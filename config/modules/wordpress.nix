@@ -111,8 +111,10 @@ in {
         forceSSL = i.letsencrypt;
         serverAliases = i.aliases;
         locations = {
-          "/blog/" = {
-            alias = i.documentRoot;
+          "~ ^/blog/([^\\s])" = {
+            extraConfig = ''
+              return 301 /$1;
+            '';
             priority = 100;
           };
           "= /robots.txt" = {
@@ -142,6 +144,7 @@ in {
           "/" = {
             extraConfig = ''
               try_files $uri $uri/ /index.php?$args;
+              index index.php;
             '';
             priority = 400;
           };
