@@ -2,6 +2,7 @@
   imports = [
     ./modules.nix
     ./morph.nix
+    ./nix-path.nix
   ];
 
   users.users.andi = {
