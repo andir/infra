@@ -1,4 +1,10 @@
 {
+    "modules": {
+        "ref": "master",
+        "repo": "https://git.darmstadt.ccc.de/nixos/modules.git",
+        "rev": "224ffd83c34627694f565d9c7b59f851e781894b",
+        "type": "git"
+    },
     "morph": {
         "branch": "master",
         "description": "NixOS deployment tool",
