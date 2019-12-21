@@ -50,9 +50,14 @@ in {
   };
   config = mkIf (cfg.instances != {}) {
 
-    environment.systemPackages = [
-      pkgs.wp-cli
-    ];
+    environment.systemPackages = mapAttrsToList (n: v:
+      pkgs.writeScriptBin "${n}-wp-cli" ''
+        #! ${pkgs.stdenv.shell}
+        echo "Starting wp-cli in ${v.documentRoot} as user ${n}"
+        cd ${v.documentRoot}
+        exec su -s ${pkgs.writeScript "wp-cli" "exec ${pkgs.wp-cli}/bin/wp \"$@\""}  '${n}' -- "$@"
+      ''
+      ) cfg.instances;
 
     systemd.tmpfiles.rules = [
       "d '/var/lib/wordpress/' 0755 root root - -"
