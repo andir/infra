@@ -40,15 +40,12 @@ let siteName = "foo.bar.nixos.dev"; in
     };
   };
 
-  hetzner = {
-    ipv4Address = "78.46.187.204";
-    ipv6Address = "2a01:4f8:c17:7a6::";
-    persistentDisks = [
-      {
-        id = 3842340;
-        mountPoint = "/data";
-      }
+  mods.hetzner = {
+    networking.ipAddresses = [
+      "78.46.187.204/32"
+      "2a01:4f8:c17:7a6::/128"
     ];
+    vm.persistentDisks."/data".id = 3842340;
   };
 
   fileSystems = {
