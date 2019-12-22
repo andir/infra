@@ -3,6 +3,7 @@
     ./modules.nix
     ./morph.nix
     ./nix-path.nix
+    ./nix.nix
   ];
 
   users.users.andi = {
