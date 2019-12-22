@@ -6,7 +6,7 @@
 
   deployment = {
     targetHost = "kack.it";
-    targetUser = "root";
+    targetUser = "morph";
     substituteOnDestination = true;
   };
 
