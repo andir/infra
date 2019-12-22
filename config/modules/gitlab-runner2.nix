@@ -49,6 +49,14 @@ in
         type = lib.types.path;
       };
 
+      tags = mkOption {
+        default = [ "nix" ];
+        type = types.listOf types.str;
+        description = ''
+          The default tags the gitlab-runner registers on startup.
+        '';
+      };
+
       gracefulTermination = mkOption {
         default = false;
         type = types.bool;
@@ -102,7 +110,7 @@ in
           ExecStartPre = ''${cfg.package.bin}/bin/gitlab-runner register \
             --non-interactive=true \
             --name gitlab-runner \
-            --tag-list "nix" \
+            --tag-list "${lib.concatStringsSep "," cfg.tags}" \
             --executor "docker" \
             --docker-image "alpine" \
             --docker-volumes /nix/store:/nix/store:ro \
