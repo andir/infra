@@ -3,6 +3,7 @@
   imports = [
     ./base
     ./ssh
+    ./dns.nix
   ];
 
   programs.mosh.enable = true;

@@ -9,8 +9,8 @@
   };
 
   boot.loader.grub.devices = [ "/dev/sda" ];
-  fileSystems."/" = lib.mkDefault {
-    fsType = "ext4";
-    device = "/dev/disk/by-label/nixos";
+  fileSystems."/" = {
+    fsType = lib.mkDefault "ext4";
+    device = lib.mkDefault "/dev/disk/by-label/nixos";
   };
 }
