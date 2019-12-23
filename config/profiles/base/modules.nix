@@ -6,5 +6,6 @@
     ../../modules/monitoring.nix
     ../../modules/syncserver.nix
     ../../modules/backup.nix
+    ../../modules/c3schedule.nix
   ];
 }

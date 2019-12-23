@@ -8,6 +8,13 @@
     targetHost = "kack.it";
     targetUser = "morph";
     substituteOnDestination = true;
+
+    secrets."c3shedule.env" = {
+      source = "../secrets/c3schedule.env";
+      destination = "/var/lib/secrets/c3schedule.env";
+      owner.user = "c3schedule";
+      action = ["sudo" "systemctl" "restart" "c3schedule"];
+    };
   };
 
   networking = {
@@ -45,6 +52,37 @@
       encryption = {
         mode = "repokey";
         passCommand = "cat /var/lib/secrets/borg.password";
+      };
+    };
+  };
+
+  c3schedule = {
+    enable = true;
+    config = {
+      core = {
+        host = "guybrush.hackint.org";
+        port = 6697;
+        use_ssl = "True";
+        enable = "reload,c3schedule";
+        logging_level = "DEBUG";
+        auth_method = "nickserv";
+        auth_username = "c3schedule";
+        auth_password = "@AUTH_PASSWORD@";
+        nick = "c3schedule";
+        owner = "andi-";
+        owner_account = "andi-";
+        pid_dir = "/var/lib/c3schedule";
+        homedir = "/var/lib/c3schedule";
+        channels = "#36c3-schedule,#36c3-hall-a,#36c3-hall-b,#36c3-hall-c,#36c3-hall-d,#36c3-hall-a,#signalangel,#36c3-hall-e,#chaoswest-stage";
+        prefix = ".?";
+        reply_errors = "False";
+        flood_empty_wait = "0";
+        flood_burst_lines = "40";
+        flood_refill_rate = "30";
+      };
+      c3schedule = {
+        channel = "#36c3-schedule";
+        angel_channel = "#signalangel";
       };
     };
   };
