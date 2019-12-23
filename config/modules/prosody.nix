@@ -118,6 +118,17 @@ in {
                 proxy65_acl = { "${cfg.serverName}" }
 
         Component "upload.${cfg.serverName}" "http_upload"
+
+        Component "conference.${cfg.serverName}" "muc"
+                name = "kack.it's MUCs"
+                restrict_room_creation = "local"
+                max_history_messages = 20000
+                muc_room_default_public = false
+                muc_log_by_default = true
+                muc_log_presences = false
+                log_all_rooms = false
+                muc_log_expires_after = "1w"
+                muc_log_cleanup_interval = 4 * 60 * 60
       '';
       extraModules = [
         "reload_modules"
@@ -135,6 +146,7 @@ in {
         "omemo_all_access" # disable restrictions on accessing the OMEMO keys
         "vcard_legacy" # XEP-0398: User Avatar to vCard-Based Avatars Conversion
         "bosh" # enable accessing server via HTTP(s)
+        "muc_mam" # MAM for MUCs
       ];
 
       # all the different domains this server serves go here
