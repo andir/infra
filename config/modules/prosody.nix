@@ -178,13 +178,20 @@ in {
 
     # enable nginx with ACME for our certificates
     services.nginx = let
-      host-meta = pkgs.writeText "host-meta.json" ''
+      host-meta-json = pkgs.writeText "host-meta.json" (builtins.toJSON {
+        links = [
+          {
+            rel = "urn:xmpp:alt-connections:xbosh";
+            href = "https://${cfg.serverName}/.xmpp/http-bind";
+          }
+        ];
+      });
+      host-meta = pkgs.writeText "host-meta.xml" ''
         <?xml version='1.0' encoding='utf-8'?>
         <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
           <Link rel="urn:xmpp:alt-connections:xbosh" href="https://${cfg.serverName}/.xmpp/http-bind" />
         </XRD>
       '';
-
     in {
       enable = true;
       virtualHosts = {
@@ -209,12 +216,16 @@ in {
           };
           locations."=/.well-known/host-meta" = {
             extraConfig = ''
+                default_type 'application/xrd+xml';
+                add_header Access-Control-Allow-Origin '*' always;
                 alias ${host-meta};
             '';
           };
           locations."=/.well-known/host-meta.json" = {
             extraConfig = ''
-                alias ${host-meta};
+                default_type 'application/json+xml';
+                add_header Access-Control-Allow-Origin '*' always;
+                alias ${host-meta-json};
             '';
           };
         };
