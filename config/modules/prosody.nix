@@ -44,6 +44,7 @@ in {
           "throttle_presence"
           "filter_chatstates"
           "vcard_muc"
+          "bookmarks"
         ];
       };
       allowRegistration = false;
@@ -149,6 +150,7 @@ in {
         "vcard_legacy" # XEP-0398: User Avatar to vCard-Based Avatars Conversion
         "bosh" # enable accessing server via HTTP(s)
         "websocket" # enable accessing the server via WS over HTTPS
+        "bookmark"
       ];
 
       # all the different domains this server serves go here
