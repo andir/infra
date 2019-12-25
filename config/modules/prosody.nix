@@ -33,15 +33,15 @@ in {
       enable = true;
       package = pkgs.prosody.override {
         withCommunityModules = [
-  	"carbons_adhoc"
-  	"cloud_notify"
-  	"csi"
-  	"http_upload"
-  	"mam_adhoc"
-  	"omemo_all_access"
-  	"reload_modules"
-  	"smacks"
-  	"throttle_presence"
+          "carbons_adhoc"
+          "cloud_notify"
+          "csi"
+          "http_upload"
+          "mam_adhoc"
+          "omemo_all_access"
+          "reload_modules"
+          "smacks"
+          "throttle_presence"
           "filter_chatstates"
         ];
       };
@@ -147,6 +147,7 @@ in {
         "omemo_all_access" # disable restrictions on accessing the OMEMO keys
         "vcard_legacy" # XEP-0398: User Avatar to vCard-Based Avatars Conversion
         "bosh" # enable accessing server via HTTP(s)
+        "websocket" # enable accessing the server via WS over HTTPS
       ];
 
       # all the different domains this server serves go here
@@ -184,12 +185,18 @@ in {
             rel = "urn:xmpp:alt-connections:xbosh";
             href = "https://${cfg.serverName}/.xmpp/http-bind";
           }
+          {
+            rel = "urn:xmpp:alt-connections:websocket";
+            href = "wss://${cfg.serverName}/.xmpp/ws";
+          }
+
         ];
       });
       host-meta = pkgs.writeText "host-meta.xml" ''
         <?xml version='1.0' encoding='utf-8'?>
         <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
           <Link rel="urn:xmpp:alt-connections:xbosh" href="https://${cfg.serverName}/.xmpp/http-bind" />
+          <Link rel="urn:xmpp:alt-connections:websocket" href="wss://${cfg.serverName}/.xmpp/ws" />
         </XRD>
       '';
     in {
@@ -205,6 +212,18 @@ in {
               proxy_set_header X-Forwarded-For $remote_addr;
               proxy_buffering off;
               tcp_nodelay on;
+            '';
+          };
+          locations."/.xmpp/ws" = {
+            extraConfig = ''
+              proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/xmpp-websocket;
+              proxy_http_version 1.1;
+              proxy_set_header Connection "Upgrade";
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-For $remote_addr;
+              proxy_read_timeout 900s;
+              proxy_buffering off;
             '';
           };
           locations."/.xmpp/" = {
