@@ -129,6 +129,7 @@ in {
                 log_all_rooms = false
                 muc_log_expires_after = "1w"
                 muc_log_cleanup_interval = 4 * 60 * 60
+                modules_enabled = { "muc_mam" }
       '';
       extraModules = [
         "reload_modules"
@@ -146,7 +147,6 @@ in {
         "omemo_all_access" # disable restrictions on accessing the OMEMO keys
         "vcard_legacy" # XEP-0398: User Avatar to vCard-Based Avatars Conversion
         "bosh" # enable accessing server via HTTP(s)
-        "muc_mam" # MAM for MUCs
       ];
 
       # all the different domains this server serves go here
