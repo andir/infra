@@ -43,6 +43,7 @@ in {
           "smacks"
           "throttle_presence"
           "filter_chatstates"
+          "vcard_muc"
         ];
       };
       allowRegistration = false;
@@ -129,7 +130,7 @@ in {
                 log_all_rooms = false
                 muc_log_expires_after = "1w"
                 muc_log_cleanup_interval = 4 * 60 * 60
-                modules_enabled = { "muc_mam" }
+                modules_enabled = { "muc_mam", "vcard_muc", }
       '';
       extraModules = [
         "reload_modules"
