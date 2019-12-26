@@ -83,7 +83,7 @@
       c3schedule = {
         channel = "#36c3-schedule";
         angel_channel = "#signalangel";
-        url = "https://github.com/voc/36C3_schedule/blob/master/everything.schedule.json";
+        url = "https://raw.githubusercontent.com/voc/36C3_schedule/master/everything.schedule.json";
       };
     };
   };
