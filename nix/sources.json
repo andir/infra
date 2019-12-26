@@ -5,10 +5,10 @@
         "homepage": null,
         "owner": "andir",
         "repo": "c3schedule",
-        "rev": "e3658338aa8479aa33e445fdca45005a7d2821a2",
-        "sha256": "04yx8p1l870jh925bpcgm7sin76847klw3m1r6q66nkdip4hm1bf",
+        "rev": "a70c647974efca120dce1885e6d5a7195961fc6c",
+        "sha256": "1ljdhqlwq97y4hkc01kfgj7gs13f7nzb5wsfp5871s4sf15x07qy",
         "type": "tarball",
-        "url": "https://github.com/andir/c3schedule/archive/e3658338aa8479aa33e445fdca45005a7d2821a2.tar.gz",
+        "url": "https://github.com/andir/c3schedule/archive/a70c647974efca120dce1885e6d5a7195961fc6c.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "modules": {

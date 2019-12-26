@@ -73,7 +73,7 @@
         owner_account = "andi-";
         pid_dir = "/var/lib/c3schedule";
         homedir = "/var/lib/c3schedule";
-        channels = "#36c3-schedule,#36c3-hall-a,#36c3-hall-b,#36c3-hall-c,#36c3-hall-d,#36c3-hall-a,#signalangel,#36c3-hall-e,#chaoswest-stage";
+        channels = "#36c3-schedule,#36c3-hall-a,#36c3-hall-b,#36c3-hall-c,#36c3-hall-d,#36c3-hall-a,#signalangel,#36c3-hall-e,#chaoswest-stage,#oio-stage";
         prefix = ".?";
         reply_errors = "False";
         flood_empty_wait = "0";
@@ -83,6 +83,7 @@
       c3schedule = {
         channel = "#36c3-schedule";
         angel_channel = "#signalangel";
+        url = "https://github.com/voc/36C3_schedule/blob/master/everything.schedule.json";
       };
     };
   };
