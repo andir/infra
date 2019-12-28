@@ -65,6 +65,7 @@
         use_ssl = "True";
         enable = "reload,c3schedule";
         logging_level = "DEBUG";
+        log_raw = "True";
         auth_method = "nickserv";
         auth_username = "c3schedule";
         auth_password = "@AUTH_PASSWORD@";
