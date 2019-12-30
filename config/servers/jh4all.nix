@@ -10,17 +10,6 @@ let siteName = "foo.bar.nixos.dev"; in
     targetUser = "morph";
     substituteOnDestination = true;
     healthChecks = {
-      cmd = [
-        {
-          cmd = ["/run/wrappers/bin/ping" "-6" "${config.networking.hostName}" ];
-          description = "Check whether the server responds to ICMPv6";
-        }
-        {
-          cmd = ["/run/wrappers/bin/ping" "-4" "${config.networking.hostName}" ];
-          description = "Check whether the server responds to ICMPv4";
-        }
-      ];
-
       http = [
         {
           scheme = "http";
