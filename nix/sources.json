@@ -14,7 +14,7 @@
     "modules": {
         "ref": "master",
         "repo": "https://git.darmstadt.ccc.de/nixos/modules.git",
-        "rev": "e9c9146cff5f1316c3b2dfa710f8559e4af06a5b",
+        "rev": "62216d3d092e8e7a5957a0fb38ca5e0e649cfcbb",
         "type": "git"
     },
     "morph": {

@@ -3,6 +3,7 @@ let siteName = "foo.bar.nixos.dev"; in
 {
   imports = [
     ../profiles/hetzner-vm.nix
+    ../profiles/webserver.nix
   ];
 
   deployment = {
@@ -50,12 +51,16 @@ let siteName = "foo.bar.nixos.dev"; in
     };
   };
 
-  wordpress.instances = {
+  services.prometheus.exporters.nginx = {
+    enable = true;
+    openFirewall = true;
+  };
+
+  mods.webhost.virtualHosts = {
     "foo.bar.nixos.dev" = {
       aliases = [ ];
-    };
-    "www.foo.bar.nixos.dev" = {
-      aliases = [ ];
+      domain = "foo.bar.nixos.dev";
+      application = "wordpress";
     };
   };
 
