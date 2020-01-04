@@ -39,7 +39,7 @@ let siteName = "foo.bar.nixos.dev"; in
   };
 
   fileSystems = {
-    "/var/lib/wordpress/" = {
+    "/var/www/" = {
        fsType = "none";
        options = [ "bind" ];
        device = "/data/wordpress";
