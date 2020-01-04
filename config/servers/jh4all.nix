@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 let siteName = "foo.bar.nixos.dev"; in
 {
   imports = [
@@ -55,6 +55,22 @@ let siteName = "foo.bar.nixos.dev"; in
     enable = true;
     openFirewall = true;
   };
+
+  h4ck.backup.paths =
+    [ "/var/lib/mysql" ]
+    ++ map (name: config.users.users.${name}.home) (lib.attrNames config.mods.webhost.virtualHosts);
+
+#  services.borgbackup.jobs = {
+#    "kack-it" = {
+#      inherit (config.h4ck.backup) paths;
+#      compression = "lz4";
+#      repo = "borg@epsilon.rammhold.de:/home/borg/backups/jh4all.de";
+#      encryption = {
+#        mode = "repokey";
+#        passCommand = "cat /var/lib/secrets/borg.password";
+#      };
+#    };
+#  };
 
   mods.webhost.virtualHosts = {
     "foo.bar.nixos.dev" = {
