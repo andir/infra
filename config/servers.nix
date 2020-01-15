@@ -10,5 +10,7 @@ in {
   "gitlab-runner" = mkMachine ./servers/gitlab-runner.nix;
   "kack.it" = mkMachine ./servers/kack-it.nix;
 
+  mail = mkMachine ./servers/mail.nix;
+
 #  "mon.h4ck.space" = mkMachine ./servers/mon.nix;
 }
