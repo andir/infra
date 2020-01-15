@@ -43,6 +43,7 @@
     adminJID = "andi@kack.it";
   };
   h4ck.syncserver.enable = true;
+  h4ck.ssh-unlock.networking.ipv6.address = "2a01:4f8:1c1c:4b9f::2/128";
 
   services.borgbackup.jobs = {
     "kack-it" = {

@@ -1,3 +1,4 @@
+{ lib, config, ... }:
 {
   imports = [
     ./modules.nix
@@ -12,6 +13,11 @@
     openssh.authorizedKeys.keyFiles = [
       ./andi.pub
     ];
+  };
+
+  h4ck.ssh-unlock = {
+    enable = config.boot.initrd.luks.devices != {};
+    authorizedKeys = lib.splitString "\n" (builtins.readFile ./andi.pub);
   };
 
   # there are no passwords

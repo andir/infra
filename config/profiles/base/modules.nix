@@ -6,5 +6,6 @@
     ../../modules/syncserver.nix
     ../../modules/backup.nix
     ../../modules/c3schedule.nix
+    ../../modules/ssh-unlock.nix
   ];
 }
