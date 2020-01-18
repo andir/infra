@@ -1,5 +1,5 @@
 { pkgs, config, lib, ... }:
-let siteName = "foo.bar.nixos.dev"; in
+let siteName = "jh4all.e"; in
 {
   imports = [
     ../profiles/hetzner-vm.nix
@@ -7,7 +7,7 @@ let siteName = "foo.bar.nixos.dev"; in
   ];
 
   deployment = {
-    targetHost = "foo.bar.nixos.dev";
+    targetHost = "jh4all.de";
     targetUser = "morph";
     substituteOnDestination = true;
     healthChecks = {
@@ -60,25 +60,40 @@ let siteName = "foo.bar.nixos.dev"; in
     [ "/var/lib/mysql" ]
     ++ map (name: config.users.users.${name}.home) (lib.attrNames config.mods.webhost.virtualHosts);
 
-#  services.borgbackup.jobs = {
-#    "kack-it" = {
-#      inherit (config.h4ck.backup) paths;
-#      compression = "lz4";
-#      repo = "borg@epsilon.rammhold.de:/home/borg/backups/jh4all.de";
-#      encryption = {
-#        mode = "repokey";
-#        passCommand = "cat /var/lib/secrets/borg.password";
-#      };
-#    };
-#  };
+  services.borgbackup.jobs = {
+    "kack-it" = {
+      inherit (config.h4ck.backup) paths;
+      compression = "lz4";
+      repo = "borg@epsilon.rammhold.de:/home/borg/backups/www.jh4all.de";
+      encryption = {
+        mode = "repokey";
+        passCommand = "cat /var/lib/secrets/borg.password";
+      };
+    };
+  };
 
   mods.webhost.virtualHosts = {
-    "foo.bar.nixos.dev" = {
-      aliases = [ ];
-      domain = "foo.bar.nixos.dev";
+    "jh4all.de" = {
+      aliases = [
+        "www.jh4all.de"
+        "broadcastmuseum.de"
+        "www.broadcastmuseum.de"
+        "bts-broadcast.de"
+        "www.bts-broadcast.de"
+      ];
+      domain = "jh4all.de";
+      application = "wordpress";
+    };
+
+    "bergstraesser_bilderbox.de" = {
+      aliases = [
+        "www.bergstraesser-bilderbox.de"
+      ];
+      domain = "bergstraesser-bilderbox.de";
       application = "wordpress";
     };
   };
 
-  system.stateVersion = "19.03";
+
+  system.stateVersion = "19.09";
 }
