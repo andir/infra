@@ -1,11 +1,11 @@
 { config, lib, pkgs, ... }:
 let
-  snms = import (import ../../nix/sources.nix).nixos-mailserver;
+  snms = import (import ../../../nix/sources.nix).nixos-mailserver;
 
   # import secrets if they exist (e.g. on deployment hosts)
   secrets =
     let
-      path = ../../secrets/mail.nix;
+      path = ../../../secrets/mail.nix;
       default = {
         domains = [];
         loginAccounts = {};
@@ -16,7 +16,8 @@ in {
 
   imports = [
     snms
-    ../profiles/hetzner-vm.nix
+    ../../profiles/hetzner-vm.nix
+    ./radicale.nix
   ];
 
   deployment = {
@@ -35,6 +36,13 @@ in {
 
   # snms provides kresd configuration, pull this in when that isn't the case (anymore?)
   services.unbound.enable = !config.services.kresd.enable;
+
+  h4ck.backup.paths = [
+    config.mailserver.mailDirectory
+    config.mailserver.dkimKeyDirectory
+    "/var/sieve" # managesieve files
+    "/var/lib/radicale" # radicale files (contacts, calendar, …)
+  ];
 
   mailserver = {
     enable = true;
@@ -71,43 +79,5 @@ in {
     virusScanning = true;
   };
 
-  services.roundcube = {
-    enable = true;
-    hostName = "webmail.kack.it";
-    database.password = "securepasswordforthelocalhostonlypostgresql";
-    plugins = [
-      "archive"
-      "zipdownload"
-      "managesieve"
-      "acl"
-    ];
-  };
 
-  services.radicale = {
-    enable = true;
-    config = ''
-      [server]
-      hosts = 127.0.0.1:5232
-
-      [auth]
-      delay = 1
-      type = htpasswd
-      htpasswd_filename = ${builtins.toFile "passwd" (lib.concatStringsSep "\n" (lib.mapAttrsToList  (name: value: "${name}:${value.hashedPassword}") config.mailserver.loginAccounts)) }
-      htpasswd_encryption = crypt
-
-      [storage]
-      filesystem_folder = ${config.users.users.radicale.home}
-      # hook = git add -A && (git diff --cached --quiet || git commit -m "Changes by "%(user)s)
-    '';
-  };
-
-  services.nginx = {
-    virtualHosts."davical.kack.it" = {
-      forceSSL = true;
-      enableACME = true;
-      locations."/".proxyPass = "http://127.0.0.1:5232";
-    };
-  };
-
-  networking.firewall.allowedTCPPorts = [ 443 ];
 }
