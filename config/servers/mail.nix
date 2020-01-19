@@ -1,9 +1,20 @@
 { config, lib, pkgs, ... }:
 let
   snms = (builtins.fetchTarball {
-    url = "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/-/archive/v2.2.1/nixos-mailserver-v2.2.1.tar.gz";
-    sha256 = "03d49v8qnid9g9rha0wg2z6vic06mhp0b049s3whccn1axvs2zzx";
+    url = "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/-/archive/v2.3.0/nixos-mailserver-v2.3.0.tar.gz";
+    sha256 = "0lpz08qviccvpfws2nm83n7m2r8add2wvfg9bljx9yxx8107r919";
   });
+
+  # import secrets if they exist (e.g. on deployment hosts)
+  secrets =
+    let
+      path = ../../secrets/mail.nix;
+      default = {
+        domains = [];
+        loginAccounts = {};
+      };
+    in if builtins.trace path builtins.pathExists path then import path else default;
+
 in {
 
   imports = [
@@ -31,7 +42,10 @@ in {
   mailserver = {
     enable = true;
     fqdn = "test-mx.kack.it";
-    domains = [ "kack.it" ];
+    domains = [
+      "kack.it"
+      "foo.bar.kack.it"
+    ] ++ secrets.domains;
     loginAccounts = {
         "andi@kack.it" = {
 	    hashedPassword = "$6$oJhcZDZZ$9QFwPXZhmjPjJL0TcEsZVTehhdWFxxjVDBDg0Ked71ziAd1GnsJJUpsuIhqG8fdAhalQe/BXn8VZE4Te7oE7g/";
@@ -40,7 +54,7 @@ in {
 		"test@kack.it"
             ];
         };
-    };
+    } // secrets.loginAccounts;
 
     # Use Let's Encrypt certificates. Note that this needs to set up a stripped
     # down nginx and opens port 80.
@@ -64,6 +78,12 @@ in {
     enable = true;
     hostName = "webmail.kack.it";
     database.password = "securepasswordforthelocalhostonlypostgresql";
+    plugins = [
+      "archive"
+      "zipdownload"
+      "managesieve"
+      "acl"
+    ];
   };
 
   services.radicale = {

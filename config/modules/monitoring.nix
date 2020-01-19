@@ -73,5 +73,22 @@ in
         services.nginx.statusPage = mkDefault true;
       }
     ]))
+
+    # enable dovecot monitoring
+    (mkIf config.services.dovecot2.enable (mkMerge [
+      (mkExporter "dovecot" 9166 {})
+      {
+        services.prometheus.exporters.dovecot.socketPath = "/run/dovecot2/old-stats";
+        services.dovecot2.extraConfig = ''
+          mail_plugins = $mail_plugins old_stats
+          service old-stats {
+            unix_listener old-stats {
+              user = dovecot-exporter
+              group = dovecot-exporter
+            }
+          }
+        '';
+      }
+    ]))
   ]);
 }
