@@ -41,16 +41,22 @@
         "url": "https://github.com/nmattia/niv/archive/61b61d1e5f8096fe65fb825bec23f33e861c51d0.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixos-mailserver": {
+        "ref": "master",
+        "repo": "git@gitlab.com:andi-/nixos-mailserver.git",
+        "rev": "9878387845fd6ad615e5ed4dabd3bc6af23e9fec",
+        "type": "git"
+    },
     "nixpkgs": {
         "branch": "nixos-19.09",
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "63a3564987d35ffc80ae8be627d6f30e7d997ba1",
-        "sha256": "1y91r7r3scic3j3f2n9yzyap4yrvf3l41ab48bkf0s1m7mv1ph5k",
+        "rev": "5b9eee22acf2a0787d314357d4d3a54f33a21bbf",
+        "sha256": "0qrjwawar78vnicpfj67kqmlc2zq90d679g6aic18fnq3m16l1hp",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/63a3564987d35ffc80ae8be627d6f30e7d997ba1.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/5b9eee22acf2a0787d314357d4d3a54f33a21bbf.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {

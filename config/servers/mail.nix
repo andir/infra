@@ -1,9 +1,6 @@
 { config, lib, pkgs, ... }:
 let
-  snms = (builtins.fetchTarball {
-    url = "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver/-/archive/v2.3.0/nixos-mailserver-v2.3.0.tar.gz";
-    sha256 = "0lpz08qviccvpfws2nm83n7m2r8add2wvfg9bljx9yxx8107r919";
-  });
+  snms = import (import ../../nix/sources.nix).nixos-mailserver;
 
   # import secrets if they exist (e.g. on deployment hosts)
   secrets =
