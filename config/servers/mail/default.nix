@@ -18,6 +18,7 @@ in {
     snms
     ../../profiles/hetzner-vm.nix
     ./radicale.nix
+    ./roundcube.nix
   ];
 
   deployment = {
@@ -26,13 +27,54 @@ in {
     substituteOnDestination = true;
   };
 
-  fileSystems."/".fsType = "btrfs";
+  boot.initrd.luks.devices = {
+    "rootfs".device = "/dev/disk/by-uuid/f7f8b86e-c0c4-42a1-b4ff-8e90a3c2b72d";
+    "data".device = "/dev/disk/by-uuid/da233a8f-129d-404b-a217-586594896276";
+  };
+
+  fileSystems = {
+    "/" = {
+      device = "/dev/disk/by-uuid/7f183a7b-354d-46c8-a1df-e83f80b327cf";
+      fsType = "ext4";
+    };
+    "/boot" = {
+      device = "/dev/disk/by-uuid/4dcdc263-6c8e-456d-a79f-6e19a6168cee";
+      fsType = "ext4";
+    };
+    "/data" = {
+      device = "/dev/disk/by-uuid/becf89e2-1b70-4db2-accf-184e466a035e";
+      fsType = "btrfs";
+      options = [ "compress=zstd" ];
+    };
+    "${config.mailserver.mailDirectory}" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/mails";
+    };
+    "${config.mailserver.dkimKeyDirectory}" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/dkim";
+    };
+    "/var/sieve" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/sieve";
+    };
+    "/var/lib/radicale" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/radicale";
+    };
+  };
+
   mods.hetzner = {
     networking.ipAddresses = [
       "159.69.146.50/32"
       "2a01:4f8:1c1c:f2f5::/128"
     ];
   };
+  h4ck.ssh-unlock.networking.ipv6.address = "2a01:4f8:1c1c:f2f5::2/128";
 
   # snms provides kresd configuration, pull this in when that isn't the case (anymore?)
   services.unbound.enable = !config.services.kresd.enable;
@@ -78,6 +120,11 @@ in {
     # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
     virusScanning = true;
   };
+  services.dovecot2.extraConfig = ''
+    service imap {
+      vsz_limit = 256 MB
+    }
+  '';
 
 
 }
