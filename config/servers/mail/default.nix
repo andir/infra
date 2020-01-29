@@ -22,7 +22,7 @@ in {
   ];
 
   deployment = {
-    targetHost = "test-mx.kack.it.";
+    targetHost = "mx.h4ck.space.";
     targetUser = "morph";
     substituteOnDestination = true;
   };
@@ -88,7 +88,7 @@ in {
 
   mailserver = {
     enable = true;
-    fqdn = "test-mx.kack.it";
+    fqdn = "mx.h4ck.space";
     domains = [
       "kack.it"
       "foo.bar.kack.it"
@@ -122,7 +122,7 @@ in {
   };
   services.dovecot2.extraConfig = ''
     service imap {
-      vsz_limit = 256 MB
+      vsz_limit = 512MB
     }
   '';
 
