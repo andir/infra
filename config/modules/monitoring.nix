@@ -1,8 +1,8 @@
 { lib, config, ... }:
 with lib;
 let
-  v4Src = "148.251.9.69/32";
-  v6Src = "2a01:4f8:201:6344::/64";
+  v4Srcs = [ "148.251.9.69/32" "95.216.144.32/32" ];
+  v6Srcs = [ "2a01:4f8:201:6344::/64" "2a01:4f9:c010:c50::/64" ];
   mkExporter = name: port: conf: {
     services.prometheus.exporters.${name} = mkMerge [
       {
@@ -15,14 +15,16 @@ let
     h4ck.monitoring.targets.${name} = {
       inherit port;
     };
-    networking.firewall.extraCommands = ''
-      iptables -A nixos-fw -p tcp --dport ${toString port} -s ${v4Src} -j ACCEPT -m comment --comment "prometheus ${name}"
-      ip6tables -A nixos-fw -p tcp --dport ${toString port} -s ${v6Src} -j ACCEPT -m comment --comment "prometheus ${name}"
-    '';
-    networking.firewall.extraStopCommands = ''
-      iptables -D nixos-fw -p tcp --dport ${toString port} -s ${v4Src} -j ACCEPT -m comment --comment "prometheus ${name}" || :
-      ip6tables -D nixos-fw -p tcp --dport ${toString port} -s ${v6Src} -j ACCEPT -m comment --comment "prometheus ${name}"  || :
-    '';
+    networking.firewall.extraCommands = lib.concatStringsSep "\n" (
+      (map (v4Src: ''iptables -A nixos-fw -p tcp --dport ${toString port} -s ${v4Src} -j ACCEPT -m comment --comment "prometheus ${name}"'') v4Srcs)
+      ++
+      (map (v6Src: ''ip6tables -A nixos-fw -p tcp --dport ${toString port} -s ${v6Src} -j ACCEPT -m comment --comment "prometheus ${name}"'') v6Srcs)
+    );
+    networking.firewall.extraStopCommands = lib.concatStringsSep "\n" (
+      (map (v4Src: ''iptables -D nixos-fw -p tcp --dport ${toString port} -s ${v4Src} -j ACCEPT -m comment --comment "prometheus ${name}" || :'') v4Srcs)
+      ++
+      (map (v6Src: ''ip6tables -D nixos-fw -p tcp --dport ${toString port} -s ${v6Src} -j ACCEPT -m comment --comment "prometheus ${name}"  || :'') v6Srcs)
+    );
   };
 
   monitoringTarget = { name, ... }: {

@@ -43,18 +43,5 @@ let
       })
       targetSets);
 in {
-
-  imports = [ ../profiles/hetzner-vm.nix ];
-
-  services.prometheus = {
-    enable = true;
-    scrapeConfigs = lib.traceValSeq targets;
-  };
-
-  h4ck.monitoring.targets."node" = {
-    port = 9100;
-    job_config = { tls_config = {}; };
-  };
-
-  environment.etc."monitoring-targets".text = builtins.toJSON targets;
+  services.prometheus.scrapeConfigs = targets;
 }

@@ -38,6 +38,8 @@ let siteName = "jh4all.e"; in
     vm.persistentDisks."/data".id = 3842340;
   };
 
+  networking.hostName = "jh4all.de";
+
   fileSystems = {
     "/var/www/" = {
        fsType = "none";

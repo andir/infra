@@ -23,6 +23,9 @@
     ];
   };
 
+  # FIXME: this host needs a proper DNS rentry
+  h4ck.monitoring.targetHost = "95.216.155.219";
+
   services.gitlab-runner2 = {
     enable = true;
     registrationConfigFile = "/var/secrets/gitlab-runner.env";

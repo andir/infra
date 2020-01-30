@@ -19,5 +19,5 @@ in {
 
   mail = mkMachine ./servers/mail;
 
-#  "mon.h4ck.space" = mkMachine ./servers/mon.nix;
+  mon = mkMachine ./servers/mon;
 }
