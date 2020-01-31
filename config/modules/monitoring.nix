@@ -36,6 +36,10 @@ let
       name = mkOption {
         type = types.str;
       };
+      targetHost = mkOption {
+        type = types.nullOr types.str;
+        default = null;
+      };
       port = mkOption {
         type = types.port;
       };
@@ -77,16 +81,55 @@ in
     ]))
 
     # enable dovecot monitoring
-    (mkIf config.services.dovecot2.enable (mkMerge [
+    # currently deactivated since the old exporter isn't really great
+    # and the new configuration syntax doesn't seem to work :(
+    (mkIf (config.services.dovecot2.enable && false) (mkMerge [
       (mkExporter "dovecot" 9166 {})
       {
         services.prometheus.exporters.dovecot.socketPath = "/run/dovecot2/old-stats";
         services.dovecot2.extraConfig = ''
-          mail_plugins = $mail_plugins old_stats
-          service old-stats {
-            unix_listener old-stats {
-              user = dovecot-exporter
-              group = dovecot-exporter
+          # mail_plugins = $mail_plugins old_stats
+          # service old-stats {
+          #   unix_listener old-stats {
+          #     user = dovecot-exporter
+          #     group = dovecot-exporter
+          #   }
+          # }
+          #metric imap_command {
+          #  event_name = imap_command_finished
+          #  filter {
+          #    tagged_reply_state = OK
+          #  }
+          #  group_by = cmd_name
+          #}
+
+          #metric imap_select_no {
+          #  event_name = imap_command_finished
+          #  filter {
+          #    name = SELECT
+          #    tagged_reply_state = OK
+          #  }
+          #  group_by = cmd_name
+          #}
+          #metric imap_select_no_notfound {
+          #  event_name = imap_command_finished
+          #  filter {
+          #    name = SELECT
+          #    tagged_reply = NO*Mailbox doesn't exist:*
+          #  }
+          #  group_by = cmd_name
+          #}
+          service stats {
+            unix_listener stats-reader {
+              user = virtualMail
+              group = virtualMail
+              mode = 0660
+            }
+
+            unix_listener stats-writer {
+               user = virtualMail
+               group = virtualMail
+               mode = 0660
             }
           }
         '';

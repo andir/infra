@@ -52,6 +52,17 @@ in {
 
   config = mkIf cfg.enable {
 
+    h4ck.monitoring.targets = {
+      ipv6_watch = {
+        enable = true;
+        targetHost = "ipv6.watch";
+        port = 443;
+        job_config = {
+          scheme = "https";
+        };
+      };
+    };
+
     users.users."ipv6.watch" = {
       isSystemUser = true;
       createHome = true;
@@ -88,7 +99,7 @@ in {
         test -e repo || git clone "${cfg.repoUrl}" -b "${cfg.repoBranch}" repo
         cd repo
         git fetch origin
-        git reset --hard "${cfg.repoBranch}"
+        git reset --hard "origin/${cfg.repoBranch}"
         git prune -v
         git gc --force
         OUT_DIR=$(mktemp -d)

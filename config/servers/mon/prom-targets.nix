@@ -35,9 +35,12 @@ let
       (job_name: conf: conf.job_config // {
         inherit job_name;
         static_configs =
-          lib.mapAttrsToList (n: v: {
+          lib.mapAttrsToList (n: v: let
+            targetHost = if v ? targetHost && v.targetHost != null then v.targetHost else
+                            nodes.${n}.config.h4ck.monitoring.targetHost;
+          in {
             targets = [
-              "${nodes.${n}.config.h4ck.monitoring.targetHost}:${toString v.port}"
+              "${targetHost}:${toString v.port}"
             ];
           }) conf.nodes;
       })
