@@ -2,6 +2,7 @@
 {
   imports = [
     ../profiles/hetzner-vm.nix
+    ../modules/ipv6watch.nix
   ];
 
   deployment = {
@@ -36,6 +37,8 @@
       "2a01:4f8:1c1c:4b9f::/128"
     ];
   };
+
+  h4ck.ipv6watch.enable = true;
 
   h4ck.prosody = {
     enable = true;
