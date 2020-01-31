@@ -11,6 +11,7 @@ in pkgs.mkShell {
     bash
     evalServers
     git
+    git-lfs
     gnutar
     gzip
     hcloud
