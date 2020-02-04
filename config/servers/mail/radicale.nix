@@ -18,7 +18,7 @@
   };
 
   services.nginx = {
-    virtualHosts."davical.kack.it" = {
+    virtualHosts."davical.h4ck.space" = {
       forceSSL = true;
       enableACME = true;
       locations."/".proxyPass = "http://127.0.0.1:5232";
