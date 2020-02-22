@@ -45,6 +45,7 @@ in {
           "filter_chatstates"
           "vcard_muc"
           "bookmarks"
+          "conversejs"
         ];
       };
       allowRegistration = false;
@@ -151,6 +152,7 @@ in {
         "bosh" # enable accessing server via HTTP(s)
         "websocket" # enable accessing the server via WS over HTTPS
         "bookmark"
+        "conversejs"
       ];
 
       # all the different domains this server serves go here
@@ -202,6 +204,44 @@ in {
           <Link rel="urn:xmpp:alt-connections:websocket" href="wss://${cfg.serverName}/.xmpp/ws" />
         </XRD>
       '';
+
+      signal = pkgs.fetchurl {
+        url ="https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
+        sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
+      };
+
+      js = pkgs.fetchurl {
+        url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.js";
+        sha256 = "05d8dyhqh3pq69ifjhr65c937d3ll08iaxdxqjrjv08yki9micxk";
+      };
+
+      css = pkgs.fetchurl {
+        url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.css";
+        sha256 = "1w4g6y9ji9jx84ic5fl452dyv116h5x96vj572y4f62xw7dlrfi7";
+      };
+
+      index = pkgs.writeText "index.html" ''
+        <!doctype html>
+        <html lang="en">
+        <head>
+          <meta chartset="utf-8"/>
+          <link rel="stylesheet" type="text/css" media="screen" href="converse.css">
+          <script src="signal.js" charset="utf-8"></script>
+          <script src="converse.js" charset="utf-8"></script>
+        </head>
+        <body class="converse-fullscreen">
+        <div id="conversejs-bg"></div>
+
+        <script>
+          converse.initialize({
+              authentication: 'login',
+              bosh_service_url: 'https://${cfg.serverName}/.xmpp/http-bind/',
+              view_mode: 'fullscreen'
+          });
+        </script>
+        </body>
+        </html>
+      '';
     in {
       enable = true;
       virtualHosts = {
@@ -236,6 +276,31 @@ in {
               proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/;
               proxy_set_header Host $host;
               proxy_set_header X-Forwarded-For $remote_addr;
+            '';
+          };
+          locations."=/converse" = {
+            extraConfig = ''
+              default_type 'text/html';
+              alias ${index};
+            '';
+          };
+          locations."=/converse.js" = {
+            extraConfig = ''
+              default_type 'application/javascript';
+              alias ${js};
+            '';
+          };
+          locations."=/signal.js" = {
+            extraConfig = ''
+              default_type 'application/javascript';
+              alias ${signal};
+            '';
+          };
+
+          locations."=/converse.css" = {
+            extraConfig = ''
+              default_type 'text/css';
+              alias ${css};
             '';
           };
           locations."=/.well-known/host-meta" = {
