@@ -116,6 +116,9 @@ in {
         push_notification_important_body = ""
         push_max_devices = 10
 
+        -- trust websocket from any source, nginx enforces origins
+        cross_domain_websocket = true
+
         Component "proxy.${cfg.serverName}" "proxy65"
                 proxy65_address = "${cfg.serverName}"
                 proxy65_acl = { "${cfg.serverName}" }
