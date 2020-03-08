@@ -20,4 +20,6 @@ in {
   mail = mkMachine ./servers/mail;
 
   mon = mkMachine ./servers/mon;
+
+  bertha = mkMachine ./servers/bertha;
 }
