@@ -3,6 +3,7 @@
   networking.nameservers = [ "::1" ];
   services.resolved.enable = false;
   networking.resolvconf = {
+    # TODO: file upstream (nixpkgs) issue about non-standard address resolvers
     useLocalResolver = false;
     extraConfig = "name_servers='127.0.1.53'";
   };

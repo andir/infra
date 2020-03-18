@@ -3,18 +3,8 @@ with lib;
 let
   v4Srcs = [ "148.251.9.69/32" "95.216.144.32/32" ];
   v6Srcs = [ "2a01:4f8:201:6344::/64" "2a01:4f9:c010:c50::/64" ];
-  mkExporter = name: port: conf: {
-    services.prometheus.exporters.${name} = mkMerge [
-      {
-        enable = mkDefault true;
-        port = mkDefault port;
-        openFirewall = mkDefault false;
-      }
-      conf
-    ];
-    h4ck.monitoring.targets.${name} = {
-      inherit port;
-    };
+
+  mkFirewallRules = name: port: {
     networking.firewall.extraCommands = lib.concatStringsSep "\n" (
       (map (v4Src: ''iptables -A nixos-fw -p tcp --dport ${toString port} -s ${v4Src} -j ACCEPT -m comment --comment "prometheus ${name}"'') v4Srcs)
       ++
@@ -25,7 +15,25 @@ let
       ++
       (map (v6Src: ''ip6tables -D nixos-fw -p tcp --dport ${toString port} -s ${v6Src} -j ACCEPT -m comment --comment "prometheus ${name}"  || :'') v6Srcs)
     );
+
   };
+
+  mkExporter = name: port: conf: mkMerge [
+    {
+      services.prometheus.exporters.${name} = mkMerge [
+        {
+          enable = mkDefault true;
+          port = mkDefault port;
+          openFirewall = mkDefault false;
+        }
+        conf
+      ];
+      h4ck.monitoring.targets.${name} = {
+        inherit port;
+      };
+    }
+    (mkFirewallRules name port)
+  ];
 
   monitoringTarget = { name, ... }: {
     options = {
@@ -134,6 +142,17 @@ in
           }
         '';
       }
+    ]))
+
+    (mkIf config.services.knot.enable (mkMerge [
+      {
+        h4ck.prometheus.exporters.knot_exporter.enable = true;
+        h4ck.monitoring.targets.knot = {
+          port = 9053;
+        };
+        h4ck.authorative-dns.enableStats = true;
+      }
+      (mkFirewallRules "knot" 9053)
     ]))
   ]);
 }

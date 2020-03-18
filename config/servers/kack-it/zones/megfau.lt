@@ -1,0 +1,24 @@
+$TTL 600
+$ORIGIN megfau.lt.
+@    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
+                2019081301 ; Serial - date by convention
+                10800      ; Refresh
+                600        ; Retry
+                604800     ; Expire
+                600        ; Negative cache TTL
+)
+
+        IN      NS      ns1.h4ck.space.
+        IN      NS      ns2.h4ck.space.
+        IN      MX      10 mail.radgo.at.
+        IN      TXT     "v=spfv1 mx ~all"
+
+
+; xmpp
+xmpp	IN	A	159.69.152.180
+xmpp	IN	AAAA	2a01:4f8:1c1c:5e04::
+_xmpp-client._tcp.xmpp IN	SRV	5 0 5222 xmpp.megfau.lt.
+_xmpp-server._tcp.xmpp IN	SRV	5 0 5269 xmpp.megfau.lt.
+upload.xmpp	IN 	CNAME	xmpp
+mail._domainkey IN      TXT     "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjHnOV43v3RcCMnIROpMdokDUmwvoPVBfCW+PRvpu5UsverAzeSUL8wP+VL7kAOi3Uo3aRM1nUO+K3tLl/IstQwAosmoV7IMH11JtsN5S4fWKbRpDWnplxmndkktlNyhp7NmD4nQ/1Ei88GpMG4v+L4r4ZUjRx2Zi6jmaAYoCUWQIDAQAB"
+

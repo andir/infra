@@ -1,8 +1,9 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   imports = [
-    ../profiles/hetzner-vm.nix
-    ../modules/ipv6watch.nix
+    ../../profiles/hetzner-vm.nix
+    ../../modules/ipv6watch.nix
+    ./dns.nix
   ];
 
   deployment = {
@@ -39,7 +40,6 @@
   };
 
   h4ck.ipv6watch.enable = true;
-
   h4ck.prosody = {
     enable = true;
     serverName = "kack.it";
