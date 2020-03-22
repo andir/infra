@@ -131,6 +131,7 @@ in {
       process_limit = 10
     }
   '';
+  services.postfix.config.lmtp_destination_concurrency_limit = "10";
 
 
 }
