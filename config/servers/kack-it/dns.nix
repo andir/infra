@@ -37,6 +37,7 @@
         dnssecSigning = false;
       }) [
         "c-radar.de"
+        "c-radar.ccc.de"
         "cdark.net"
         "chaos-darmstadt.de"
         "darmstadt.ccc.de"
