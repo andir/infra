@@ -126,6 +126,10 @@ in {
     service imap {
       vsz_limit = 512MB
     }
+    service lmtp {
+      vsz_limit = 368MB
+      process_limit = 10
+    }
   '';
 
 
