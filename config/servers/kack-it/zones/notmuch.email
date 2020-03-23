@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
-                2017100101 ; Serial - date by convention
+                2020010322 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -16,3 +16,104 @@ l       IN      MX      20 mx.h4ck.space.
 l       IN      TXT     "v=spf1 mx -all"
 *.spam  IN      MX      20 mx.h4ck.space.
 *.l     IN      MX      20 mx.h4ck.space.
+
+; for file in  *.l.notmuch.email.mail.txt; do sed "s/^mail._domainkey/mail._domainkey.${file%.notmuch.email.mail.txt}/ " $file; done
+mail._domainkey.aerc.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDB1h/13du42tHQFK+wQzngpkob6Wrqv5B5jsWsufTPEwB8FxQU4rex21znyFnhtOfiVOuGhocHOQk2Svc2h7I96pBjOfQ9cBvpI8Uw9NTxkT3pDGssbBaHnA8MBZ4hkguivUwiiqkubC3Cu83H0BQpZ52ZbDo9fxzI/oNLP+f/DQIDAQAB" )  ; ----- DKIM key mail for aerc.l.notmuch.email
+mail._domainkey.airbnb.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDdk8o63UtqGp28hA5j/zPYkmfcD9a42UxYR4uaaRfW6quVv1HZbldwMTLDwI/bKldx4lEHdwYEA13tLMgkpSGo3ywl7+Sp+rZXbx+xNcXAj5cmjjaJ3Lm1C7V4z+lorSwYYRr14l8rn+MmXez5RQ6y8ts2Ip28dVJVmLDagRVmOQIDAQAB" )  ; ----- DKIM key mail for airbnb.l.notmuch.email
+mail._domainkey.aribnb.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8PsZ4j1n78nG6uKWVgMgigfLuSDsSUuSukhQ72TtiGb9kMG3FNvaqcMfu0VQ/cSboEDlujYN1dgLLplNKkZ6lIIAtR7/e4cHzRA+hKq9lPOgrrVafXo+F4Uh7uQNZ217/DAOUbqyjeWzXIi9QCyckNZlW3W+bY+Pzel06RK+HwQIDAQAB" )  ; ----- DKIM key mail for aribnb.l.notmuch.email
+mail._domainkey.autodesk.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDadJD7bxXa6yqkjAwEP4FFvsnEFPyK4iOizSoJIBAnwWpadCNSxz1gvmErirNBsl4FbY/UA2GOnQQLDJ2o4kpBJ1V5V8Nc32sVhiAnzdpsMh8KEePeOuIgI41D4sEsHsneDvHTzfcCfduiqw4/DaO8NJ3/Ye03eBIZ93D0yoWEkwIDAQAB" )  ; ----- DKIM key mail for autodesk.l.notmuch.email
+mail._domainkey.ccc-intern.l    IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCcBzP28bzYQwHaRgSAUKWStpfHRgw7gcFiW58UY4w2Kn2c+f6rlTs06mvE4bP5F0MpXYDTg2P0KYi3XEQyId4kJtlVYQG1umTc2d5XXCd6MKw9rW8KCw13yeFyBFNfm0UH5ZENFVGZ93dOMlaxOR5m5vg5fswYheRrzVFF72tUlQIDAQAB" )  ; ----- DKIM key mail for ccc-intern.l.notmuch.email
+mail._domainkey.colab.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDbGoQCFftz6/veYtJ5i0sC2hrhb0Oit63WuWbG2S4pQQINBgwYiM3pw7aKsIEcw+uogfkxjghpQ+a352MQQ+bJlrjlSlX1NUPJDJBnQ8xTNCqdryqF0ijLlq32B2sR70heEQ05SGdmGlva0FZzpbmAqEWOBHYXTwMnqwADVxfPYwIDAQAB" )  ; ----- DKIM key mail for colab.l.notmuch.email
+mail._domainkey.drbd-announce.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/8D80N0d/GfV5eG3BBmTLDuiY92hjDol5KlUe4vzGj4xRl0nOL1esHOrGO6dyRZ2EpmBihrjKDy4xSZu1yq8z8tuwlZUQ/bszJyZiBH6q6sRnTPHgj6rsem77by3pdZCHtxIg2Ns6h/RUKgAHTIfiSL6hhY48PUHAkkbpvAHTfQIDAQAB" )  ; ----- DKIM key mail for drbd-announce.l.notmuch.email
+mail._domainkey.drbd-dev.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC94FlmLcp4pirq7YJhSDgROUYGliDOOW1eZU8R+yPqCv16RjQVoCOXvRihpFTommGW7EFpkBJwo1XWurcc+ZYKtsPjY7XRT7lJ99UAN8o6bU97q0EYopIM0cPQ4Odr90KLxbcW3+tHwrPcxdi2QkGcI1v+VoWhXXow6VFZGB+5CwIDAQAB" )  ; ----- DKIM key mail for drbd-dev.l.notmuch.email
+mail._domainkey.drbd-user.l     IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDJ+JI8XKSQwJV0zsTTmzIPRIcUYemYgt1UFaFOo42qDEvB7KA1ZkFg1DiDkpxEUqS2r2Npea+/gsioGK8L54uBX5jbboMrQdYw1R/q1pq3+H4PuagSvbxqjM6wD11luOnnfA2zgSt7gCZk57A4p9fMHddAT9R2+l90OuiU8gkASwIDAQAB" )  ; ----- DKIM key mail for drbd-user.l.notmuch.email
+mail._domainkey.dri-devel.l     IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEmxscpeoi4BMxsDOKiX8IeTiIPY2l332xSFGYvGsuIUfrhjf8hugscVF5lSPKssbCAIs6ig4vpi0fKFUNYJIaNCa5DkghuRG6laFjbsORWPwdA9Zbz5/2JNY+mad9ZHivZ1hWtqYCh0jEMsudOK3ujpQQ4ThJrT0SzU584HgLxwIDAQAB" )  ; ----- DKIM key mail for dri-devel.l.notmuch.email
+mail._domainkey.europecar.l     IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC0RKTc+9wj7bEo6mek44s5iqNhWoI8xYo0inUutACD8tgOFS4Wy3PdKoOp12mQSlXISIQybrAALVwBMlXHdYa/ny0ZPec1dCKyj8t855uOQx/nqsfu/TDFy9vzbeSE/JeJmVk5NlDr20xO/dp2n4npujCNbLwaL39TrMcXJqBXKQIDAQAB" )  ; ----- DKIM key mail for europecar.l.notmuch.email
+mail._domainkey.ewelink.l       IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCgDZadioaO6ZkxRMOZXSIENWcNYK+PledK20vfBn9/Uh9CENSPtiJlG4pNC3g8KWUI7BgLRw2ov6nijCORm4Mb9ZC6Hd8ULnFlkaUZo7XgDKaTmKdbPGgjMH9Hk9h84nIRVDa9YZpWOqA7o9K1BBRFIxxYKxk/SK96mNl6RPYQoQIDAQAB" )  ; ----- DKIM key mail for ewelink.l.notmuch.email
+mail._domainkey.freeswitch-users.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDL7Xej45v8m6Dk2Iznq8JI5NPzb751gehtYzoa6jV3F1lxTX5pYj6mDojyVqFBqavugsxlpq5aVGY7yxJgdzJDcWYvD1x2GXabSHILcNKwtKsKvGHExDNWJAg5wxEuzA3fYK/VI/9l+bqdJfkAMDxFeeNysDtjgx2UZAPJaVLhRQIDAQAB" )  ; ----- DKIM key mail for freeswitch-users.l.notmuch.email
+mail._domainkey.gearbest.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCrqnomR1Miho4pY+2TgcgRLQNZmEi7Y+YJ/+2SwURzVyVNYWx923VnSawT1DoYZMf7Mor94WkhYyXkVBXb62J4GTi5cKqXSKGDPE4AQ1iv/5/BROYaOSTeHCsvJD+9OnitsCLIrSIOw409TUt8bvJaFl1fYoOc6FIOHgAHIt/V1wIDAQAB" )  ; ----- DKIM key mail for gearbest.l.notmuch.email
+mail._domainkey.github.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC6sTSuUOspVWh+hwx+tZApoV/w5/376oi7ZeiQInGLNNcIyIm4YjrLDtzpTLMC4KPCoEyaACdcJkoyG+aFhwK1LqSKMaV/yqaiAffcncP43qAvMpnQ5sQroE5hfcuAFoZ/C0P3vbe9f+esiH9rqC09JGXp6Rvd3kutXqWng0ywsQIDAQAB" )  ; ----- DKIM key mail for github.l.notmuch.email
+mail._domainkey.gnupg.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOtXObrS9QjmXnGvrSnoDOnbWEFYrs/WOkOXmCKFn85R68fy87yeCLPl2+NDuDy3vY3TK7QLc6Lypop9xKsekiPOz64zwA2gm/BP+ex12Jl0fBPKSJuM/g9Mr32/0bq4zMO6Tj6w4zHJ9veghaqKhkb1RTN8x3ZAHk18sBy6aX5wIDAQAB" )  ; ----- DKIM key mail for gnupg.l.notmuch.email
+mail._domainkey.gnu-security.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDFWYEy4elH1+/AfDIVjyDMSvZkn2TxUvVFmZQUYbl6a/vVUrUgHCey6/xQABLbJmABZtGi6fHR+BXez5NxrSmw5fnKgSwQQHoRL5xx7bbojiGpoT0U1Qfkqmv5XvQazhIb/NnYg2DcD7Caf7mw0PILCwczIBnZ4eJ09PdbAqg/iQIDAQAB" )  ; ----- DKIM key mail for gnu-security.l.notmuch.email
+mail._domainkey.grub-devel.l    IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCywzud9F4+x9W/kYjzXop1He4+t/oXMdASqUNgcoMVAUxLh3bfPOdZt2Vc+cSb7qv34KXEdt2UnV0bublLIGzAgA+PapC7GFA6NbAE9kVNUHCG4G6VchxbDwgum0LRcgI2N2YMe460riw0ytIVcD1PhwWvieFSzkKXZZkmR3MnkQIDAQAB" )  ; ----- DKIM key mail for grub-devel.l.notmuch.email
+mail._domainkey.haskellx.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWdX+TU0WalBN+u5RZgj6b99pjy8KxZ/sOOmzY4aGDB2ysUp3mtjtz5fniwKvtXfUg9XtSIAHBCfl4TRjs2br9xLJVQ64LQgfRW5czkpqgptTQuPuHneqWOHuwXCrMRtGBvgfHce95ujtpRBosC6Kb0/D9malMy3KLojy8lX6JBQIDAQAB" )  ; ----- DKIM key mail for haskellx.l.notmuch.email
+mail._domainkey.klick-tipp2.l   IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/PTvqNUUHpC5X+4WxuCAq00Ys+knCR06lY4O3Xqd/ywztZ6ta00faw60WXN6DhLBs1bKowBUG4yTsVTkMgpUv6nZqR/CRKE7emmIgXaWwqNfRDsZRWgI0L1uSOi5jgfyiGj/TpeBT4bJN4pjYxuidaotCuQXRayZvjaj86JGpNwIDAQAB" )  ; ----- DKIM key mail for klick-tipp2.l.notmuch.email
+mail._domainkey.klick-tipp.l    IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKhMVrZFvIxtVeRvWggBAcuhXu4QS8HSXjYjZImZBWhLIRcV9+cGFQJrDHh8h2X0kn7D9XBBsPS4/bASLTJZzlTmJkRKCtlgrk/vIenR+01H1qN2O1jysgb48VNvK5NqCkXiKPQht17Oj4oLg/T0ZvqZ+FNNeenZQXFpa1ujVKWwIDAQAB" )  ; ----- DKIM key mail for klick-tipp.l.notmuch.email
+mail._domainkey.libc-announce.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD1KRgMBIJwUcTe17n2qwyfRX25YLwKjM1wpYx5VVKtlcvO5j6bnoCDireIfXxBqLeuQllRyC0EBrybDDAiBDwghGa1hHu3J0iXQNJtH0d64M2ltZNDkmTw0pJcwFHX71ZhrH7h8Zo/vej2GdKxDoAkRma4D1KqrK2KALd/3sUGSwIDAQAB" )  ; ----- DKIM key mail for libc-announce.l.notmuch.email
+mail._domainkey.linotp.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCQz6OWFcaRV10XGqxUAYl0tn7ESSULRUVqvoTRYqgb6HmJWwdkqLAw72Udz+F0e4MNyiv54aIWi/JG/TZ1t8VpdxP8UqH+OKA/ffmyXfeIBZCOnqn9sEYq0MMEWaZS8fM7xeSAQU1fzJqqNfsE3aM538mntcqih93tmo95ktPCnwIDAQAB" )  ; ----- DKIM key mail for linotp.l.notmuch.email
+mail._domainkey.linux-stable.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfM9r9CBwL28pHvYqpVOvLkcHrue/9bfLKYSfw9FqbrZduLpgVXDGlS443rqgVq6Ann5+gauCJymBOBFBeREQOE+mPHv/XzECTAuusMh/HLQV5P33Uy34YTYv1F6mgf4YckcNn5JgPurS+HeX/Kv/Z1YlVjSkb6L8IT7w2bft13QIDAQAB" )  ; ----- DKIM key mail for linux-stable.l.notmuch.email
+mail._domainkey.lobsters.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9LNcTfcjCMH3a2fYTt4Ki+JHd0A+xGjF66ZmUQ/sJYn17R0Ytil2baOfnOC9HdttM4IQgVRBVws70j3SA7YfsB5WwGaqFqxawhZXj9ya1H1uKzmMynwFt2I7PMqW7Ynj5ToXDoox48JcQrHXK/9+ONa6hZHQ5gMhEww/vTL5qpQIDAQAB" )  ; ----- DKIM key mail for lobsters.l.notmuch.email
+mail._domainkey.lwn.l   IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDE6xdjxpNxsISevXtTjKJcPZSGn8PWG2yv+fQyhjE0CSBvKjG4GlVuKxpfng+2ibPXSMVbO/CL4Iy4eCYpH5WL9u93bC4ambZ4F6SzunbZfAIeexVhU7k98BgTsX6+C3LsgKpxtO/mEt+apE3BqRVxHlNiXMupI4taWZOYrneLgwIDAQAB" )  ; ----- DKIM key mail for lwn.l.notmuch.email
+mail._domainkey.mattermost-sec.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDPQdR5If5LNn/IP+ZLGmh3LtB91VP8dMb5pQb5grO6nkFsPm4x/xAQpRrX2K6AJSpZstKGv0DMO1AidhbX9SQ0hy0kAfZc5vbJfq1EEDs/N0Y+4IYZLVglLx/MY7yC8fO9py4u5UmhdNsNeFHx6/is2u0Iu3r3aXrTYr5mgxAUeQIDAQAB" )  ; ----- DKIM key mail for mattermost-sec.l.notmuch.email
+mail._domainkey.nginx-dev.l     IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgIk/eCZZKGzpGun2dG8U2V8A1emRiIwuqINjMsxs4iYVhLRjY2LoWyj8ZeOgevIuUyNiaNQuS+sKn8YCTLxKY/tB25rUJwqZaiX0xv5PG9DVSfvDbZOsrjibNKA9svajdmm48GGFoCTOZOP1ZTxTx2L3zRisDnef7knGth/JxfwIDAQAB" )  ; ----- DKIM key mail for nginx-dev.l.notmuch.email
+mail._domainkey.nix-devel.l     IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9DXUHXNDRm2oV3w80d63YKcg1vGOajfsvQRubOhM043uUsS87/eNwrTXWXoJlLdlL6yrRpsFVbl/L/mboOrjIp9MQ+zZL5/81elZFOJ8006ZgtYP4+ZSeL2SZP2muQX+WqAqoyTWwc2ivURx7FlADElQwOJBb0b2x0qsgsaVzvwIDAQAB" )  ; ----- DKIM key mail for nix-devel.l.notmuch.email
+mail._domainkey.nix-security-announce.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLkH2lpPFsmI01DLJAMriTgmKbu5HalMd5ap1wPJft30Y2EFpv3lPpf9CCefbkFXFzpfEf9qjUupx262U0keorIQ2kU12TxAC7GP61NZBdUPy2PiolaIxUN+GPlgF5wBoLFdFZGH3lMKKbM2SC2xCzAn3dPr6Or9DeRP3LndUstQIDAQAB" )  ; ----- DKIM key mail for nix-security-announce.l.notmuch.email
+mail._domainkey.openbsd-tech.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOcx9huCKsDJ/LPiy8B4Bsk8+XQZCiFBOOpYfwdgoZ/zSA/X7NByxqwQr+X8HfJje/k2vELVaiKDFUOxJ0W2yX4ZhDDHtG3W+D396iMolJ+IH+/k59loQ6tm9M2jj3CahTMAzatb45PRtYWWgKNAozQY3QC3mVov0oU+EnBz8fgQIDAQAB" )  ; ----- DKIM key mail for openbsd-tech.l.notmuch.email
+mail._domainkey.opencollective.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDGmJa0ruCgYSx8i8X2hQKTMd8yEo0jEvE0j5w27sU0D+C12HfenuAXoA1PpYh3iEWWjAyq6vTd0P0hkzsvllOz/Y+bnNQAelyGM51o0wIZmfTZwe7qxwM6RPVp0mGSecBx4X2ZeQ9NE2dvq0navDlhRy5Zzq/GogZTffHgqYxGnQIDAQAB" )  ; ----- DKIM key mail for opencollective.l.notmuch.email
+mail._domainkey.oss-sec.l       IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhC+PY0sTOcTeiTzyuclWxRb+xqZxb8cQi+c6GYbUr/Bm/tZ+MVWY18oBgs33U4U7PP4ASNP9+GIiVK8Xn4eF9wyuu/nh8ECRN/HBZGN0obs2BN+lVyiTce4EURNe6adThGv8/S7VYSvZKWXDjezH/54Ku5SXGirMXpU7wW0/1KwIDAQAB" )  ; ----- DKIM key mail for oss-sec.l.notmuch.email
+mail._domainkey.parsec.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDL8ddzYfJnysIv4E/GtSNbMYZGRxhDAA5R3fRyF8W243HiRtICBt7R08MEcRT6F+v/6Z2+qfuy+GDys64MGF+VxUWZRBfu+dC/62zT3kz0StANM4MB++PwgaaPTMcmG82eS69OrUaFFFCKKI722KzPZ1CIt3Fxcy0yJugOF1d5hQIDAQAB" )  ; ----- DKIM key mail for parsec.l.notmuch.email
+mail._domainkey.pushover.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC4d/eNrqCZFmdqAX2bCY1ZXzCkHl5Go8feCY2YSkaq5T5a0gJ6awxwzLzDd548e06taDdJ9ZvpVpx8TRdJgJd/TGcgiGPh82gfYAjnkrLEqdTH9urTe7wftjaxbbyrZV4OjWVLFoK7zm8R+tRhjJi08bX2fu42N2HqXZShrabxKQIDAQAB" )  ; ----- DKIM key mail for pushover.l.notmuch.email
+mail._domainkey.pystada.l       IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC3m0PIpEQBm/5bAjrGX7Pk1RlDVAJP2jc8LG5CSxFUoRpXxraYsTBKT93pW9oxNpoBjdoPnTXAWCeDEV1Z1GYSdIcSdn995q/SU2dg5yP0Bl92A+IXfrVcpwzMcX0BWUD1oY5b8ozBmQBXLZIRL3M87tvM7FmJXw/2AFNjPRtb/wIDAQAB" )  ; ----- DKIM key mail for pystada.l.notmuch.email
+mail._domainkey.redacted.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD0+CgsxcbLKeqlF7/wlKIkzgL/zl0xojdkYWcbFX9QOY8o4udiwla70dDElATSUTlLQIsbeBAVCW0vcidTsqjkWxU2GoSxB6ZVoY0q24jsu0GPOyIo9AoiHciCpjz49LNixBYjc6S72bAhhwOvi+SZKpmTF/eEdv2madQt6X/a3QIDAQAB" )  ; ----- DKIM key mail for redacted.l.notmuch.email
+mail._domainkey.rhsa-announce.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDUbatfnN4cM3T6s7OpSoWkMhZQVy05WxzAY+pO6ohIp3Oam9gMD7iyiXXUbuRnv1mwDhY9OXwqyXavu3YXvKgr4xkKc9m9V+0k4jgtkuWk+zxCFMpiErL1+lss3zNCO3HpzvSY1G9FvpcWR7lOG1mdWl4n1Vy8FxXbM0htEWOoOQIDAQAB" )  ; ----- DKIM key mail for rhsa-announce.l.notmuch.email
+mail._domainkey.ripe-members.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDY+fByLjHNxtfUm36RVvzEUXpgMWrwO+1DETRJprnIoWOwl/dS0dyArK3eVfIqsGLLTeVOo/58FKFblgEIvB37vJZ7UXI48RHhTeTDLo1ZKcECsYEUVkJhdw6lhPqNyP3mdzgGiEiED5wBwWOmaGeH3HAvbTY2jrLYycQpXJU9AQIDAQAB" )  ; ----- DKIM key mail for ripe-members.l.notmuch.email
+mail._domainkey.skype.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQ7Rl7e43naVWaWrxeNkJSM5ti5UQEuj682toMgUj9bdlgzMgRm2H+bw1qNVKX7SBluBbxLpnBwu6VOvmIuw9+ebZ42KZxnp/cO3oAZzhpyYCulX+0mOeeMYA+YUhyx6RTGHpkQSJc0vFaxzKxmpExa2YPE795+Vjzmq8dy7ZJlwIDAQAB" )  ; ----- DKIM key mail for skype.l.notmuch.email
+mail._domainkey.slackware-security.l    IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC2TzC95t6iB0tZ7fnWEn1QwWvS90ooYoyT/nY+HLXXxOnl98JjCyke//23uz2/E5ycCc1FvsrvSwM8fuQ29Xiyp7FZQN7LDvsqi1j0/nh5P4chE4JEbuTZvQ56B7vNOIf+9Ydjh5HAVpmw03Divh3U8brE6Cw6FFn90kJQNMdUtQIDAQAB" )  ; ----- DKIM key mail for slackware-security.l.notmuch.email
+mail._domainkey.sle-security-updates.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/vFjT9n472kp7L7nCz/EEL1cdaYhPljNu3RnB9LyKjbZlbgcN7t1bmUuxZpJn+V6PNbsSlbrI6qk3ubdftmwMAtBol7VXD4xcmwc3wrijehsRZ/iCctFJgOe/kOM8abBuOw2p2V4OrdXvOodOPp/hxTn22RYV5n55D9g9v4s7wwIDAQAB" )  ; ----- DKIM key mail for sle-security-updates.l.notmuch.email
+mail._domainkey.srht.l  IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDboDVBCwU3QKGRCk8k1+hxsrJooLcIBv+BDAkOD6k0Io84vwcvfzK+OGg8HnneHQxibhcRtqcetJj8yTzGcV+SkwK87txbRgdqUBRcwT2DzJPJz2Jb3GmrurcCgMDJ/YZ8b5c4t8MKBwtFWLTKUGTtlqW2hpO34wTsS0gOCwKc2QIDAQAB" )  ; ----- DKIM key mail for srht.l.notmuch.email
+mail._domainkey.stickermule.l   IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC32h687eGPHA1YZke8vo+oxSUadDBk7iraZ7gjFffG7iV+bEJ6ens1JlbqUKoa2JOjA3gP3GDoVzAz6MaFwr8TkU4MsQxmAikzsy3Wc7FRTxeIVGJurPPIimhe3246PdQ8FOIUr3k69ZcmjZ9Re4VPZ7USIG78Ko8LhZevwzVphQIDAQAB" )  ; ----- DKIM key mail for stickermule.l.notmuch.email
+mail._domainkey.systemd-devel.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDGK5KonTuSLKBlE7cV6ycRyhHc9bsf8UYjadjH5j0IGEqm3ZUNwea8ij/lmr7G3ApGAglksicbUZZBHi3UVMWLAYKr3jRaUfEjSFniKgXBlkOykTIFySahn2SlSTgnMCQUhQqJRWxto8KKcxLkWecKLaKjvKb70anF9zL1GAGNNwIDAQAB" )  ; ----- DKIM key mail for systemd-devel.l.notmuch.email
+mail._domainkey.tzdata.l        IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9NiTgh4EcYqYLB5jj8lTqxEUsWjPuYEbT6hj9AYFb8p1pb6i0p032MDnzLWp6VlXcziE0zX28a2SvvMrmnuQwCG391+y9XAe0YO8mobsgpvZZDS3FJZD31tBzs8w1C+cktqG9GC/bVSAK/esPboYcz4DOa6LniS6GkzdE25M7YwIDAQAB" )  ; ----- DKIM key mail for tzdata.l.notmuch.email
+mail._domainkey.unsplash.l      IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWhIWisiOafALkIGOgiEnZcMgoFjd8qK+FHxxBD5saBDjtHw5nhhiaJHQo7R7UK9t491nFjjFEYhZVtgViLvv4/9yEf6mhG0f78YNFbDhun9sO3i/P3NJN03IIrei8pBxKAYw3QUPAnj+yfDQXgHs+BmNxOFH6+Vj/lggJGX/fpwIDAQAB" )  ; ----- DKIM key mail for unsplash.l.notmuch.email
+mail._domainkey.xxe.l   IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKWwcgRL+deVgzq2uV3TzUAdjL+1P3vBC+e7MSN4R+NHcK4AbRxEZ6yEjR0KqTLp2ftFz+ZYhsqPAsu1aUT/JNL3/lIleBgLdysJGC4HLfehRFmEubjuWZ7K6o1GfvNHzmHKTg5pQnkd08D7wZJ7rqOPHzmQAbuJ/Yhu1vPxCJiwIDAQAB" )  ; ----- DKIM key mail for xxe.l.notmuch.email
+mail._domainkey.zsh.l   IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDYU0G6FvMn2KpPbhiQIeoQee24K9tY+B8KcaL85Ov3IaiLnuaXC0f7ufznR/TXotDXOW7LssY1xTOWRYVfXZeeSk10UKeSpf6zb1pwstyHps4/eV6BN74kj/X9rvWzLYcP8HPaGBADTfpeeakGr6evoZoRcykJCfTVZJ8uo7D8NwIDAQAB" )  ; ----- DKIM key mail for zsh.l.notmuch.email
+
