@@ -17,6 +17,7 @@ in {
   imports = [
     snms
     ../../profiles/hetzner-vm.nix
+    ./backup.nix
     ./radicale.nix
     ./roundcube.nix
   ];
