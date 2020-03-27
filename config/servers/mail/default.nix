@@ -131,6 +131,9 @@ in {
       vsz_limit = 368MB
       process_limit = 10
     }
+    protocol imap {
+      mail_plugins = $mail_plugins imap_zlib
+    }
   '';
   services.postfix.config.lmtp_destination_concurrency_limit = "10";
 
