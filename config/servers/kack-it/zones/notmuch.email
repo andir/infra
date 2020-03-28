@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
-                2020010322 ; Serial - date by convention
+                2020032801 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -116,4 +116,5 @@ mail._domainkey.xxe.l   IN      TXT     ( "v=DKIM1; k=rsa; "
           "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKWwcgRL+deVgzq2uV3TzUAdjL+1P3vBC+e7MSN4R+NHcK4AbRxEZ6yEjR0KqTLp2ftFz+ZYhsqPAsu1aUT/JNL3/lIleBgLdysJGC4HLfehRFmEubjuWZ7K6o1GfvNHzmHKTg5pQnkd08D7wZJ7rqOPHzmQAbuJ/Yhu1vPxCJiwIDAQAB" )  ; ----- DKIM key mail for xxe.l.notmuch.email
 mail._domainkey.zsh.l   IN      TXT     ( "v=DKIM1; k=rsa; "
           "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDYU0G6FvMn2KpPbhiQIeoQee24K9tY+B8KcaL85Ov3IaiLnuaXC0f7ufznR/TXotDXOW7LssY1xTOWRYVfXZeeSk10UKeSpf6zb1pwstyHps4/eV6BN74kj/X9rvWzLYcP8HPaGBADTfpeeakGr6evoZoRcykJCfTVZJ8uo7D8NwIDAQAB" )  ; ----- DKIM key mail for zsh.l.notmuch.email
-
+mail._domainkey.linux-btrfs.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCuFaTKsW/JqnzMFkytFyvb3B6dwLKMfJYS0TNrYc5vM/QhUMbL5aXrbKLWs5ZR8rFdR7uPcQF79QnDxKwcHTjjL7LEuVBuWbFxfApWeuMa3AD8YtY8COa1AAJEcVjQhbaxfaE5oXRRhkJ3Kl1+CAtgU0PHr6MsErne6h1PZXokoQIDAQAB" )  ; ----- DKIM key mail for linux-btrfs.l.notmuch.emai
