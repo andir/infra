@@ -89,12 +89,20 @@ in {
     "/var/lib/radicale" # radicale files (contacts, calendar, …)
   ];
 
+  # monitor that all the configured domains have a "valid" MX record
+  # I lost some entries in the pase due to slight differences in bind vs knot
+  # zone interpretation when more specific records in the same file exist
+  h4ck.monitoring.dns = lib.listToAttrs (map (domain:
+    lib.nameValuePair domain {
+      queryType = "MX";
+    }
+    ) config.mailserver.domains);
+
   mailserver = {
     enable = true;
     fqdn = "mx.h4ck.space";
     domains = [
       "kack.it"
-      "foo.bar.kack.it"
     ] ++ secrets.domains;
     loginAccounts = {
         "andi@kack.it" = {

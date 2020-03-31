@@ -9,5 +9,6 @@
     ../../modules/ssh-unlock.nix
     ../../modules/syncserver.nix
     ../../modules/knot_exporter.nix
+    ../../modules/blackbox_exporter.nix
   ];
 }
