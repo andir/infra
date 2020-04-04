@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
-                2020033002 ; Serial - date by convention
+                2020040401 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -168,4 +168,6 @@ zsh.l     IN      MX      20 mx.h4ck.space.
 mail._domainkey.linux-btrfs.l IN      TXT     ( "v=DKIM1; k=rsa; "
           "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCuFaTKsW/JqnzMFkytFyvb3B6dwLKMfJYS0TNrYc5vM/QhUMbL5aXrbKLWs5ZR8rFdR7uPcQF79QnDxKwcHTjjL7LEuVBuWbFxfApWeuMa3AD8YtY8COa1AAJEcVjQhbaxfaE5oXRRhkJ3Kl1+CAtgU0PHr6MsErne6h1PZXokoQIDAQAB" )  ; ----- DKIM key mail for linux-btrfs.l.notmuch.emai
 linux-btrfs.l     IN      MX      20 mx.h4ck.space.
-
+mail._domainkey.remotecommunication.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDW1wXvkKQizP37HM7NCS8las2dGeRkN/XxRLbK/3VyEq3xbWGipC1GP90/yTkHGS3bXo9p2IW8+NtkQ7I34AFRfXyRGLY2rWJlmG65MrwoWtfrZZk0ff7/eCZlWB03TaqWcmRyXOxfPYOyvhnd4Jgql6hhzr9xelADMqLlcj1lywIDAQAB" )  ; ----- DKIM key mail for remotecommunication.l.notmuch.email
+remotecommunication.l     IN      MX      20 mx.h4ck.space.
