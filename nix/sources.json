@@ -67,7 +67,7 @@
     },
     "nixos-mailserver": {
         "ref": "master",
-        "repo": "git@gitlab.com:andi-/nixos-mailserver.git",
+        "repo": "https://gitlab.com/andi-/nixos-mailserver.git",
         "rev": "9878387845fd6ad615e5ed4dabd3bc6af23e9fec",
         "type": "git"
     },
