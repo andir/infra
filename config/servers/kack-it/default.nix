@@ -4,6 +4,7 @@
     ../../profiles/hetzner-vm.nix
     ../../modules/ipv6watch.nix
     ./dns.nix
+    ./blog.nix
   ];
 
   deployment = {
