@@ -33,8 +33,6 @@ let
     git clone "$GIT_DIR" "$TMPDIR"
     unset GIT_DIR
     cd "$TMPDIR"
-    ls -la
-    git submodule update --init
     exec nix-build "$TMPDIR" -A build -o ${home}/current
   '';
 

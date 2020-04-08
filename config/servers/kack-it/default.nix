@@ -2,6 +2,7 @@
 {
   imports = [
     ../../profiles/hetzner-vm.nix
+    ../../profiles/webserver.nix
     ../../modules/ipv6watch.nix
     ./dns.nix
     ./blog.nix
