@@ -66,7 +66,7 @@ let siteName = "jh4all.e"; in
     "kack-it" = {
       inherit (config.h4ck.backup) paths;
       compression = "lz4";
-      repo = "borg@epsilon.rammhold.de:/home/borg/backups/www.jh4all.de";
+      repo = "borg@zeta.rammhold.de:/tank/enc/borg/www.jh4all.de";
       encryption = {
         mode = "repokey";
         passCommand = "cat /var/lib/secrets/borg.password";

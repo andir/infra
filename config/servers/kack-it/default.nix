@@ -54,7 +54,7 @@
     "kack-it" = {
       inherit (config.h4ck.backup) paths;
       compression = "lz4";
-      repo = "borg@epsilon.rammhold.de:/home/borg/backups/kack-it";
+      repo = "borg@zeta.rammhold.de:/tank/enc/borg/kack.it";
       encryption = {
         mode = "repokey";
         passCommand = "cat /var/lib/secrets/borg.password";
