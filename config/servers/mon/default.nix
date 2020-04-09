@@ -1,4 +1,4 @@
-{ lib, pkgs, nodes, ... }:
+{ config, lib, pkgs, nodes, ... }:
 {
 
   imports = [
@@ -41,6 +41,12 @@
   #  enable = true;
   #  listenAddress = "localhost";
   #};
+
+  # use my custom `grafanaPlugins` attribute to enable plugins on the installed grafana
+  systemd.tmpfiles.rules = lib.mapAttrsToList (
+    pluginName: plugin:
+      "L ${config.services.grafana.dataDir}/plugins/${pluginName} - - - - ${plugin}"
+  ) (pkgs.grafanaPlugins or {});
 
   services.grafana = {
     enable = true;

@@ -1,4 +1,4 @@
-{ stdenv, grafana, writeScriptBin, symlinkJoin, writeTextFile }:
+{ stdenv, lib, grafana, writeScriptBin, symlinkJoin, writeTextFile, grafanaPlugins ? {} }:
 let
   provision = symlinkJoin {
     name = "provision-files";
@@ -76,6 +76,9 @@ in writeScriptBin "grafana-devel" ''
 
   ln -sf ${grafana}/share/grafana/conf conf
   ln -sf ${grafana}/share/grafana/tools tools
-
+  ${lib.concatStringsSep "\n" (lib.mapAttrsToList (
+    pluginName: plugin:
+      "ln -s ${toString plugin} plugins/${pluginName}"
+  ) grafanaPlugins)}
   exec ${grafana}/bin/grafana-server "$@"
 ''
