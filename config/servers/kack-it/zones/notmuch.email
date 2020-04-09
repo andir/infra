@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
-                2020040401 ; Serial - date by convention
+                2020040902 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -12,6 +12,7 @@ $ORIGIN notmuch.email.
         IN      NS      ns2.h4ck.space.
         IN      MX      20 mx.h4ck.space.
         IN      TXT     "v=spf1 mx -all"
+
 l       IN      MX      20 mx.h4ck.space.
 l       IN      TXT     "v=spf1 mx -all"
 *.spam  IN      MX      20 mx.h4ck.space.

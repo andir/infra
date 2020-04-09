@@ -165,7 +165,7 @@ in
           ${lib.concatStringsSep "\n" (lib.mapAttrsToList
           (_: slave: ''
             - id: ${slave.name}-${zone.name}
-              action: transfer
+              action: ["transfer", "notify"]
               address: ${slave.address}
               ${lib.optionalString (slave.keyName != null) "key: ${slave.keyName}"}
           '') zone.slaves)
@@ -173,6 +173,7 @@ in
           zone:
             - domain: ${name}
               file: ${zone.name}.zone
+              acl: [${lib.concatMapStringsSep "," (slave: "\"${slave.name}-${zone.name}\"") (lib.attrValues zone.slaves)}]
               ${lib.optionalString (zone.slaves != {}) ''
               notify: [${lib.concatStringsSep ", " (lib.mapAttrsToList
                   (_: slave: "${name}-${slave.name}") zone.slaves)
@@ -206,6 +207,10 @@ in
         slaveZoneFiles = lib.mapAttrsToList slaveZoneFile cfg.slaveZones;
 
       in ''
+        log:
+          - target: syslog
+            control: debug
+            zone: debug
         server:
         ${lib.concatMapStringsSep "\n" (addr: "  listen: ${addr}") cfg.listenAddresses}
 
