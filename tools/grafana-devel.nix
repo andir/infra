@@ -62,7 +62,7 @@ in writeScriptBin "grafana-devel" ''
   export GF_SERVER_STATIC_ROOT_PATH=${grafana}/share/grafana/public
   export GF_AUTH_ANONYMOUS_ENABLED=true
   export GF_AUTH_ANONYMOUS_ORG_NAME="Main Org."
-  export GF_AUTH_ANONYMOUS_ORG_ROLE="Viewer"
+  export GF_AUTH_ANONYMOUS_ORG_ROLE="Admin"
   export GF_ANALYTICS_REPORTING_ENABLED=false
   export GF_SECURITY_ADMIN_USER="admin"
   export GF_SECURITY_ADMIN_PASSWORD="admin"
