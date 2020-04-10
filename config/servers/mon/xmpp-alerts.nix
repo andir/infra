@@ -6,7 +6,7 @@ let
     listen_port = 9199;
     password_command = "cat /var/lib/secrets/prometheus-xmpp-alerts.password";
     to_jid = "andi@kack.it";
-    amtool_allowed = [];
+    amtool_allowed = [ "andi@kack.it" ];
     format = "full";
   });
 in {
