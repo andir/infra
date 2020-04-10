@@ -6,6 +6,7 @@
     ./prom-targets.nix
     ./prom-rules.nix
     ./grafana-dashboards.nix
+    ./xmpp-alerts.nix
   ];
 
   deployment = {
@@ -29,18 +30,34 @@
     alertmanagers = [
       {
         scheme = "http";
-        path_prefix = "/alertmanager";
-        static_configs = [ { targets = [ "localhost" ]; } ];
+        path_prefix = "/";
+        static_configs = [ { targets = [ "localhost:${toString config.services.prometheus.alertmanager.port}" ]; } ];
       }
     ];
   };
 
   networking.firewall.allowedTCPPorts = [ 9090 443 80 ];
 
-  #services.prometheus.alertmanager = {
-  #  enable = true;
-  #  listenAddress = "localhost";
-  #};
+  services.prometheus.alertmanager = {
+    enable = true;
+    listenAddress = "localhost";
+    extraFlags = [
+      "--cluster.listen-address=127.0.0.1:9094"
+    ];
+    configText = builtins.toJSON {
+      route = {
+        receiver = "xmpp-notify";
+      };
+      receivers = [
+        {
+          name =  "xmpp-notify";
+          webhook_configs = [
+            { url = "http://127.0.0.1:9199/alert"; }
+          ];
+        }
+      ];
+    };
+  };
 
   # use my custom `grafanaPlugins` attribute to enable plugins on the installed grafana
   systemd.tmpfiles.rules = lib.mapAttrsToList (
