@@ -7,7 +7,29 @@
     ./prom-rules.nix
     ./grafana-dashboards.nix
     ./xmpp-alerts.nix
+    ../../modules/wireguard.nix
   ];
+
+  h4ck.wireguardBackbone = {
+    addresses = [
+      "fe80::2/64"
+      "172.20.25.1/32"
+      "fd21:a07e:735e:ffff::2/128"
+
+    ];
+    peers = {
+      "bertha" = {
+        remotePublicKey = "6A8qvwQnxOqo8EPntT7VmoR6PVUI7fHhE6zs8P7rVGk=";
+        localPort = 11001;
+      };
+      "gitlab" = {
+        remotePublicKey = "s6OL5S5GvUykOs1XVAWL2i6Mflk6niZ4BZhrHmdB5Gw=";
+        localPort = 11002;
+        remoteEndpoint = "2a01:4f9:c010:593::";
+        remotePort = 11001;
+      };
+    };
+  };
 
   deployment = {
     targetHost = "95.216.144.32";
@@ -37,6 +59,7 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 9090 443 80 ];
+  networking.firewall.allowedUDPPorts = [ 11001 ];
 
   services.prometheus.alertmanager = {
     enable = true;

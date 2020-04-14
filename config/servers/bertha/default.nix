@@ -1,3 +1,4 @@
+{ lib, config, ... }:
 {
   imports = [
     # custom nixpkgs since I need a very specific version of systemd-networkd
@@ -5,7 +6,30 @@
     ./nixpkgs.nix
     ./router.nix
     ../../profiles/server.nix
+    ../../modules/wireguard.nix
   ];
+
+  h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
+  h4ck.wireguardBackbone = {
+    addresses = [
+      "fe80::1/64"
+      "172.20.24.1/32"
+      "fd21:a07e:735e:ffff::1/128"
+    ];
+    peers = {
+      "mon" = {
+        localPort = 11001;
+        remotePublicKey = "SSywq3RQZqQDOBDNBIliVxTXVaOGwCPBpGkzZtvuSU8=";
+        remoteEndpoint = "mon.h4ck.space";
+      };
+      "gitlab" = {
+        localPort = 11002;
+        remotePublicKey = "s6OL5S5GvUykOs1XVAWL2i6Mflk6niZ4BZhrHmdB5Gw=";
+        remoteEndpoint = "95.216.155.219";
+        remotePort = 11002;
+      };
+    };
+  };
 
   boot.loader.grub = {
     enable = true;
@@ -22,7 +46,7 @@
 
   deployment = {
  #   targetHost = "2a00:e67:1a6:0:20d:b9ff:fe41:6546";
-    targetHost = "10.250.11.79";
+    targetHost = "10.250.30.254";
     targetUser = "root";
     substituteOnDestination = false;
   };
@@ -172,11 +196,21 @@
 
         iifname lan jump lan_input
         iifname mgmt accept;
+
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: _: "iifname wg-${n} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
+
         # iifname mgmt jump lan_input # FIXME: mgmt input should be handled differently
         iifname uplink jump upstream_input
 
 
         counter log prefix "blocked incoming: " drop
+      }
+
+      chain wg_peer_input {
+        ip protocol icmp accept
+        ip6 nexthdr icmpv6 accept
+        ip6 nexthdr udp udp dport 6696 accept # babel
+        ip6 nexthdr tcp tcp dport 9100 accept # node-exporter
       }
 
       chain lan_input {
@@ -185,6 +219,9 @@
         udp sport bootpc udp dport bootps accept comment "DHCP clients"
         udp dport { domain, domain-s } accept
         tcp dport { domain, domain-s } accept
+
+        # FIXME: move this to upstream once bertha is the real router
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
       }
 
       chain upstream_input {
@@ -193,6 +230,8 @@
         udp sport bootps udp dport bootpc accept
         ip6 nexthdr icmpv6 icmpv6 type { nd-router-advert } accept
         ip6 nexthdr tcp tcp sport dhcpv6-server tcp dport dhcpv6-client accept
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
+
       }
 
       chain output {

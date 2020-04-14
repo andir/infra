@@ -1,7 +1,27 @@
 {
   imports = [
     ../profiles/hetzner-vm.nix
+    ../modules/wireguard.nix
   ];
+  h4ck.wireguardBackbone = {
+    addresses = [
+      "fe80::3/64"
+      "172.20.25.2/32"
+      "fd21:a07e:735e:ffff::3/128"
+    ];
+    peers = {
+      "mon" = {
+        localPort = 11001;
+        remotePublicKey = "SSywq3RQZqQDOBDNBIliVxTXVaOGwCPBpGkzZtvuSU8=";
+        remoteEndpoint = "mon.h4ck.space";
+      };
+      "bertha" = {
+        localPort = 11002;
+        remotePublicKey = "6A8qvwQnxOqo8EPntT7VmoR6PVUI7fHhE6zs8P7rVGk=";
+      };
+    };
+  };
+  networking.firewall.allowedUDPPorts = [ 11001 11002 ];
 
   deployment = {
     targetHost = "95.216.155.219";
