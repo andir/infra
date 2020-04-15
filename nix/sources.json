@@ -1,14 +1,14 @@
 {
     "bertha-nixpkgs": {
-        "branch": "systemd-update-networkd-options",
+        "branch": "networkd-options-systemd-245",
         "description": "Nix Packages collection",
         "homepage": null,
         "owner": "andir",
         "repo": "nixpkgs",
-        "rev": "24683bdefb4c30f184c97418cc3ea4d76d4d7f83",
-        "sha256": "0qw49qk5fhj4g3jhj9vxq7p76w6i2a14iq9kbjy7ikxh5crp0hkr",
+        "rev": "6382db1aff3d8708d85d887e58e27f6c0891584e",
+        "sha256": "0x8l4q80f7rvrjsrlgylz1sfx238k11472y228b0b8sirmj6nfk6",
         "type": "tarball",
-        "url": "https://github.com/andir/nixpkgs/archive/24683bdefb4c30f184c97418cc3ea4d76d4d7f83.tar.gz",
+        "url": "https://github.com/andir/nixpkgs/archive/6382db1aff3d8708d85d887e58e27f6c0891584e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
@@ -77,10 +77,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "5fa2612ca277c6b4fabaf206594e0596a9d8a1b4",
-        "sha256": "0i80h7dv9hx2db0zndzh1vflwyz9qds8ijfvnp2rir00lvkcsn3j",
+        "rev": "f6c1d3b113ce9e7c908991df2e8eed02f03df1bc",
+        "sha256": "08z6qbjmx64bcil3cnvflb7bv9ibdizxcr63yvhgcqzsja7m51n5",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/5fa2612ca277c6b4fabaf206594e0596a9d8a1b4.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/f6c1d3b113ce9e7c908991df2e8eed02f03df1bc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
