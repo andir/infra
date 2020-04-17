@@ -27,8 +27,8 @@ let
       };
     };
   };
-
-in {
+in
+{
   options.router = {
     enable = mkEnableOption "enable the router module";
     upstreamInterfaces = mkOption {

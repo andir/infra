@@ -9,6 +9,7 @@ in
       ({ lib, ... }: {
         nixpkgs.pkgs = lib.mkDefault (import ../nix);
       })
+      ./servers/wireguard.nix
     ] ++ extraModules;
   };
 }

@@ -6,7 +6,6 @@
     ./nixpkgs.nix
     ./router.nix
     ../../profiles/server.nix
-    ../../modules/wireguard.nix
   ];
 
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
@@ -16,19 +15,6 @@
       "172.20.24.1/32"
       "fd21:a07e:735e:ffff::1/128"
     ];
-    peers = {
-      "mon" = {
-        localPort = 11001;
-        remotePublicKey = "SSywq3RQZqQDOBDNBIliVxTXVaOGwCPBpGkzZtvuSU8=";
-        remoteEndpoint = "mon.h4ck.space";
-      };
-      "gitlab" = {
-        localPort = 11002;
-        remotePublicKey = "s6OL5S5GvUykOs1XVAWL2i6Mflk6niZ4BZhrHmdB5Gw=";
-        remoteEndpoint = "95.216.155.219";
-        remotePort = 11002;
-      };
-    };
   };
 
   boot.loader.grub = {
@@ -197,7 +183,7 @@
         iifname lan jump lan_input
         iifname mgmt accept;
 
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: _: "iifname wg-${n} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
+        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
 
         # iifname mgmt jump lan_input # FIXME: mgmt input should be handled differently
         iifname uplink jump upstream_input

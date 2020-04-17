@@ -10,5 +10,7 @@
     ../../modules/syncserver.nix
     ../../modules/knot_exporter.nix
     ../../modules/blackbox_exporter.nix
+    ../../modules/wireguard
+    ../../modules/wireguard.nix
   ];
 }
