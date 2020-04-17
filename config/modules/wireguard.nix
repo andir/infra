@@ -204,8 +204,8 @@ in
                 ) cfg.addresses;
                 routes = map (
                   addr:
-                    { routeConfig.GatewayOnLink = true; Destination = addr; }
-                  ) peer.remoteAddresses;
+                    { routeConfig = { Destination = addr; }; }
+                  ) (lib.traceValSeq peer.remoteAddresses);
               };
             };
           }
