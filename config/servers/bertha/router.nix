@@ -64,11 +64,15 @@ in
     systemd.services."systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
 
     # if systemd is below 244 patch it to carry the new prefix hint flag
-    systemd.package = mkIf (lib.versionOlder pkgs.systemd.version "244") (pkgs.systemd.overrideAttrs ({ patches ? [], ... }: {
-      patches = patches ++ [
-        ./systemd-bacd67562b954a077a658a935c494f7e40a6c8db.patch
-      ];
-    }));
+    systemd.package = mkIf (lib.versionOlder pkgs.systemd.version "244") (
+      pkgs.systemd.overrideAttrs (
+        { patches ? [], ... }: {
+          patches = patches ++ [
+            ./systemd-bacd67562b954a077a658a935c494f7e40a6c8db.patch
+          ];
+        }
+      )
+    );
     systemd.network = let
       mkUpstreamIfConfig = name: nameValuePair "00-${name}" {
         enable = true;
@@ -91,7 +95,7 @@ in
           UseRoutes = true;
         };
         dhcpV6Config = {
-          PrefixDelegationHint= "::/48";
+          PrefixDelegationHint = "::/48";
         };
         ipv6PrefixDelegationConfig = {
           Managed = true;
@@ -104,10 +108,13 @@ in
           Name = conf.interface;
         };
 
-        addresses = (map (addr:
-            { addressConfig.Address = "${addr.address}/${toString addr.prefixLength}"; }
-          ) (conf.v4Addresses ++ conf.v6Addresses))
-          ++ [ { addressConfig.Address = "::/64"; } ];
+        addresses = (
+          map (
+            addr:
+              { addressConfig.Address = "${addr.address}/${toString addr.prefixLength}"; }
+          ) (conf.v4Addresses ++ conf.v6Addresses)
+        )
+        ++ [ { addressConfig.Address = "::/64"; } ];
 
         networkConfig = {
           DHCPServer = mkDefault true;

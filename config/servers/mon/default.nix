@@ -47,7 +47,6 @@
   };
 
   networking.firewall.allowedTCPPorts = [ 9090 443 80 ];
-  networking.firewall.allowedUDPPorts = [ 11001 ];
 
   services.prometheus.alertmanager = {
     enable = true;
