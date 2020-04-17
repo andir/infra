@@ -5,6 +5,11 @@ let
       name = lib.mkOption {
         type = lib.types.str;
       };
+
+      interfaceName = lib.mkOption {
+        internal = true;
+        type = lib.types.str;
+      };
       remoteEndpoint = lib.mkOption {
         type = lib.types.nullOr lib.types.str;
         default = null;
@@ -26,6 +31,7 @@ let
     };
     config = {
       inherit name;
+      interfaceName = "wg-${builtins.substring 0 10 name}";
     };
   };
 in
@@ -48,6 +54,7 @@ in
       default = [];
       type = lib.types.listOf (lib.types.str);
     };
+
     peers = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule wireguardPeerConfig);
       default = {};
@@ -130,7 +137,7 @@ in
 
         protocol babel wgbackbone {
           randomize router id yes;
-          interface "wg-*", "wg-bertha", "wg-mon" {
+          interface "wg-*" {
             type wired;
           };
           ipv4 {
@@ -155,17 +162,18 @@ in
         };
       '';
     };
+    networking.firewall.allowedUDPPorts = [ 6696 ] ++  lib.mapAttrsToList (_: peer: peer.localPort) config.h4ck.wireguardBackbone.peers;
     systemd.network = lib.mkMerge (
       lib.mapAttrsToList (
         name: peer:
           {
             enable = lib.mkDefault true;
             netdevs = {
-              "40-wg-${name}" = {
+              "40-${peer.interfaceName}" = {
                 netdevConfig = {
                   Kind = "wireguard";
                   MTUBytes = "1300";
-                  Name = "wg-${name}";
+                  Name = "${peer.interfaceName}";
                 };
                 extraConfig = ''
                   [WireGuard]
@@ -181,9 +189,9 @@ in
             };
 
             networks = {
-              "40-wg-${name}" = {
+              "40-${peer.interfaceName}" = {
                 matchConfig = {
-                  Name = "wg-${name}";
+                  Name = "${peer.interfaceName}";
                 };
                 networkConfig = {
 #                  DHCP = false;
