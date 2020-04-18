@@ -1,2 +1,3 @@
 secrets
 .pre-commit-config.yaml
+.direnv
