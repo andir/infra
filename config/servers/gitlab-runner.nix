@@ -1,7 +1,6 @@
 {
   imports = [
     ../profiles/hetzner-vm.nix
-    ../modules/wireguard.nix
   ];
   h4ck.wireguardBackbone = {
     addresses = [
