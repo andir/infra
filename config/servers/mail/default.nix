@@ -11,8 +11,8 @@ let
         loginAccounts = {};
       };
     in if builtins.trace path builtins.pathExists path then import path else default;
-
-in {
+in
+{
 
   imports = [
     snms
