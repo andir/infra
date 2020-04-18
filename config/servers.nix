@@ -1,7 +1,8 @@
 let
   inherit (import ./lib.nix) mkMachine;
   pkgs = import ../nix;
-in {
+in
+{
 
   network = {
     description = "foo";

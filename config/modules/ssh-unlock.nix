@@ -48,38 +48,40 @@ in
     };
   };
 
-  config = mkIf cfg.enable ({
-    #assert haveV4 || haveV6;
-    boot.initrd = {
-      kernelModules = [ "ipv6" ];
-      preLVMCommands = mkOrder 490 ''
-        hasNetwork=1
-      '';
-      network = {
-        enable = true;
-        postCommands = ''
-          ip link set up "${cfg.networking.interface}"
-        '' + optionalString (haveV4) ''
-          ip addr add "${cfg.networking.ipv4.address}" dev "${cfg.networking.interface}"
-        '' + optionalString (haveV6) ''
-          ip addr add "${cfg.networking.ipv6.address}" dev "${cfg.networking.interface}"
-        '' + optionalString (haveV4 && haveV4Route) ''
-          ip -4 route add default via "${cfg.networking.ipv4.gateway}" dev "${cfg.networking.interface}"
-        '' + optionalString (haveV6 && haveV6Route) ''
-          ip -6 route add default via "${cfg.networking.ipv6.gateway}" dev "${cfg.networking.interface}"
-        '' + ''
-          ip link
-          ip -6 a
-          ip -4 a
-          ip -4 route
-          ip -6 route
+  config = mkIf cfg.enable (
+    {
+      #assert haveV4 || haveV6;
+      boot.initrd = {
+        kernelModules = [ "ipv6" ];
+        preLVMCommands = mkOrder 490 ''
+          hasNetwork=1
         '';
-
-        ssh = {
+        network = {
           enable = true;
-          authorizedKeys = cfg.authorizedKeys;
+          postCommands = ''
+            ip link set up "${cfg.networking.interface}"
+          '' + optionalString (haveV4) ''
+            ip addr add "${cfg.networking.ipv4.address}" dev "${cfg.networking.interface}"
+          '' + optionalString (haveV6) ''
+            ip addr add "${cfg.networking.ipv6.address}" dev "${cfg.networking.interface}"
+          '' + optionalString (haveV4 && haveV4Route) ''
+            ip -4 route add default via "${cfg.networking.ipv4.gateway}" dev "${cfg.networking.interface}"
+          '' + optionalString (haveV6 && haveV6Route) ''
+            ip -6 route add default via "${cfg.networking.ipv6.gateway}" dev "${cfg.networking.interface}"
+          '' + ''
+            ip link
+            ip -6 a
+            ip -4 a
+            ip -4 route
+            ip -6 route
+          '';
+
+          ssh = {
+            enable = true;
+            authorizedKeys = cfg.authorizedKeys;
+          };
         };
       };
-    };
-  });
+    }
+  );
 }

@@ -1,7 +1,8 @@
 { python3, fetchFromGitHub, prometheus-alertmanager }:
 let
   pname = "prometheus-xmpp-alerts";
-in python3.pkgs.buildPythonApplication {
+in
+python3.pkgs.buildPythonApplication {
   inherit pname;
   version = "git";
 

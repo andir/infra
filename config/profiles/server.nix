@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   imports = [
     ./base
@@ -6,7 +6,8 @@
     ./dns.nix
   ];
 
-  programs.mosh.enable = true;
+  # FIXME: on the systemd v245 nixpkgs branch mosh fails to build
+  programs.mosh.enable = config.networking.hostName != "bertha";
 
   environment.systemPackages = with pkgs; [
     tmux

@@ -6,9 +6,11 @@ in
   mkMachine = config: {
     imports = [
       config
-      ({ lib, ... }: {
-        nixpkgs.pkgs = lib.mkDefault (import ../nix);
-      })
+      (
+        { lib, ... }: {
+          nixpkgs.pkgs = lib.mkDefault (import ../nix);
+        }
+      )
       ./servers/wireguard.nix
     ] ++ extraModules;
   };

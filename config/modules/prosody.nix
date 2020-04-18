@@ -8,7 +8,8 @@ let
 
   cfg = config.h4ck.prosody;
 
-in {
+in
+{
 
   options = {
     h4ck.prosody = {
@@ -29,43 +30,44 @@ in {
         ciphers = "HIGH+kEECDH:HIGH+kEDH:!DSS:!ECDSA:!3DES:!aNULL:@STRENGTH";
         options = [ "no_sslv2" "no_sslv3" "no_ticket" "no_compression" "cipher_server_preference" ];
       };
-    in {
-      enable = true;
-      package = pkgs.prosody.override {
-        withCommunityModules = [
-          "carbons_adhoc"
-          "cloud_notify"
-          "csi"
-          "http_upload"
-          "mam_adhoc"
-          "omemo_all_access"
-          "reload_modules"
-          "smacks"
-          "throttle_presence"
-          "filter_chatstates"
-          "vcard_muc"
-          "bookmarks"
-          "conversejs"
-        ];
-      };
-      allowRegistration = false;
-      admins = [ cfg.adminJID ];
-      ssl = {
-        cert = "${acmeDirectory}/${cfg.serverName}/fullchain.pem";
-        key = "${acmeDirectory}/${cfg.serverName}/key.pem";
-        extraOptions = sslOptions;
-      };
+    in
+      {
+        enable = true;
+        package = pkgs.prosody.override {
+          withCommunityModules = [
+            "carbons_adhoc"
+            "cloud_notify"
+            "csi"
+            "http_upload"
+            "mam_adhoc"
+            "omemo_all_access"
+            "reload_modules"
+            "smacks"
+            "throttle_presence"
+            "filter_chatstates"
+            "vcard_muc"
+            "bookmarks"
+            "conversejs"
+          ];
+        };
+        allowRegistration = false;
+        admins = [ cfg.adminJID ];
+        ssl = {
+          cert = "${acmeDirectory}/${cfg.serverName}/fullchain.pem";
+          key = "${acmeDirectory}/${cfg.serverName}/key.pem";
+          extraOptions = sslOptions;
+        };
 
-      # standard configuration
-      modules = {
-        admin_telnet = true;
-        admin_adhoc = true;
-        mam = true;
-        carbons = true;
-        pep = true;
-        roster = true;
-      };
-      extraConfig = ''
+        # standard configuration
+        modules = {
+          admin_telnet = true;
+          admin_adhoc = true;
+          mam = true;
+          carbons = true;
+          pep = true;
+          roster = true;
+        };
+        extraConfig = ''
 
         -- configure logging
         -- log = {
@@ -137,40 +139,40 @@ in {
                 muc_log_cleanup_interval = 4 * 60 * 60
                 modules_enabled = { "muc_mam", "vcard_muc", }
       '';
-      extraModules = [
-        "reload_modules"
-        "http"
-        "http_upload"
-        "smacks" # XEP-0198: messages are queued until they get acked. useful for instable c2s connections
-        "carbons_adhoc" # http://modules.prosody.im/mod_carbons_adhoc.html
-        "csi" # client state indication
-        "filter_chatstates"
-        "throttle_presence"
-        "mam_adhoc"
-        "blocklist"
-        "cloud_notify"
-        "proxy65"
-        "omemo_all_access" # disable restrictions on accessing the OMEMO keys
-        "vcard_legacy" # XEP-0398: User Avatar to vCard-Based Avatars Conversion
-        "bosh" # enable accessing server via HTTP(s)
-        "websocket" # enable accessing the server via WS over HTTPS
-        "bookmark"
-        "conversejs"
-      ];
+        extraModules = [
+          "reload_modules"
+          "http"
+          "http_upload"
+          "smacks" # XEP-0198: messages are queued until they get acked. useful for instable c2s connections
+          "carbons_adhoc" # http://modules.prosody.im/mod_carbons_adhoc.html
+          "csi" # client state indication
+          "filter_chatstates"
+          "throttle_presence"
+          "mam_adhoc"
+          "blocklist"
+          "cloud_notify"
+          "proxy65"
+          "omemo_all_access" # disable restrictions on accessing the OMEMO keys
+          "vcard_legacy" # XEP-0398: User Avatar to vCard-Based Avatars Conversion
+          "bosh" # enable accessing server via HTTP(s)
+          "websocket" # enable accessing the server via WS over HTTPS
+          "bookmark"
+          "conversejs"
+        ];
 
-      # all the different domains this server serves go here
-      virtualHosts = {
-        kackit = {
-          enabled = true;
-          domain = "${cfg.serverName}";
-     	ssl = {
-            cert = "${acmeDirectory}/${cfg.serverName}/fullchain.pem";
-            key = "${acmeDirectory}/${cfg.serverName}/key.pem";
-            extraOptions = sslOptions;
+        # all the different domains this server serves go here
+        virtualHosts = {
+          kackit = {
+            enabled = true;
+            domain = "${cfg.serverName}";
+            ssl = {
+              cert = "${acmeDirectory}/${cfg.serverName}/fullchain.pem";
+              key = "${acmeDirectory}/${cfg.serverName}/key.pem";
+              extraOptions = sslOptions;
+            };
           };
         };
       };
-    };
 
     networking.firewall.allowedTCPPorts = [
       5000
@@ -187,19 +189,21 @@ in {
 
     # enable nginx with ACME for our certificates
     services.nginx = let
-      host-meta-json = pkgs.writeText "host-meta.json" (builtins.toJSON {
-        links = [
-          {
-            rel = "urn:xmpp:alt-connections:xbosh";
-            href = "https://${cfg.serverName}/.xmpp/http-bind";
-          }
-          {
-            rel = "urn:xmpp:alt-connections:websocket";
-            href = "wss://${cfg.serverName}/.xmpp/ws";
-          }
+      host-meta-json = pkgs.writeText "host-meta.json" (
+        builtins.toJSON {
+          links = [
+            {
+              rel = "urn:xmpp:alt-connections:xbosh";
+              href = "https://${cfg.serverName}/.xmpp/http-bind";
+            }
+            {
+              rel = "urn:xmpp:alt-connections:websocket";
+              href = "wss://${cfg.serverName}/.xmpp/ws";
+            }
 
-        ];
-      });
+          ];
+        }
+      );
       host-meta = pkgs.writeText "host-meta.xml" ''
         <?xml version='1.0' encoding='utf-8'?>
         <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
@@ -209,7 +213,7 @@ in {
       '';
 
       signal = pkgs.fetchurl {
-        url ="https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
+        url = "https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
         sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
       };
 
@@ -245,84 +249,85 @@ in {
         </body>
         </html>
       '';
-    in {
-      enable = true;
-      virtualHosts = {
-        "${cfg.serverName}" = {
-          forceSSL = true;
-          enableACME = true;
-          locations."/.xmpp/http-bind" = {
-            extraConfig = ''
-              add_header Access-Control-Allow-Origin '*' always;
-              proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/http-bind;
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $remote_addr;
-              proxy_buffering off;
-              tcp_nodelay on;
-            '';
-          };
-          locations."/.xmpp/ws" = {
-            extraConfig = ''
-              add_header Access-Control-Allow-Origin '*' always;
-              proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/xmpp-websocket;
-              proxy_http_version 1.1;
-              proxy_set_header Connection "Upgrade";
-              proxy_set_header Upgrade $http_upgrade;
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $remote_addr;
-              proxy_read_timeout 900s;
-              proxy_buffering off;
-            '';
-          };
-          locations."/.xmpp/" = {
-            extraConfig = ''
-              proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/;
-              proxy_set_header Host $host;
-              proxy_set_header X-Forwarded-For $remote_addr;
-            '';
-          };
-          locations."=/converse" = {
-            extraConfig = ''
-              default_type 'text/html';
-              alias ${index};
-            '';
-          };
-          locations."=/converse.js" = {
-            extraConfig = ''
-              default_type 'application/javascript';
-              alias ${js};
-            '';
-          };
-          locations."=/signal.js" = {
-            extraConfig = ''
-              default_type 'application/javascript';
-              alias ${signal};
-            '';
-          };
+    in
+      {
+        enable = true;
+        virtualHosts = {
+          "${cfg.serverName}" = {
+            forceSSL = true;
+            enableACME = true;
+            locations."/.xmpp/http-bind" = {
+              extraConfig = ''
+                add_header Access-Control-Allow-Origin '*' always;
+                proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/http-bind;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                proxy_buffering off;
+                tcp_nodelay on;
+              '';
+            };
+            locations."/.xmpp/ws" = {
+              extraConfig = ''
+                add_header Access-Control-Allow-Origin '*' always;
+                proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/xmpp-websocket;
+                proxy_http_version 1.1;
+                proxy_set_header Connection "Upgrade";
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-For $remote_addr;
+                proxy_read_timeout 900s;
+                proxy_buffering off;
+              '';
+            };
+            locations."/.xmpp/" = {
+              extraConfig = ''
+                proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/;
+                proxy_set_header Host $host;
+                proxy_set_header X-Forwarded-For $remote_addr;
+              '';
+            };
+            locations."=/converse" = {
+              extraConfig = ''
+                default_type 'text/html';
+                alias ${index};
+              '';
+            };
+            locations."=/converse.js" = {
+              extraConfig = ''
+                default_type 'application/javascript';
+                alias ${js};
+              '';
+            };
+            locations."=/signal.js" = {
+              extraConfig = ''
+                default_type 'application/javascript';
+                alias ${signal};
+              '';
+            };
 
-          locations."=/converse.css" = {
-            extraConfig = ''
-              default_type 'text/css';
-              alias ${css};
-            '';
-          };
-          locations."=/.well-known/host-meta" = {
-            extraConfig = ''
+            locations."=/converse.css" = {
+              extraConfig = ''
+                default_type 'text/css';
+                alias ${css};
+              '';
+            };
+            locations."=/.well-known/host-meta" = {
+              extraConfig = ''
                 default_type 'application/xrd+xml';
                 add_header Access-Control-Allow-Origin '*' always;
                 alias ${host-meta};
-            '';
-          };
-          locations."=/.well-known/host-meta.json" = {
-            extraConfig = ''
+              '';
+            };
+            locations."=/.well-known/host-meta.json" = {
+              extraConfig = ''
                 default_type 'application/json+xml';
                 add_header Access-Control-Allow-Origin '*' always;
                 alias ${host-meta-json};
-            '';
+              '';
+            };
           };
         };
       };
-    };
 
     security.acme.certs = {
       "${cfg.serverName}" = {

@@ -21,7 +21,7 @@
       source = "../secrets/gitlab-runner.env";
       destination = "/var/secrets/gitlab-runner.env";
       owner.user = "gitlab-runner";
-      action = ["sudo" "systemctl" "restart" "gitlab-runner2"];
+      action = [ "sudo" "systemctl" "restart" "gitlab-runner2" ];
     };
   };
 

@@ -102,67 +102,71 @@ in
           OtherInformation = true;
         };
       };
-      mkClientIfConfig = conf: let v = nameValuePair "00-${conf.interface}" {
+      mkClientIfConfig = conf: let
+        v = nameValuePair "00-${conf.interface}" {
+          enable = true;
+          matchConfig = {
+            Name = conf.interface;
+          };
+
+          addresses = (
+            map (
+              addr:
+                { addressConfig.Address = "${addr.address}/${toString addr.prefixLength}"; }
+            ) (conf.v4Addresses ++ conf.v6Addresses)
+          )
+          ++ [ { addressConfig.Address = "::/64"; } ];
+
+          networkConfig = {
+            DHCPServer = mkDefault true;
+            IPv6PrefixDelegation = "dhcpv6";
+          };
+
+          dhcpServerConfig = {
+            PoolOffset = 10;
+            EmitDNS = true;
+            EmitNTP = true;
+            EmitRouter = true;
+            EmitTimezone = true;
+          };
+
+          ipv6PrefixDelegationConfig = {
+            RouterLifetimeSec = 300;
+            EmitDNS = true;
+          };
+
+          ipv6Prefixes = [
+            {
+              ipv6PrefixConfig = {
+                AddressAutoconfiguration = true;
+                PreferredLifetimeSec = 1800;
+                ValidLifetimeSec = 1800;
+              };
+            }
+          ];
+        };
+      in
+        builtins.trace "${builtins.toJSON v.value}" v;
+      upstreamConfig = builtins.listToAttrs (map mkUpstreamIfConfig cfg.upstreamInterfaces);
+      downstreamConfig = builtins.listToAttrs (map mkClientIfConfig cfg.downstreamInterfaces);
+    in
+      {
         enable = true;
-        matchConfig = {
-          Name = conf.interface;
-        };
-
-        addresses = (
-          map (
-            addr:
-              { addressConfig.Address = "${addr.address}/${toString addr.prefixLength}"; }
-          ) (conf.v4Addresses ++ conf.v6Addresses)
-        )
-        ++ [ { addressConfig.Address = "::/64"; } ];
-
-        networkConfig = {
-          DHCPServer = mkDefault true;
-          IPv6PrefixDelegation = "dhcpv6";
-        };
-
-        dhcpServerConfig = {
-          PoolOffset = 10;
-          EmitDNS = true;
-          EmitNTP = true;
-          EmitRouter = true;
-          EmitTimezone = true;
-        };
-
-        ipv6PrefixDelegationConfig = {
-          RouterLifetimeSec = 300;
-          EmitDNS = true;
-        };
-
-        ipv6Prefixes = [
+        networks = mkMerge [
+          upstreamConfig
+          downstreamConfig
           {
-            ipv6PrefixConfig = {
-              AddressAutoconfiguration = true;
-              PreferredLifetimeSec = 1800;
-              ValidLifetimeSec = 1800;
+            "99-main" = {
+              networkConfig = {
+                IPv6AcceptRA = lib.mkForce false;
+                DHCP = lib.mkForce "no";
+              };
+              linkConfig = {
+                Unmanaged = lib.mkForce "yes";
+              };
             };
           }
         ];
-      }; in builtins.trace "${builtins.toJSON v.value}" v;
-      upstreamConfig = builtins.listToAttrs (map mkUpstreamIfConfig cfg.upstreamInterfaces);
-      downstreamConfig = builtins.listToAttrs (map mkClientIfConfig cfg.downstreamInterfaces);
-    in {
-      enable = true;
-      networks = mkMerge [
-        upstreamConfig
-        downstreamConfig
-        {
-          "99-main" = {
-            networkConfig = {
-              IPv6AcceptRA = lib.mkForce false;
-              DHCP = lib.mkForce "no";
-            };
-            linkConfig = {
-              Unmanaged = lib.mkForce "yes";
-            };
-          };
-        }
-      ];
-    };
+      };
   };
 }

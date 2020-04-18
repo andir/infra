@@ -60,7 +60,7 @@
       };
       receivers = [
         {
-          name =  "xmpp-notify";
+          name = "xmpp-notify";
           webhook_configs = [
             { url = "http://127.0.0.1:9199/alert"; }
           ];

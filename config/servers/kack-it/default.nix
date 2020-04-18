@@ -17,7 +17,7 @@
       source = "../secrets/c3schedule.env";
       destination = "/var/lib/secrets/c3schedule.env";
       owner.user = "c3schedule";
-      action = ["sudo" "systemctl" "restart" "c3schedule"];
+      action = [ "sudo" "systemctl" "restart" "c3schedule" ];
     };
   };
 

@@ -6,7 +6,8 @@ let
   '';
 
   grafana-devel = pkgs.callPackage ./tools/grafana-devel.nix {};
-in pkgs.mkShell {
+in
+pkgs.mkShell {
   buildInputs = with pkgs; [
     bash
     evalServers
@@ -20,5 +21,6 @@ in pkgs.mkShell {
     nix
     openssh
     grafana-devel
+    nixpkgs-fmt
   ];
 }

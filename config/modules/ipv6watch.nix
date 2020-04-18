@@ -4,7 +4,8 @@ let
   cfg = config.h4ck.ipv6watch;
 
   interpreter = cfg.python.withPackages (_: cfg.pythonPackages);
-in {
+in
+{
   options.h4ck.ipv6watch = {
     enable = mkEnableOption "Enable ipv6.watch";
 
@@ -117,7 +118,7 @@ in {
         Group = "ipv6.watch";
         ReadWritePaths = [ cfg.outputDir "/var/lib/ipv6.watch" ];
         StateDirectory = "ipv6.watch";
-        WorkingDirectory="/var/lib/ipv6.watch";
+        WorkingDirectory = "/var/lib/ipv6.watch";
         PrivateTmp = true;
         PrivateDevices = true;
         ProtectHostname = true;

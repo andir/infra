@@ -26,9 +26,11 @@ let
     in
       {
         remoteEndpoint = lib.mkDefault
-          (if peerConfig ? hostName then
-          peerConfig.hostName
-          else nodes.${peerName}.config.networking.hostName);
+          (
+            if peerConfig ? hostName then
+              peerConfig.hostName
+            else nodes.${peerName}.config.networking.hostName
+          );
         remotePort = lib.mkDefault port;
         localPort = lib.mkDefault port;
         remoteAddresses = lib.mkDefault peerConfig.addresses;
@@ -42,7 +44,7 @@ let
       mesh = wireLib.mesh { servers = cfg.hosts; };
     in
       if mesh ? ${hostName} then
-        lib.filterAttrs (k: _: ! builtins.elem k [ "hostName" "connections"]) (
+        lib.filterAttrs (k: _: ! builtins.elem k [ "hostName" "connections" ]) (
           mesh.${hostName} // {
             peers = builtins.listToAttrs (
               map

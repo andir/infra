@@ -8,7 +8,7 @@
       [auth]
       delay = 1
       type = htpasswd
-      htpasswd_filename = ${builtins.toFile "passwd" (lib.concatStringsSep "\n" (lib.mapAttrsToList  (name: value: "${name}:${value.hashedPassword}") config.mailserver.loginAccounts)) }
+      htpasswd_filename = ${builtins.toFile "passwd" (lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "${name}:${value.hashedPassword}") config.mailserver.loginAccounts)) }
       htpasswd_encryption = crypt
 
       [storage]

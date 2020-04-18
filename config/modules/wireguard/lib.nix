@@ -50,11 +50,11 @@ in
   genPort = minPort: maxPort: serverA: serverB:
     assert !builtins.isString serverA -> builtins.throw "`serverA` should be a string, got ${builtins.typeOf serverA}";
     assert !builtins.isString serverB -> builtins.throw "`serverB` should be a string, got ${builtins.typeOf serverB}";
-  let
-    width = maxPort - minPort;
-  in
-    assert width <= 0 -> builtins.throw "maxPort - minPort must be >= 1";
+    let
+      width = maxPort - minPort;
+    in
+      assert width <= 0 -> builtins.throw "maxPort - minPort must be >= 1";
 
-    minPort + (mod ((md5ToInt (builtins.hashString "md5" serverA)) + (md5ToInt (builtins.hashString "md5" serverB))) width);
+      minPort + (mod ((md5ToInt (builtins.hashString "md5" serverA)) + (md5ToInt (builtins.hashString "md5" serverB))) width);
 
 }

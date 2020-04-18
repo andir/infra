@@ -1,5 +1,7 @@
 { pkgs, config, lib, ... }:
-let siteName = "jh4all.e"; in
+let
+  siteName = "jh4all.e";
+in
 {
   imports = [
     ../profiles/hetzner-vm.nix
@@ -42,14 +44,14 @@ let siteName = "jh4all.e"; in
 
   fileSystems = {
     "/var/www/" = {
-       fsType = "none";
-       options = [ "bind" ];
-       device = "/data/wordpress";
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/wordpress";
     };
     "/var/lib/mysql" = {
-       fsType = "none";
-       options = [ "bind" ];
-       device = "/data/mysql";
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/mysql";
     };
   };
 

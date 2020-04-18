@@ -5,7 +5,8 @@ let
   hashConfig = config:
     let
       h = if config == null || config == {} then "" else builtins.hashString "sha256" (builtins.toJSON config);
-    in lib.substring 0 8 h;
+    in
+      lib.substring 0 8 h;
 
   # targetNames :: List String
   targetNames = lib.unique (lib.flatten (lib.attrValues (forAllNodes (_: v: lib.attrNames v.config.h4ck.monitoring.targets))));
@@ -20,13 +21,14 @@ let
             job_config = let val = v.job_config or {}; in if val == null then {} else val;
             hash = hashConfig job_config;
             name = if hash != "" then "${targetName}-${hash}" else targetName;
-          in {
-            inherit name;
-            value = {
-              inherit job_config;
-              nodes = nodesWithTarget;
-            };
-          }
+          in
+            {
+              inherit name;
+              value = {
+                inherit job_config;
+                nodes = nodesWithTarget;
+              };
+            }
       ) nodesWithTarget;
 
   targetSets = lib.fold (a: b: a // b) {} (map targetConfigurations targetNames);
@@ -47,11 +49,12 @@ let
                       let
                         targetHost = if v ? targetHost && v.targetHost != null then v.targetHost else
                           nodes.${n}.config.h4ck.monitoring.targetHost;
-                      in {
-                        targets = [
-                          "${targetHost}:${toString v.port}"
-                        ];
-                      }
+                      in
+                        {
+                          targets = [
+                            "${targetHost}:${toString v.port}"
+                          ];
+                        }
                   ) conf.nodes;
               } else {}
             )

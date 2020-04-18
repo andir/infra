@@ -31,7 +31,7 @@
   boot.kernelParams = [ "console=ttyS0,115200" ];
 
   deployment = {
- #   targetHost = "2a00:e67:1a6:0:20d:b9ff:fe41:6546";
+    #   targetHost = "2a00:e67:1a6:0:20d:b9ff:fe41:6546";
     targetHost = "10.250.30.254";
     targetUser = "root";
     substituteOnDestination = false;
@@ -113,14 +113,14 @@
     "00-oldlan" = {
       networkConfig.DHCPServer = false;
     };
-   # "00-enp3s0" = {
-   #   matchConfig = {
-   #     Name = "enp3s0";
-   #   };
-   #   networkConfig = {
-   #     DHCP = "yes";
-   #   };
-   # };
+    # "00-enp3s0" = {
+    #   matchConfig = {
+    #     Name = "enp3s0";
+    #   };
+    #   networkConfig = {
+    #     DHCP = "yes";
+    #   };
+    # };
   };
 
   # router networkd configuration that actually puts addresses on interfaces,

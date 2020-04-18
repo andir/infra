@@ -2,7 +2,8 @@
 let
   domain = "syncserver.h4ck.space";
   port = 5001;
-in {
+in
+{
 
   options = {
     h4ck.syncserver = {
@@ -29,4 +30,3 @@ in {
     };
   };
 }
-

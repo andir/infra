@@ -6,4 +6,5 @@ let
     (_: _: { c3schedule = import sources.c3schedule {}; })
     (import ./packages { inherit sources; })
   ];
-in import sources.nixpkgs { inherit overlays; config = {}; }
+in
+import sources.nixpkgs { inherit overlays; config = {}; }

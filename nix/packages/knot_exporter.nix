@@ -13,4 +13,5 @@ let
     knot_exporter --help
     ln -s ${script}/bin/knot_exporter $out
   '';
-in pkg
+in
+pkg
