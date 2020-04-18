@@ -6,6 +6,14 @@ let
   '';
 
   grafana-devel = pkgs.callPackage ./tools/grafana-devel.nix {};
+
+
+  pre-commit-hooks = pkgs.nix-pre-commit-hooks.run {
+    src = ./.;
+    hooks = {
+      nixpkgs-fmt.enable = true;
+    };
+  };
 in
 pkgs.mkShell {
   buildInputs = with pkgs; [
@@ -23,4 +31,6 @@ pkgs.mkShell {
     grafana-devel
     nixpkgs-fmt
   ];
+
+  inherit (pre-commit-hooks) shellHook;
 }
