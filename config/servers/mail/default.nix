@@ -92,12 +92,28 @@ in {
   # monitor that all the configured domains have a "valid" MX record
   # I lost some entries in the pase due to slight differences in bind vs knot
   # zone interpretation when more specific records in the same file exist
-  h4ck.monitoring.dns = lib.listToAttrs (map (domain:
-    lib.nameValuePair domain {
-      queryType = "MX";
-    }
-    ) config.mailserver.domains);
-
+  h4ck.monitoring.dns = (
+    lib.listToAttrs (
+      map (
+        domain:
+          lib.nameValuePair domain {
+            queryType = "MX";
+          }
+      ) config.mailserver.domains
+    )
+  )
+  # also ensure that all the domains have valid domainkeys set otherwise DKIM
+  # validation fails
+  // (
+    lib.listToAttrs (
+      map (
+        domain:
+          lib.nameValuePair "mail._domainkey.${domain}" {
+            queryType = "TXT";
+          }
+      ) config.mailserver.domains
+    )
+  );
   mailserver = {
     enable = true;
     fqdn = "mx.h4ck.space";
@@ -105,13 +121,13 @@ in {
       "kack.it"
     ] ++ secrets.domains;
     loginAccounts = {
-        "andi@kack.it" = {
-	    hashedPassword = "$6$oJhcZDZZ$9QFwPXZhmjPjJL0TcEsZVTehhdWFxxjVDBDg0Ked71ziAd1GnsJJUpsuIhqG8fdAhalQe/BXn8VZE4Te7oE7g/";
+      "andi@kack.it" = {
+        hashedPassword = "$6$oJhcZDZZ$9QFwPXZhmjPjJL0TcEsZVTehhdWFxxjVDBDg0Ked71ziAd1GnsJJUpsuIhqG8fdAhalQe/BXn8VZE4Te7oE7g/";
 
-            aliases = [
-		"test@kack.it"
-            ];
-        };
+        aliases = [
+          "test@kack.it"
+        ];
+      };
     } // secrets.loginAccounts;
 
     # Use Let's Encrypt certificates. Note that this needs to set up a stripped

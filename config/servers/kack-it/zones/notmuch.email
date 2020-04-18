@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
-                2020040902 ; Serial - date by convention
+                2020041801 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -17,6 +17,9 @@ l       IN      MX      20 mx.h4ck.space.
 l       IN      TXT     "v=spf1 mx -all"
 *.spam  IN      MX      20 mx.h4ck.space.
 *.l     IN      MX      20 mx.h4ck.space.
+
+mail._domainkey IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDSxAU3buf/Ge/JPFTbIz4Le5xtMM4oewQdZbQEaI5dIc19zKRB+JUfAzWFegeorpyjVcqP6oPQkUEbs4XLP6jd4xFf0sQWg8IJKfdVFObSIAX1m/l+AF8/B/HzUCS+PewBmEr0hvVnuT5tUe/pldR6aODPiyQoX8wb9CXXBLuASQIDAQAB" )  ; ----- DKIM key mail for notmuch.email
 
 ; for file in  *.l.notmuch.email.mail.txt; do sed "s/^mail._domainkey/mail._domainkey.${file%.notmuch.email.mail.txt}/ " $file; done
 mail._domainkey.aerc.l  IN      TXT     ( "v=DKIM1; k=rsa; "
