@@ -28,7 +28,11 @@ self: super: {
 
   lua5_2 = super.lua5_2.override {
     packageOverrides = self: super: {
-      luaexpat = super.luaexpat.overrideAttrs ({ meta, ... }: { meta = meta // { broken = false; }; });
+      luaexpat = super.luaexpat.overrideAttrs (
+        { meta, ... }:
+          assert meta.broken == true; # notify me if it is fixed in the channel
+          { meta = meta // { broken = false; }; }
+      );
     };
   };
 
