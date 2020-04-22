@@ -9,8 +9,6 @@
     ./xmpp-alerts.nix
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   h4ck.wireguardBackbone = {
     addresses = [
       "fe80::2/64"
@@ -22,6 +20,7 @@
   deployment = {
     targetHost = "95.216.144.32";
     targetUser = "morph";
+    substituteOnDestination = true;
   };
 
   networking.hostName = "mon.h4ck.space";

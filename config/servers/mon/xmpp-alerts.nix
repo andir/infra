@@ -19,6 +19,13 @@ in
     '';
     wantedBy = [ "multi-user.target" ];
     after = [ "network-online.target" ];
-    serviceConfig.DynamicUser = true;
+    unitConfig = {
+      StartLimitIntervalSec = 0;
+    };
+    serviceConfig = {
+      DynamicUser = true;
+      Restart = "on-failure";
+      RestartSec = 30;
+    };
   };
 }
