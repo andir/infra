@@ -4,6 +4,8 @@ let
   port = 5001;
 in
 {
+  disabledModules = [ "services/networking/firefox/sync-server.nix" ];
+  imports = [ ./upstream.nix ];
 
   options = {
     h4ck.syncserver = {

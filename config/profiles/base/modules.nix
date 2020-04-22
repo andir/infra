@@ -9,7 +9,7 @@
     ../../modules/monitoring.nix
     ../../modules/prosody.nix
     ../../modules/ssh-unlock.nix
-    ../../modules/syncserver.nix
+    ../../modules/syncserver
     ../../modules/wireguard
   ];
 }
