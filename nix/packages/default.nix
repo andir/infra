@@ -25,4 +25,11 @@ self: super: {
       ];
     }
   );
+
+  lua5_2 = super.lua5_2.override {
+    packageOverrides = self: super: {
+      luaexpat = super.luaexpat.overrideAttrs ({ meta, ... }: { meta = meta // { broken = false; }; });
+    };
+  };
+
 }
