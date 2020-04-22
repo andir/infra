@@ -8,6 +8,7 @@
     vm.enable = true;
   };
 
+  networking.usePredictableInterfaceNames = false; # stick with eth0 for the first device (for now)
   boot.loader.grub.devices = [ "/dev/sda" ];
   fileSystems."/" = {
     fsType = lib.mkDefault "ext4";
