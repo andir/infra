@@ -26,7 +26,7 @@ in
   };
   config = mkIf cfg.enable {
     systemd.services.knot_exporter = {
-      after = [ "network.target" ];
+      after = [ "network.target" "knot.service" ];
       wantedBy = [ "multi-user.target" ];
       script = ''
         ${pkgs.knot_exporter} \
