@@ -5,6 +5,7 @@
     ./morph.nix
     ./nix-path.nix
     ./nix.nix
+    ./acme.nix
   ];
 
   users.users.andi = {
