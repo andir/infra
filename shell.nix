@@ -22,14 +22,14 @@ pkgs.mkShell {
     git
     git-lfs
     gnutar
+    grafana-devel
     gzip
     hcloud
     morph
     niv
     nix
-    openssh
-    grafana-devel
     nixpkgs-fmt
+    openssh
   ];
 
   inherit (pre-commit-hooks) shellHook;
