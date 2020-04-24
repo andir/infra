@@ -4,6 +4,7 @@
   imports = [
     ../../profiles/hetzner-vm.nix
     ./prom-targets.nix
+    ./prom-external-targets.nix
     ./prom-rules.nix
     ./grafana-dashboards.nix
     ./xmpp-alerts.nix
@@ -56,6 +57,12 @@
     configText = builtins.toJSON {
       route = {
         receiver = "xmpp-notify";
+        routes = [
+          {
+            receiver = "ana-xmpp-notify";
+            match.external = "ana";
+          }
+        ];
       };
       receivers = [
         {
@@ -64,6 +71,13 @@
             { url = "http://127.0.0.1:9199/alert"; }
           ];
         }
+        {
+          name = "ana-xmpp-notify";
+          webhook_configs = [
+            { url = "http://127.0.0.1:9199/alert/ana@xmpp.megfau.lt"; }
+          ];
+        }
+
       ];
     };
   };

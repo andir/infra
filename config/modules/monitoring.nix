@@ -70,7 +70,22 @@ let
       };
     };
     config = {
-      queryName = name;
+      queryName = mkDefault name;
+    };
+  };
+
+  icmpMonitoringEntry = { name, ... }: {
+    options = {
+      targetName = mkOption {
+        type = types.str;
+      };
+      protocol = mkOption {
+        type = types.enum [ "ip4" "ip6" null ];
+        default = null;
+      };
+    };
+    config = {
+      targetName = mkDefault name;
     };
   };
 in
@@ -90,6 +105,11 @@ in
 
     dns = mkOption {
       type = types.attrsOf (types.submodule dnsMonitoringEntry);
+      default = {};
+    };
+
+    icmp = mkOption {
+      type = types.attrsOf (types.submodule icmpMonitoringEntry);
       default = {};
     };
   };
@@ -189,45 +209,103 @@ in
       )
 
       (
-        mkIf (config.h4ck.monitoring.dns != {}) (
+        mkIf (config.h4ck.monitoring.dns != {} || config.h4ck.monitoring.icmp != {}) (
           mkMerge [
             {
               services.prometheus.exporters.blackbox.enable = true;
-              h4ck.blackbox_exporter.config = {
-                modules = lib.mapAttrs'
-                  (
-                    zone: params: lib.nameValuePair
-                      "dns_${zone}"
-                      {
-                        prober = "dns";
-                        dns = {
-                          query_type = params.queryType;
-                          query_name = params.queryName;
-                        };
-                      }
-                  ) config.h4ck.monitoring.dns;
-              };
               h4ck.monitoring.targets.blackbox = {
                 port = 9115;
               };
             }
+            {
+              h4ck.blackbox_exporter.config = {
+                modules =
+                  (
+                    lib.mapAttrs'
+                      (
+                        zone: params: lib.nameValuePair
+                          "dns_${zone}"
+                          {
+                            prober = "dns";
+                            dns = {
+                              query_type = params.queryType;
+                              query_name = params.queryName;
+                            };
+                          }
+                      ) config.h4ck.monitoring.dns
+                  )
+                  // (
+                    lib.mapAttrs'
+                      (
+                        target: params: lib.nameValuePair
+                          "icmp_${target}" {
+                          prober = "icmp";
+                          timeout = "1s";
+                          icmp =
+                            (
+                              lib.optionalAttrs (params.protocol != null) {
+                                preferred_ip_protocol = params.protocol;
+                                ip_protocol_fallback = true;
+                              }
+                            )
+                          ;
+                        }
+                      ) config.h4ck.monitoring.icmp
+                  )
+                ;
+              };
+            }
             (
               {
-                h4ck.monitoring.targets = lib.mapAttrs' (
-                  zone: params: lib.nameValuePair
-                    "blackbox_${zone}"
-                    {
+                h4ck.monitoring.targets = (
+                  lib.mapAttrs' (
+                    zone: params: lib.nameValuePair
+                      "blackbox_dns_${zone}"
+                      {
+                        port = 9115;
+                        job_config = {
+                          params.module = [ "dns_${zone}" ];
+                          metrics_path = "/probe";
+                          static_configs = [
+                            {
+                              targets = [
+                                "1.1.1.1"
+                                "8.8.4.4"
+                                "8.8.8.8"
+                                "9.9.9.9"
+                              ];
+                            }
+                          ];
+                          relabel_configs = [
+                            {
+                              source_labels = [ "__address__" ];
+                              target_label = "__param_target";
+                            }
+                            {
+                              source_labels = [ "__param_target" ];
+                              target_label = "instance";
+                            }
+                            {
+                              target_label = "__address__";
+                              replacement = config.h4ck.monitoring.targetHost + ":9115";
+                            }
+
+                          ];
+                        };
+                      }
+                  ) config.h4ck.monitoring.dns
+                ) // (
+                  lib.mapAttrs' (
+                    target: params: lib.nameValuePair
+                      "blackbox_icmp_${target}" {
                       port = 9115;
                       job_config = {
-                        params.module = [ "dns_${zone}" ];
+                        params.module = [ "icmp_${target}" ];
                         metrics_path = "/probe";
                         static_configs = [
                           {
                             targets = [
-                              "1.1.1.1"
-                              "8.8.4.4"
-                              "8.8.8.8"
-                              "9.9.9.9"
+                              params.targetName
                             ];
                           }
                         ];
@@ -248,7 +326,8 @@ in
                         ];
                       };
                     }
-                ) config.h4ck.monitoring.dns;
+                  ) config.h4ck.monitoring.icmp
+                );
               }
             )
             (mkFirewallRules "blackbox" 9115)

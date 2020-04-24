@@ -1,11 +1,37 @@
+let
+  # import secrets if they exist (e.g. on deployment hosts)
+  secrets =
+    let
+      path = ../../../secrets/alerts.nix;
+      default = {
+        config = {};
+        rules = [];
+      };
+    in
+      if builtins.trace path builtins.pathExists path then import path else default;
+in
 {
+
+  imports = [ secrets.config ];
+
   services.prometheus.rules = [
     (
       builtins.toJSON {
         groups = [
           {
             name = "rules";
-            rules = [
+            rules = secrets.rules ++ [
+              {
+                alert = "ICMP probe unsucessfull";
+                expr = ''
+                  probe_success{job=~"^blackbox_icmp_.+"} == 0
+                '';
+                for = "3m";
+                annotations = {
+                  description = "ICMP replies to {{ $labels.instance }} gone missing.";
+                  summary = "ICMP replies missing {{ $labels.instance }}";
+                };
+              }
               {
                 alert = "ExporterDown";
                 expr = "up == 0";
