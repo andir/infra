@@ -6,6 +6,7 @@
     ../../modules/ipv6watch.nix
     ./dns.nix
     ./blog.nix
+    ./static.nix
   ];
 
   deployment = {
