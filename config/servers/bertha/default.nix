@@ -1,4 +1,24 @@
-{ lib, config, ... }:
+{ pkgs, lib, config, ... }:
+let
+  verifiedNetfilter = text: let
+    file = pkgs.writeText "netfilter" text;
+    check = pkgs.vmTools.runInLinuxVM (
+      pkgs.runCommand "nft-check" {
+        buildInputs = [ pkgs.nftables ];
+        inherit file;
+      } ''
+        set -ex
+        # make sure protocols & services are known
+        ln -s ${pkgs.iana-etc}/etc/protocol /etc/protocol
+        ln -s ${pkgs.iana-etc}/etc/services /etc/services
+
+        # test the configuration
+        nft --file $file
+      ''
+    );
+  in
+    "#checked with ${check}\n" + text;
+in
 {
   imports = [
     # custom nixpkgs since I need a very specific version of systemd-networkd
@@ -32,7 +52,8 @@
 
   deployment = {
     #   targetHost = "2a00:e67:1a6:0:20d:b9ff:fe41:6546";
-    targetHost = "10.250.30.254";
+    #targetHost = "10.250.11.254";
+    targetHost = "fe80::3c29:d9ff:fe39:1adf%vlan40";
     targetUser = "root";
     substituteOnDestination = false;
   };
@@ -111,7 +132,7 @@
       };
     };
     "00-oldlan" = {
-      networkConfig.DHCPServer = false;
+      #      networkConfig.DHCPServer = false;
     };
     # "00-enp3s0" = {
     #   matchConfig = {
@@ -156,13 +177,12 @@
           { address = "fd21:a07e:735e:ff01::"; prefixLength = 64; }
         ];
       }
-
     ];
   };
 
   networking.firewall.enable = false;
   networking.nftables.enable = true;
-  networking.nftables.ruleset = ''
+  networking.nftables.ruleset = verifiedNetfilter ''
     table inet filter {
 
       chain input {
@@ -181,6 +201,7 @@
         tcp dport { 22, 80, 443 } accept
 
         iifname lan jump lan_input
+        iifname oldlan jump lan_input
         iifname mgmt accept;
 
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
@@ -205,9 +226,6 @@
         udp sport bootpc udp dport bootps accept comment "DHCP clients"
         udp dport { domain, domain-s } accept
         tcp dport { domain, domain-s } accept
-
-        # FIXME: move this to upstream once bertha is the real router
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
       }
 
       chain upstream_input {
@@ -215,7 +233,7 @@
         udp sport bootps udp dport bootpc accept
         udp sport bootps udp dport bootpc accept
         ip6 nexthdr icmpv6 icmpv6 type { nd-router-advert } accept
-        ip6 nexthdr tcp tcp sport dhcpv6-server tcp dport dhcpv6-client accept
+        ip6 nexthdr udp udp sport dhcpv6-server udp dport dhcpv6-client accept
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
 
       }
@@ -236,6 +254,7 @@
         oifname uplink accept
 
         oifname lan jump forward_to_lan
+        oifname oldlan jump forward_to_lan
         oifname mgmt jump forward_to_mgmt
 
         log prefix "not forwarding: " reject
@@ -243,6 +262,10 @@
 
       chain forward_to_lan {
         tcp dport { 22 } accept
+        tcp dport { 6882 } accept;
+
+        ip6 nexthdr tcp tcp dport { 80, 443, 4001 } accept
+
         reject
       }
 
@@ -253,7 +276,8 @@
     table ip nat {
       chain prerouting {
          type nat hook prerouting priority dstnat;
-         #tcp dport { 4001 } dnat to $somewhere
+         # tcp dport { 4001 } dnat to $somewhere
+         tcp dport { 6882 } dnat to 10.250.11.63
       }
       chain postrouting {
          type nat hook postrouting priority srcnat;
@@ -261,6 +285,9 @@
       }
     }
   '';
+  services.unifi = {
+    enable = true;
+  };
 
   # allow local unbound-control invocations
   systemd.tmpfiles.rules = [
@@ -271,5 +298,10 @@
       control-enable: yes
       control-interface: /run/unbound/unbound.ctl
   '';
+  services.unbound.interfaces = [
+    ""
+  ];
   users.users.root.initialPassword = "password";
+
+  environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
 }

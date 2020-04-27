@@ -56,6 +56,22 @@ in
       "net.ipv6.conf.all.forwarding" = 1;
     };
 
+    services.unbound.interfaces = lib.mkForce (
+      [ "127.0.1.52" "::1" ] ++ (
+        lib.flatten (
+          map (
+            iface:
+              (map (addr: addr.address) iface.v4Addresses)
+              ++ (map (addr: addr.address) iface.v6Addresses)
+          )
+            cfg.downstreamInterfaces
+        )
+      )
+    );
+    environment.etc."debug".text = builtins.toJSON config.services.unbound.interfaces;
+    # allow everyone to access the resolver, filtering will be done in the firewall
+    services.unbound.allowedAccess = [ "::1/128" "127.0.0.0/8" "::/0" "0.0.0.0/0" ];
+
     fileSystems."/" = {
       device = "/dev/disk/by-uuid/662313c7-5fa6-460f-80a8-c3aaa26fad80";
       fsType = "ext4";
@@ -125,9 +141,11 @@ in
           dhcpServerConfig = {
             PoolOffset = 10;
             EmitDNS = true;
+            DNS = (map (addr: addr.address) conf.v4Addresses);
             EmitNTP = true;
             EmitRouter = true;
             EmitTimezone = true;
+            Timezone = "Europe/Berlin";
           };
 
           ipv6PrefixDelegationConfig = {
@@ -143,7 +161,15 @@ in
                 ValidLifetimeSec = 1800;
               };
             }
-          ];
+          ] ++ (
+            map (
+              addr: {
+                ipv6PrefixConfig = {
+                  Prefix = "${addr.address}/${toString addr.prefixLength}";
+                };
+              }
+            ) conf.v6Addresses
+          );
         };
       in
         builtins.trace "${builtins.toJSON v.value}" v;
