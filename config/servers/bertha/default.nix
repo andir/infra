@@ -26,6 +26,7 @@ in
     ./nixpkgs.nix
     ./router.nix
     ../../profiles/server.nix
+    ./unifi.nix
   ];
 
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
@@ -291,10 +292,7 @@ in
       }
     }
   '';
-  services.unifi = {
-    enable = true;
-    unifiPackage = pkgs.unifiStable;
-  };
+
 
   # allow local unbound-control invocations
   systemd.tmpfiles.rules = [
