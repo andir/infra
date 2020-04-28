@@ -257,7 +257,13 @@ in
         oifname oldlan jump forward_to_lan
         oifname mgmt jump forward_to_mgmt
 
+        oifname "wg-*" jump forward_to_wg
+
         log prefix "not forwarding: " reject
+      }
+
+      chain forward_to_wg {
+        iifname lan accept;
       }
 
       chain forward_to_lan {
