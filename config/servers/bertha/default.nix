@@ -270,7 +270,7 @@ in
         tcp dport { 22 } accept
         tcp dport { 6882 } accept;
 
-        ip6 nexthdr tcp tcp dport { 80, 443, 4001 } accept
+        ip6 nexthdr tcp tcp dport { 80, 443, 4001, 22000 } accept
 
         reject
       }
