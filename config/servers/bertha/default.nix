@@ -293,6 +293,7 @@ in
   '';
   services.unifi = {
     enable = true;
+    unifiPackage = pkgs.unifiStable;
   };
 
   # allow local unbound-control invocations
