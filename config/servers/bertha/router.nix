@@ -117,6 +117,33 @@ in
           Managed = true;
           OtherInformation = true;
         };
+        routes = [
+          {
+            routeConfig = {
+              Destination = "fd00::/8";
+              Type = "blackhole";
+            };
+          }
+          {
+            routeConfig = {
+              Destination = "10.0.0.0/8";
+              Type = "blackhole";
+            };
+          }
+          {
+            routeConfig = {
+              Destination = "172.16.0.0/12";
+              Type = "blackhole";
+            };
+          }
+          {
+            routeConfig = {
+              Destination = "192.168.0.0/16";
+              Type = "blackhole";
+            };
+          }
+
+        ];
       };
       mkClientIfConfig = conf: let
         v = nameValuePair "00-${conf.interface}" {
