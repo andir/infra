@@ -135,7 +135,7 @@ in
 
           networkConfig = {
             DHCPServer = mkDefault true;
-            IPv6PrefixDelegation = "dhcpv6";
+            IPv6PrefixDelegation = "yes";
           };
 
           dhcpServerConfig = {
