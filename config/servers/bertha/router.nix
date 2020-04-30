@@ -19,6 +19,10 @@ let
       interface = mkOption {
         type = types.str;
       };
+      subnetId = mkOption {
+        type = types.nullOr types.int;
+        default = null;
+      };
       v6Addresses = mkOption {
         type = types.listOf addressesOptions;
       };
@@ -79,12 +83,11 @@ in
 
     systemd.services."systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
 
-    # if systemd is below 244 patch it to carry the new prefix hint flag
-    systemd.package = mkIf (lib.versionOlder pkgs.systemd.version "244") (
+    systemd.package = (
       pkgs.systemd.overrideAttrs (
         { patches ? [], ... }: {
           patches = patches ++ [
-            ./systemd-bacd67562b954a077a658a935c494f7e40a6c8db.patch
+            ./systemd-ipv6-prefix-subnetid.patch
           ];
         }
       )
@@ -179,6 +182,11 @@ in
             RouterLifetimeSec = 300;
             EmitDNS = true;
           };
+
+          extraConfig = lib.optionalString (conf.subnetId != null) ''
+            [Network]
+            IPv6PDSubnetId=${toString conf.subnetId}
+          '';
 
           ipv6Prefixes = [
             {

@@ -153,6 +153,7 @@ in
     downstreamInterfaces = [
       {
         interface = "lan";
+        subnetId = 10;
         v4Addresses = [
           { address = "172.20.24.1"; prefixLength = 24; }
         ];
@@ -162,6 +163,7 @@ in
       }
       {
         interface = "oldlan";
+        subnetId = 11;
         v4Addresses = [
           { address = "10.250.11.254"; prefixLength = 24; }
         ];
@@ -251,6 +253,9 @@ in
 
         ct state {established, related} accept
 
+        ip protocol icmp accept
+        ip6 nexthdr icmpv6 accept
+
         # everything can go out
         oifname uplink accept
 
@@ -271,7 +276,7 @@ in
         tcp dport { 22 } accept
         tcp dport { 6882 } accept;
 
-        ip6 nexthdr tcp tcp dport { 80, 443, 4001, 22000 } accept
+        ip6 nexthdr tcp tcp dport { 22, 80, 443, 4001, 22000 } accept
 
         reject
       }

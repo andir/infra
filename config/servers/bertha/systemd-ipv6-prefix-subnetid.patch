@@ -1,0 +1,461 @@
+diff --git a/src/basic/in-addr-util.c b/src/basic/in-addr-util.c
+index bfe855fb4b..f6008a04e8 100644
+--- a/src/basic/in-addr-util.c
++++ b/src/basic/in-addr-util.c
+@@ -179,41 +179,61 @@ int in_addr_prefix_next(int family, union in_addr_union *u, unsigned prefixlen)
+         /* Increases the network part of an address by one. Returns
+          * positive it that succeeds, or 0 if this overflows. */
+ 
++        return in_addr_prefix_nth(family, u, prefixlen, 1);
++}
++
++int in_addr_prefix_nth(int family, union in_addr_union *u, unsigned prefixlen, unsigned nth) {
++        assert(u);
++
+         if (prefixlen <= 0)
+                 return 0;
+ 
++        if (nth == 0) { // identity??
++                return 1;
++        }
++
+         if (family == AF_INET) {
+                 uint32_t c, n;
+-
+                 if (prefixlen > 32)
+                         prefixlen = 32;
+ 
+                 c = be32toh(u->in.s_addr);
+-                n = c + (1UL << (32 - prefixlen));
++
++                n = c + (nth * (1UL << (32 - prefixlen)));
++
+                 if (n < c)
+-                        return 0;
+-                n &= 0xFFFFFFFFUL << (32 - prefixlen);
++                        return 0; // overflow
+ 
++                n &= 0xFFFFFFFFUL << (32 - prefixlen);
+                 u->in.s_addr = htobe32(n);
+                 return 1;
++
+         }
+ 
+         if (family == AF_INET6) {
+-                struct in6_addr add = {}, result;
++                struct in6_addr result = {};
+                 uint8_t overflow = 0;
++                uint64_t delta ; // this assumes that we only ever have to up to 2<<64 subnets
+                 unsigned i;
++                unsigned start_byte = (prefixlen -1) / 8;
+ 
+                 if (prefixlen > 128)
+                         prefixlen = 128;
+ 
+                 /* First calculate what we have to add */
+-                add.s6_addr[(prefixlen-1) / 8] = 1 << (7 - (prefixlen-1) % 8);
++                delta = nth << ((128 - prefixlen) % 8);
+ 
+                 for (i = 16; i > 0; i--) {
+                         unsigned j = i - 1;
++                        unsigned d = 0;
+ 
+-                        result.s6_addr[j] = u->in6.s6_addr[j] + add.s6_addr[j] + overflow;
+-                        overflow = (result.s6_addr[j] < u->in6.s6_addr[j]);
++                        if (j <= start_byte) {
++                                d = delta & 0xFF;
++                                delta >>= 8;
++                                result.s6_addr[j] = u->in6.s6_addr[j] + d + overflow;
++                                overflow = (result.s6_addr[j] < u->in6.s6_addr[j]);
++                        } else
++                                result.s6_addr[j] = u->in6.s6_addr[j];
+                 }
+ 
+                 if (overflow)
+diff --git a/src/basic/in-addr-util.h b/src/basic/in-addr-util.h
+index ae2dad0bb1..5e72048a96 100644
+--- a/src/basic/in-addr-util.h
++++ b/src/basic/in-addr-util.h
+@@ -36,6 +36,7 @@ bool in4_addr_equal(const struct in_addr *a, const struct in_addr *b);
+ int in_addr_equal(int family, const union in_addr_union *a, const union in_addr_union *b);
+ int in_addr_prefix_intersect(int family, const union in_addr_union *a, unsigned aprefixlen, const union in_addr_union *b, unsigned bprefixlen);
+ int in_addr_prefix_next(int family, union in_addr_union *u, unsigned prefixlen);
++int in_addr_prefix_nth(int family, union in_addr_union *u, unsigned prefixlen, unsigned nth);
+ int in_addr_random_prefix(int family, union in_addr_union *u, unsigned prefixlen_fixed_part, unsigned prefixlen);
+ int in_addr_to_string(int family, const union in_addr_union *u, char **ret);
+ int in_addr_prefix_to_string(int family, const union in_addr_union *u, unsigned prefixlen, char **ret);
+diff --git a/src/network/networkd-dhcp6.c b/src/network/networkd-dhcp6.c
+index 7304270c60..0d1b2509b4 100644
+--- a/src/network/networkd-dhcp6.c
++++ b/src/network/networkd-dhcp6.c
+@@ -35,6 +35,105 @@ static bool dhcp6_get_prefix_delegation(Link *link) {
+                       RADV_PREFIX_DELEGATION_BOTH);
+ }
+ 
++static bool dhcp6_has_preferred_subnet_id(Link *link) {
++        assert(link->network);
++        return link->network->router_prefix_subnet_id > -1;
++}
++
++static int dhcp6_get_preferred_delgated_prefix(
++                /* IN */
++                Manager* manager,
++                Link *link,
++                struct in6_addr *pd_prefix,
++                uint8_t pd_prefix_len,
++
++                /* OUT */
++                struct in6_addr *addr
++) {
++
++        int r;
++        union in_addr_union prefix;
++        union in_addr_union pd_prefix_union;
++        const uint8_t prefix_bits = 64 - pd_prefix_len;
++        const uint64_t n_prefixes = UINT64_C(1) << prefix_bits;
++        const int64_t subnet_id = link->network->router_prefix_subnet_id;
++        _cleanup_free_ char *assigned_buf = NULL;
++
++        pd_prefix_union.in6 = *pd_prefix;
++
++        // We start off with the original PD prefix we have been assigned and
++        // iterate from there
++        prefix.in6 = *pd_prefix;
++        log_link_debug(link, "subnet id %" PRIi64, subnet_id);
++
++        if (subnet_id > -1) { // FIXME: duplicated logic with dhcp6_has_preferred_subnet_id, probably unavoidable?
++                // If the link has a preference for a particular subnet id try to
++                // allocate that
++                if ((uint64_t)subnet_id >= n_prefixes) {
++                        log_link_debug(link, "subnet id %" PRIi64 " is out of range. Only have %" PRIu64 " subnets",
++                                        subnet_id,
++                                        n_prefixes);
++                        return -1;
++                } else {
++                        r = in_addr_prefix_nth(AF_INET6, &prefix, 64, subnet_id);
++                        if (r < 0)
++                                return r;
++
++                        (void) in_addr_to_string(AF_INET6, &prefix, &assigned_buf);
++
++                        // Verify that the prefix we did calculate fits in the
++                        // pd prefix.  FIXME: this error should never happen
++                        // given that the code above is correct.
++                        r = in_addr_prefix_covers(AF_INET6, &pd_prefix_union, pd_prefix_len, &prefix);
++                        if (!r) {
++
++                                log_link_error(link, "Prefix %s is outside of the PD prefix. Not assigning.",
++                                                strnull(assigned_buf));
++                                return -1;
++                        }
++
++
++                        Link* assigned_link = dhcp6_prefix_get(manager, &prefix.in6);
++
++                        if (assigned_link && assigned_link != link) {
++                                log_link_error(link, "The requested prefix %s is already assigned to another link: %s",
++                                               assigned_buf,
++                                               strnull(assigned_link->ifname)
++                                );
++                                return -EAGAIN; // FIXME: is -EAGAIN the right error code here?
++                        }
++                        *addr = prefix.in6;
++
++                        log_link_debug(link, "The requested prefix %s is available. Using it.",
++                                       strnull(assigned_buf)
++                        );
++                        return 0;
++                }
++        } else {
++                for (uint64_t n  = 0; n < n_prefixes; n++) {
++                        // if we do not have an allocation preference just iterate
++                        // through the address space and return the first free prefix.
++                        Link* assigned_link = dhcp6_prefix_get(manager, &prefix.in6);
++
++                        if (!assigned_link || assigned_link == link) {
++                                *addr = prefix.in6;
++                                return 0;
++                        }
++
++                        r = in_addr_prefix_next(AF_INET6, &prefix, 64);
++                        // Running out of prefixes?
++                        if (r < 0) {
++                                log_link_error(link, "Can't allocate another prefix. Out of address space?");
++                                return r;
++                        }
++                }
++
++                log_link_warning(link, "Couldn't find a suitable prefix. Ran out of address space.");
++        }
++
++        return -1;
++}
++
+ static bool dhcp6_enable_prefix_delegation(Link *dhcp6_link) {
+         Manager *manager;
+         Link *l;
+@@ -169,11 +268,12 @@ static int dhcp6_pd_prefix_distribute(Link *dhcp6_link, Iterator *i,
+                                       struct in6_addr *pd_prefix,
+                                       uint8_t pd_prefix_len,
+                                       uint32_t lifetime_preferred,
+-                                      uint32_t lifetime_valid) {
++                                      uint32_t lifetime_valid,
++                                      bool assign_preferred_subnet_id) {
+         Link *link;
+         Manager *manager = dhcp6_link->manager;
+         union in_addr_union prefix;
+-        uint64_t n_prefixes, n_used = 0;
++        uint64_t n_prefixes;
+         _cleanup_free_ char *buf = NULL;
+         _cleanup_free_ char *assigned_buf = NULL;
+         int r;
+@@ -193,15 +293,10 @@ static int dhcp6_pd_prefix_distribute(Link *dhcp6_link, Iterator *i,
+         log_link_debug(dhcp6_link, "Assigning up to %" PRIu64 " prefixes from %s/%u",
+                        n_prefixes, strnull(buf), pd_prefix_len);
+ 
+-        while (hashmap_iterate(manager->links, i, (void **)&link, NULL)) {
+-                Link *assigned_link;
+-
+-                if (n_used == n_prefixes) {
+-                        log_link_debug(dhcp6_link, "Assigned %" PRIu64 "/%" PRIu64 " prefixes from %s/%u",
+-                                       n_used, n_prefixes, strnull(buf), pd_prefix_len);
+ 
+-                        return -EAGAIN;
+-                }
++        // First iteration. Those that requested a subnet id.
++        while (hashmap_iterate(manager->links, i, (void **)&link, NULL)) {
++                union in_addr_union assgined_prefix;
+ 
+                 if (link == dhcp6_link)
+                         continue;
+@@ -209,33 +304,44 @@ static int dhcp6_pd_prefix_distribute(Link *dhcp6_link, Iterator *i,
+                 if (!dhcp6_get_prefix_delegation(link))
+                         continue;
+ 
+-                assigned_link = dhcp6_prefix_get(manager, &prefix.in6);
+-                if (assigned_link && assigned_link != link)
++                // FIXME: remove me
++                log_link_debug(link, "Trying to acquire a subnet");
++
++                if (assign_preferred_subnet_id && !dhcp6_has_preferred_subnet_id(link))
+                         continue;
+ 
+-                (void) in_addr_to_string(AF_INET6, &prefix, &assigned_buf);
+-                r = dhcp6_pd_prefix_assign(link, &prefix.in6, 64,
++                if (!assign_preferred_subnet_id && dhcp6_has_preferred_subnet_id(link))
++                        continue;
++
++                r = dhcp6_get_preferred_delgated_prefix(manager, link, &prefix.in6, pd_prefix_len,
++                                                        &assgined_prefix.in6);
++
++                if (assign_preferred_subnet_id && -EAGAIN == r) {
++                        // A link has a preferred subnet_id but that one is
++                        // already taken by another link. Now all the remaining
++                        // links will also not obtain a prefix. The called
++                        // function takes care of logging this (configuration)
++                        // error.
++                        // FIXME: return -EAGAIN ?
++                        continue;
++                } else if (r < 0) {
++                        // FIXME: remove me
++                        log_link_debug(link, "Failed to acquire prefix: %i", r);
++
++                        return r;
++                }
++
++                (void) in_addr_to_string(AF_INET6, &assgined_prefix, &assigned_buf);
++                r = dhcp6_pd_prefix_assign(link, &assgined_prefix.in6, 64,
+                                            lifetime_preferred, lifetime_valid);
+                 if (r < 0) {
+-                        log_link_error_errno(link, r, "Unable to %s prefix %s/64 from %s/%u for link: %m",
+-                                             assigned_link ? "update": "assign",
++                        log_link_error_errno(link, r, "Unable to assign/update prefix %s/64 from %s/%u for link: %m",
+                                              strnull(assigned_buf),
+                                              strnull(buf), pd_prefix_len);
+-
+-                        if (!assigned_link)
+-                                continue;
+-
+                 } else
+-                        log_link_debug(link, "Assigned prefix %" PRIu64 "/%" PRIu64 " %s/64 from %s/%u to link",
+-                                       n_used + 1, n_prefixes,
++                        log_link_debug(link, "Assigned prefix %s/64 from %s/%u to link",
+                                        strnull(assigned_buf),
+                                        strnull(buf), pd_prefix_len);
+-
+-                n_used++;
+-
+-                r = in_addr_prefix_next(AF_INET6, &prefix, 64);
+-                if (r < 0 && n_used < n_prefixes)
+-                        return r;
+         }
+ 
+         return 0;
+@@ -314,13 +420,60 @@ static int dhcp6_lease_pd_prefix_acquired(sd_dhcp6_client *client, Link *link) {
+                 } else
+                         log_link_debug(link, "Not adding a blocking route since distributed prefix is /64");
+ 
++                // We are doing prefix allocation in two steps:
++                // 1. all those links that have a prefered subnet id will be assigned their subnet
++                // 2. all those links that remain will receive prefixes in sequential
++                //    order. Prefixes that were previously already allocated to another
++                //    link will be skipped.
++                //
++                // If a subnet id request couldn't be fullfilled the failure will be logged (as error)
++                // and no further attempts at obtaining a prefix will be made.
++                //
++                // The assignment has to be split in two phases since subnet id
++                // preferences should be honored. Meaning that any subnet id should be
++                // handed out to the requesting link and not to some link that didn't
++                // specify any preference.
++
++                r = dhcp6_pd_prefix_distribute(link, &i, &pd_prefix.in6,
++                                               pd_prefix_len,
++                                               lifetime_preferred,
++                                               lifetime_valid,
++                                               true);
++
++                if (r < 0 && r != -EAGAIN)
++                        return r;
++
++                // if r == -EAGAIN then the allocation failed because we ran
++                // out of addresses for the prefered subnet id's. This doesn't
++                // mean we can't fullfill other prefix requests.
++                //
++                // Since we do not have a list of links that request specific
++                // subnet id's and those that do not we *must* reset the
++                // iterator to the start as otherwise some links might not get
++                // their requested prefix.
++
++                i = ITERATOR_FIRST;
++
+                 r = dhcp6_pd_prefix_distribute(link, &i, &pd_prefix.in6,
+                                                pd_prefix_len,
+                                                lifetime_preferred,
+-                                               lifetime_valid);
++                                               lifetime_valid,
++                                               false);
+                 if (r < 0 && r != -EAGAIN)
+                         return r;
+ 
++                // If the prefix distribution did return -EAGAIN we will try to
++                // fullfill those with the next available pd delgated prefix.
++                //
++                // FIXME: we should probably just add a check if a link already
++                // has a prefix assigned to it and then skip it instead of
++                // keeping track of this iterator. There is really no sensible
++                // way to deal with this when we have two classes of
++                // assignments (with subnet id and without).
++                // This will currently lead to duplicate prefixes on interfaces
++                // when there are multiple "upstream" PD assignments that we
++                // know about.
++
+                 if (r >= 0)
+                         i = ITERATOR_FIRST;
+         }
+diff --git a/src/network/networkd-network-gperf.gperf b/src/network/networkd-network-gperf.gperf
+index fb726c8634..75ba2d6305 100644
+--- a/src/network/networkd-network-gperf.gperf
++++ b/src/network/networkd-network-gperf.gperf
+@@ -231,6 +231,7 @@ BridgeVLAN.PVID,                             config_parse_brvlan_pvid,
+ BridgeVLAN.VLAN,                             config_parse_brvlan_vlan,                                 0,                             0
+ BridgeVLAN.EgressUntagged,                   config_parse_brvlan_untagged,                             0,                             0
+ Network.IPv6PrefixDelegation,                config_parse_router_prefix_delegation,                    0,                             0
++Network.IPv6PDSubnetId,                      config_parse_int32,                                       0,                             offsetof(Network, router_prefix_subnet_id)
+ IPv6PrefixDelegation.RouterLifetimeSec,      config_parse_sec,                                         0,                             offsetof(Network, router_lifetime_usec)
+ IPv6PrefixDelegation.Managed,                config_parse_bool,                                        0,                             offsetof(Network, router_managed)
+ IPv6PrefixDelegation.OtherInformation,       config_parse_bool,                                        0,                             offsetof(Network, router_other_information)
+diff --git a/src/network/networkd-network.c b/src/network/networkd-network.c
+index 2e716b291e..15c481a25d 100644
+--- a/src/network/networkd-network.c
++++ b/src/network/networkd-network.c
+@@ -408,6 +408,7 @@ int network_load_one(Manager *manager, OrderedHashmap **networks, const char *fi
+                 .dhcp_server_emit_router = true,
+                 .dhcp_server_emit_timezone = true,
+ 
++                .router_prefix_subnet_id = -1,
+                 .router_emit_dns = true,
+                 .router_emit_domains = true,
+ 
+diff --git a/src/network/networkd-network.h b/src/network/networkd-network.h
+index 266e40cef5..36e9c6a23c 100644
+--- a/src/network/networkd-network.h
++++ b/src/network/networkd-network.h
+@@ -159,6 +159,7 @@ struct Network {
+ 
+         /* IPv6 prefix delegation support */
+         RADVPrefixDelegation router_prefix_delegation;
++        int32_t router_prefix_subnet_id;
+         usec_t router_lifetime_usec;
+         uint8_t router_preference;
+         bool router_managed;
+diff --git a/src/test/test-socket-util.c b/src/test/test-socket-util.c
+index d36caaa71e..9f31870197 100644
+--- a/src/test/test-socket-util.c
++++ b/src/test/test-socket-util.c
+@@ -173,6 +173,45 @@ static void test_in_addr_prefix_next(void) {
+         test_in_addr_prefix_next_one(AF_INET6, "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ff00", 120, NULL);
+ }
+ 
++
++static void test_in_addr_prefix_nth_one(unsigned f, const char *before, unsigned pl, unsigned nth, const char *after) {
++        union in_addr_union ubefore, uafter, t;
++
++        char* s;
++
++        assert_se(in_addr_from_string(f, before, &ubefore) >= 0);
++
++        t = ubefore;
++        int r = in_addr_prefix_nth(f, &t, pl, nth);
++        (void) in_addr_to_string(f, &t, &s);
++        assert_se((r > 0) == !!after);
++
++        if (after) {
++                assert_se(in_addr_from_string(f, after, &uafter) >= 0);
++                assert_se(in_addr_equal(f, &t, &uafter) > 0);
++        }
++}
++
++static void test_in_addr_prefix_nth(void) {
++        log_info("/* %s */", __func__);
++
++        test_in_addr_prefix_nth_one(AF_INET, "192.168.0.0", 24, 0, "192.168.0.0");
++        test_in_addr_prefix_nth_one(AF_INET, "192.168.0.0", 24, 1, "192.168.1.0");
++        test_in_addr_prefix_nth_one(AF_INET, "192.168.0.0", 24, 4, "192.168.4.0");
++        test_in_addr_prefix_nth_one(AF_INET, "192.168.0.0", 25, 1, "192.168.0.128");
++        test_in_addr_prefix_nth_one(AF_INET, "192.168.255.0", 25, 1, "192.168.255.128");
++        test_in_addr_prefix_nth_one(AF_INET, "192.168.255.0", 24, 0, "192.168.255.0");
++        test_in_addr_prefix_nth_one(AF_INET, "255.255.255.255", 32, 1, NULL);
++
++        test_in_addr_prefix_nth_one(AF_INET6, "4400::", 8, 1, "4500::");
++        test_in_addr_prefix_nth_one(AF_INET6, "4400::", 7, 1, "4600::");
++        test_in_addr_prefix_nth_one(AF_INET6, "4400::", 64, 1, "4400:0:0:1::");
++        test_in_addr_prefix_nth_one(AF_INET6, "4400::", 64, 2, "4400:0:0:2::");
++        test_in_addr_prefix_nth_one(AF_INET6, "4400::", 64, 0xbad, "4400:0:0:0bad::");
++        test_in_addr_prefix_nth_one(AF_INET6, "4400:0:0:ffff::", 64, 1, "4400:0:1::");
++        test_in_addr_prefix_nth_one(AF_INET6, "ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff", 128, 1, NULL);
++}
++
+ static void test_in_addr_to_string_one(int f, const char *addr) {
+         union in_addr_union ua;
+         _cleanup_free_ char *r = NULL;
+@@ -673,6 +712,7 @@ int main(int argc, char *argv[]) {
+         test_in_addr_is_null();
+         test_in_addr_prefix_intersect();
+         test_in_addr_prefix_next();
++        test_in_addr_prefix_nth();
+         test_in_addr_to_string();
+         test_in_addr_ifindex_to_string();
+         test_in_addr_ifindex_from_string_auto();
+diff --git a/test/fuzz/fuzz-network-parser/directives.network b/test/fuzz/fuzz-network-parser/directives.network
+index 2b41239b74..f51f42ec05 100644
+--- a/test/fuzz/fuzz-network-parser/directives.network
++++ b/test/fuzz/fuzz-network-parser/directives.network
+@@ -174,6 +174,7 @@ NTP=
+ DHCP=
+ Domains=
+ IPv6PrefixDelegation=
++IPv6PDSubnetId=
+ VLAN=
+ DHCPServer=
+ BindCarrier=

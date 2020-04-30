@@ -1,14 +1,14 @@
 {
     "bertha-nixpkgs": {
-        "branch": "networkd-options-systemd-245",
+        "branch": "systemd-update-networkd-options",
         "description": "Nix Packages collection",
         "homepage": null,
         "owner": "andir",
         "repo": "nixpkgs",
-        "rev": "2521db31c28fb3a7be482ad582356d1859e2a0e3",
-        "sha256": "1pdaa7qbqr8w0vilkh9hhwbnfm2n3b0k7nzsfv97p1friyp1d7fj",
+        "rev": "26a62ca138478f5db8867c58994493ef24797ceb",
+        "sha256": "1rmc9q90apkzhk1x5wp8y9n3wbpfx6cxrznky8ljscyp3cy28jr5",
         "type": "tarball",
-        "url": "https://github.com/andir/nixpkgs/archive/2521db31c28fb3a7be482ad582356d1859e2a0e3.tar.gz",
+        "url": "https://github.com/andir/nixpkgs/archive/26a62ca138478f5db8867c58994493ef24797ceb.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
