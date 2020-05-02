@@ -88,6 +88,22 @@ let
       targetName = mkDefault name;
     };
   };
+
+  smtpMonitoringEntry = { name, ... }: {
+    options = {
+      targetName = mkOption {
+        type = types.str;
+      };
+
+      startTls = mkOption {
+        type = types.bool;
+        default = true;
+      };
+    };
+    config = {
+      targetName = name;
+    };
+  };
 in
 {
   options.h4ck.monitoring = {
@@ -110,6 +126,11 @@ in
 
     icmp = mkOption {
       type = types.attrsOf (types.submodule icmpMonitoringEntry);
+      default = {};
+    };
+
+    smtp = mkOption {
+      type = types.attrsOf (types.submodule smtpMonitoringEntry);
       default = {};
     };
   };
@@ -209,7 +230,7 @@ in
       )
 
       (
-        mkIf (config.h4ck.monitoring.dns != {} || config.h4ck.monitoring.icmp != {}) (
+        mkIf (config.h4ck.monitoring.dns != {} || config.h4ck.monitoring.icmp != {} || config.h4ck.monitoring.smtp != {}) (
           mkMerge [
             {
               services.prometheus.exporters.blackbox.enable = true;
@@ -251,6 +272,31 @@ in
                           ;
                         }
                       ) config.h4ck.monitoring.icmp
+                  )
+                  // (
+                    lib.mapAttrs'
+                      (
+                        target: params: lib.nameValuePair
+                          "smtp_${target}" {
+                          prober = "tcp";
+                          timeout = "5s";
+                          tcp.query_response = [
+                            { expect = "^220 ([^ ]+) ESMTP (.+)$"; }
+                            { send = "EHLO prober"; }
+                          ] ++ (
+                            lib.optionals params.startTls [
+                              { expect = "^250-STARTTLS"; }
+                              { send = "STARTTLS"; }
+                              { expect = "^220"; }
+                              { starttls = true; }
+                              { send = "EHLO prober"; }
+                              { expect = "^250-AUTH"; }
+                            ]
+                          ) ++ [
+                            { send = "QUIT"; }
+                          ];
+                        }
+                      ) config.h4ck.monitoring.smtp
                   )
                 ;
               };
@@ -322,11 +368,42 @@ in
                             target_label = "__address__";
                             replacement = config.h4ck.monitoring.targetHost + ":9115";
                           }
-
                         ];
                       };
                     }
                   ) config.h4ck.monitoring.icmp
+                ) // (
+                  lib.mapAttrs' (
+                    target: params: lib.nameValuePair
+                      "smtp_${target}" {
+                      port = 9115;
+                      job_config = {
+                        params.module = [ "smtp_${target}" ];
+                        metrics_path = "/probe";
+                        static_configs = [
+                          {
+                            targets = [
+                              params.targetName
+                            ];
+                          }
+                        ];
+                        relabel_configs = [
+                          {
+                            source_labels = [ "__address__" ];
+                            target_label = "__param_target";
+                          }
+                          {
+                            source_labels = [ "__param_target" ];
+                            target_label = "instance";
+                          }
+                          {
+                            target_label = "__address__";
+                            replacement = config.h4ck.monitoring.targetHost + ":9115";
+                          }
+                        ];
+                      };
+                    }
+                  ) config.h4ck.monitoring.smtp
                 );
               }
             )

@@ -62,6 +62,10 @@
             receiver = "ana-xmpp-notify";
             match.external = "ana";
           }
+          {
+            receiver = "maralorn-xmpp-notify";
+            match.external = "maralorn";
+          }
         ];
       };
       receivers = [
@@ -77,7 +81,12 @@
             { url = "http://127.0.0.1:9199/alert/ana@xmpp.megfau.lt"; }
           ];
         }
-
+        {
+          name = "maralorn-xmpp-notify";
+          webhook_configs = [
+            { url = "http://127.0.0.1:9199/alert/maralorn@darmstadt.ccc.de"; }
+          ];
+        }
       ];
     };
   };
