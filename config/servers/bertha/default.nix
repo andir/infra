@@ -221,6 +221,7 @@ in
         ip6 nexthdr icmpv6 accept
         ip6 nexthdr udp udp dport 6696 accept # babel
         ip6 nexthdr tcp tcp dport 9100 accept # node-exporter
+        ip6 nexthdr tcp tcp dport 9113 accept # nginx-exporter
       }
 
       chain lan_input {
