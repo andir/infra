@@ -260,6 +260,9 @@ in
         # everything can go out
         oifname uplink accept
 
+        oifname lan iifname oldlan accept
+        oifname oldlan iifname lan accept
+
         oifname lan jump forward_to_lan
         oifname oldlan jump forward_to_lan
         oifname mgmt jump forward_to_mgmt
