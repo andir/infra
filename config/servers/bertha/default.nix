@@ -293,7 +293,7 @@ in
       chain prerouting {
          type nat hook prerouting priority dstnat;
          # tcp dport { 4001 } dnat to $somewhere
-         tcp dport { 6882 } dnat to 10.250.11.63
+         iifname uplink tcp dport { 6882 } dnat to 10.250.11.63
       }
       chain postrouting {
          type nat hook postrouting priority srcnat;

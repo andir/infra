@@ -142,6 +142,15 @@ in
         }
       )
 
+      # on nodes running prometheus also scrape prometheus own metrics
+      (
+        mkIf config.services.prometheus.enable {
+          h4ck.monitoring.targets.prometheus = {
+            port = 909;
+          };
+        }
+      )
+
       # enable the nginx exporter if nginx is used on the host
       (
         mkIf config.services.nginx.enable (
