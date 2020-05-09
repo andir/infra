@@ -99,6 +99,8 @@ in
         config = let
           firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) cfg.addresses);
           firstV4Address = lib.head (builtins.split "/" firstV4Net);
+
+          interfaces = lib.mapAttrsToList (_: p: p.interfaceName) cfg.peers;
         in
           ''
             # FIXME: move the router id somewhere else. What if we would do proper peering as well?
@@ -106,7 +108,7 @@ in
 
             protocol device {
               scan time 60;
-              interface "wg-*" {};
+              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") interfaces} {};
             };
 
             protocol direct {
@@ -141,7 +143,7 @@ in
 
             protocol babel wgbackbone {
               randomize router id yes;
-              interface "wg-*" {
+              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") interfaces} {
                 type wired;
               };
               ipv4 {
