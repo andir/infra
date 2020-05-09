@@ -146,7 +146,7 @@ in
       (
         mkIf config.services.prometheus.enable {
           h4ck.monitoring.targets.prometheus = {
-            port = 909;
+            port = 9090;
           };
         }
       )
