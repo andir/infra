@@ -65,6 +65,8 @@ in
 
   config = let
     cfg = config.h4ck.wireguardBackbone;
+    firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) cfg.addresses);
+    firstV4Address = lib.head (builtins.split "/" firstV4Net);
   in
     lib.mkIf (cfg.peers != {} && cfg.addresses != []) {
       environment.systemPackages = [ pkgs.wireguard ];
@@ -94,18 +96,16 @@ in
         };
       };
       boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+      h4ck.bird = {
+        enable = true;
+        routerId = firstV4Address;
+      };
       services.bird2 = {
         enable = lib.mkDefault true;
         config = let
-          firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) cfg.addresses);
-          firstV4Address = lib.head (builtins.split "/" firstV4Net);
-
           interfaces = lib.mapAttrsToList (_: p: p.interfaceName) cfg.peers;
         in
           ''
-            # FIXME: move the router id somewhere else. What if we would do proper peering as well?
-            router id ${firstV4Address};
-
             protocol device {
               scan time 60;
               interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") interfaces} {};

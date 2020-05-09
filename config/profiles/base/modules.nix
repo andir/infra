@@ -11,5 +11,6 @@
     ../../modules/ssh-unlock.nix
     ../../modules/syncserver
     ../../modules/wireguard
+    ../../modules/bird
   ];
 }
