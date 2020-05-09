@@ -106,18 +106,12 @@ in
           interfaces = lib.mapAttrsToList (_: p: p.interfaceName) cfg.peers;
         in
           ''
-            protocol device {
+            protocol device wg_device {
               scan time 60;
               interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") interfaces} {};
             };
 
-            protocol direct {
-              ipv4;
-              ipv6;
-              interface "*";
-            };
-
-            protocol kernel kv4 {
+            protocol kernel wg_kv4 {
               learn;
               persist;
               ipv4 {
@@ -129,7 +123,7 @@ in
               };
             };
 
-            protocol kernel kv6 {
+            protocol kernel wg_kv6 {
               learn;
               persist;
               ipv6 {

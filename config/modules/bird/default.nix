@@ -15,6 +15,13 @@ in
       enable = true;
       config = ''
         router id ${cfg.routerId};
+
+        protocol direct {
+          ipv4;
+          ipv6;
+          interface "*";
+        };
+
       '';
     };
   };
