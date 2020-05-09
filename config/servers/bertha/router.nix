@@ -29,6 +29,16 @@ let
       v4Addresses = mkOption {
         type = types.listOf addressesOptions;
       };
+
+      dnsOverTls = mkOption {
+        type = types.bool;
+        default = false;
+        description = ''
+          Enable DNS-o-TLS on this interface. This will make unbound listen on
+          the address on port 853. You must ensure that unbound is configured
+          with the desired certificate.
+        '';
+      };
     };
   };
 in
@@ -67,6 +77,12 @@ in
             iface:
               (map (addr: addr.address) iface.v4Addresses)
               ++ (map (addr: addr.address) iface.v6Addresses)
+              ++ (
+                if iface.dnsOverTls then (
+                  (map (addr: "${addr.address}@853") iface.v4Addresses)
+                  ++ (map (addr: "${addr.address}@853") iface.v6Addresses)
+                ) else []
+              )
           )
             cfg.downstreamInterfaces
         )

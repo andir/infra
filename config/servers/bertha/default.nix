@@ -155,6 +155,7 @@ in
       {
         interface = "lan";
         subnetId = 10;
+        dnsOverTls = true;
         v4Addresses = [
           { address = "172.20.24.1"; prefixLength = 24; }
         ];
@@ -308,14 +309,24 @@ in
   systemd.tmpfiles.rules = [
     "d /run/unbound 550 unbound nogroup - "
   ];
-  services.unbound.extraConfig = ''
-    remote-control:
-      control-enable: yes
-      control-interface: /run/unbound/unbound.ctl
-  '';
-  services.unbound.interfaces = [
-    ""
-  ];
+  security.acme.certs."epsilon.rammhold.de" = {
+    allowKeysForGroup = true;
+    group = "cert-users";
+  };
+  users.groups.cert-users.members = [ "nginx" "unbound" ];
+  systemd.services.unbound.wantedBy = [ "network-online.target" ];
+  services.unbound.extraConfig = let
+    privateKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/key.pem";
+    publicKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/cert.pem";
+  in
+    ''
+      server:
+        tls-service-key: ${privateKey}
+        tls-service-pem: ${publicKey}
+      remote-control:
+        control-enable: yes
+        control-interface: /run/unbound/unbound.ctl
+    '';
   users.users.root.initialPassword = "password";
 
   environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
