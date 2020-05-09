@@ -27,6 +27,7 @@ in
     ./router.nix
     ../../profiles/server.nix
     ./unifi.nix
+    ./nginx.nix
   ];
 
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
