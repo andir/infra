@@ -177,7 +177,7 @@ in
           { address = "10.250.30.254"; prefixLength = 24; }
         ];
         v6Addresses = [
-          { address = "fd21:a07e:735e:ff01::"; prefixLength = 64; }
+          { address = "fd21:a07e:735e:ff02::"; prefixLength = 64; }
         ];
       }
     ];
