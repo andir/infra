@@ -12,5 +12,6 @@
     ../../modules/syncserver
     ../../modules/wireguard
     ../../modules/bird
+    ../../modules/dn42
   ];
 }

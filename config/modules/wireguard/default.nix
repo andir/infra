@@ -38,6 +38,10 @@ let
         type = lib.types.listOf lib.types.str;
         default = [];
       };
+      localAddresses = lib.mkOption {
+        type = lib.types.nullOr (lib.types.listOf lib.types.string);
+        default = null;
+      };
     };
     config = {
       inherit name;
@@ -171,7 +175,7 @@ in
                 "40-${peer.interfaceName}" = {
                   netdevConfig = {
                     Kind = "wireguard";
-                    MTUBytes = "1300";
+                    MTUBytes = toString peer.mtu;
                     Name = "${peer.interfaceName}";
                   };
                   extraConfig = ''
@@ -200,7 +204,7 @@ in
                   addresses = map (
                     addr:
                       { addressConfig.Address = addr; }
-                  ) cfg.addresses;
+                  ) (if peer.localAddresses == null then cfg.addresses else peer.localAddresses);
                   routes = map (
                     addr:
                       { routeConfig = { Destination = addr; }; }
