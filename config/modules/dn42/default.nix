@@ -50,13 +50,17 @@ in
           types.submodule {
             options = {
               tunnelType = mkOption {
-                type = types.enum [ "wireguard" ];
+                type = types.nullOr (types.enum [ "wireguard" ]);
                 description = "tunnel technology used";
               };
               mtu = mkOption {
                 type = types.nullOr types.ints.unsigned;
                 default = null;
                 description = "mtu on the interface";
+              };
+              interfaceName = mkOption {
+                type = types.nullOr types.str;
+                default = null;
               };
               wireguardConfig = mkOption {
                 type = types.submodule {
@@ -139,7 +143,7 @@ in
       lib.mapAttrsToList (
         name: v: {
           inherit name;
-          interfaceName = interfaceNameMapping."dn42_${name}";
+          interfaceName = if v.interfaceName != null then v.interfaceName else interfaceNameMapping."dn42_${name}";
           inherit (v) bgp;
         } // (
           optionalAttrs (v.addresses.ipv4 != null) {
