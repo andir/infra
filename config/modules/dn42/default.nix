@@ -178,6 +178,9 @@ in
         # DN42 peering configuration
         #
 
+        ipv4 table dn42_v4;
+        ipv6 table dn42_v6;
+
         ${optionalString (interfaceNames != []) ''
         protocol direct dn42_direct {
           interface ${concatMapStringsSep ", " (iface: "\"${iface}\"") interfaceNames};
@@ -185,12 +188,12 @@ in
       ''}
 
         protocol static dn42_static_v4 {
-          ipv4;
+          ipv4 { table dn42_v4; };
           ${concatMapStringsSep "\n" (net: "route ${net} blackhole;") cfg.bgp.staticRoutes.ipv4}
         };
 
         protocol static dn42_static_v6 {
-          ipv6;
+          ipv6 { table dn42_v6; };
           ${concatMapStringsSep "\n" (net: "route ${net} blackhole;") cfg.bgp.staticRoutes.ipv6}
         };
 
@@ -223,6 +226,19 @@ in
         roa4 table dn42_roa_v4;
         roa6 table dn42_roa_v6;
 
+        protocol pipe dn42_v4_pipe {
+          peer table master4;
+          table dn42_v4;
+          export all;
+          import none;
+        }
+
+        protocol pipe dn42_v6_pipe {
+          peer table master6;
+          table dn42_v6;
+          export all;
+          import none;
+        }
 
         ${lib.concatMapStringsSep "\n\n" (
         peer: ''
@@ -273,12 +289,16 @@ in
             direct;
 
             ipv4 {
+              table dn42_v4;
+              igp table master4;
               add paths on;
               import filter dn42_${peer.name}_import;
               export filter dn42_${peer.name}_export;
               ${optionalString (peer.bgp.import_limit != null) "import limit ${toString peer.bgp.import_limit} action block;"}
             };
             ipv6 {
+              table dn42_v6;
+              igp table master6;
               add paths on;
               import filter dn42_${peer.name}_import;
               export filter dn42_${peer.name}_export;
@@ -288,19 +308,19 @@ in
 
           ${if peer.bgp.multi_protocol then ''
           protocol bgp dn42_${peer.name} from dn42_${peer.name}_tpl {
+            #advertise ipv4 on;
             neighbor ${peer.remoteV6} as ${toString peer.bgp.asn};
             interface "${peer.interfaceName}";
-            #advertise ipv4 on;
             ipv6 {
               mandatory on;
             };
           }
         '' else ''
-          protocol bg_dn42_${peer.name}_v4 from dn42_${peer.name}_tpl {
+          protocol bgp dn42_${peer.name}_v4 from dn42_${peer.name}_tpl {
             neighbor ${peer.remoteV4} as ${toString peer.bgp.asn};
             interface "${peer.interfaceName}";
           }
-          protocol bg_dn42_${peer.name}_v6 from dn42_${peer.name}_tpl {
+          protocol bgp dn42_${peer.name}_v6 from dn42_${peer.name}_tpl {
             #advertise ipv4 off;
             neighbor ${peer.remoteV6} as ${toString peer.bgp.asn};
             interface "${peer.interfaceName}";
