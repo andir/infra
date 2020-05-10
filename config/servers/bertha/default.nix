@@ -330,4 +330,40 @@ in
   users.users.root.initialPassword = "password";
 
   environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
+
+
+  h4ck.dn42 = {
+    enable = true;
+    bgp = {
+      asn = 4242423991;
+      staticRoutes = {
+        ipv4 = [
+          "172.20.24.0/23"
+          "172.20.25.0/25"
+          "172.20.199.0/24"
+        ];
+        ipv6 = [
+          #          "fd42:4242:4200::/40"
+          "fd21:a07e:735e::/48"
+        ];
+      };
+    };
+    peers = {
+      gitlab = {
+        tunnelType = null;
+        interfaceName = "wg-gitlab-run";
+        bgp = {
+          asn = 4242423991;
+        };
+        addresses = {
+          ipv6.local_address = "fe80::1";
+          ipv6.remote_address = "fe80::3";
+          ipv6.prefix_length = 64;
+        };
+      };
+    };
+  };
+
+
+
 }

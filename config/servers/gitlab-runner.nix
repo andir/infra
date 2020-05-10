@@ -62,6 +62,18 @@
       };
     };
     peers = {
+      bertha = {
+        interfaceName = "wg-bertha";
+        tunnelType = null;
+        bgp = {
+          asn = 4242423991;
+        };
+        addresses = {
+          ipv6.remote_address = "fe80::1";
+          ipv6.local_address = "fe80::3";
+          ipv6.prefix_length = 64;
+        };
+      };
       kn = {
         tunnelType = "wireguard";
         mtu = 1408;
