@@ -23,6 +23,10 @@ in
         ''
           router id ${cfg.routerId};
 
+          protocol device {
+            scan time 60;
+          };
+
           protocol direct {
             ipv4;
             ipv6;
