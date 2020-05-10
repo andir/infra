@@ -97,6 +97,7 @@
       };
       cccda = {
         tunnelType = "wireguard";
+        mtu = 1420;
         wireguardConfig = {
           localPort = 43025;
           remoteEndpoint = "core1.darmstadt.ccc.de";
@@ -104,15 +105,18 @@
           remotePublicKey = "iB8P2uuKGISflakJiHMGuBR7zKK44qx+ioqeBN0sEnk=";
         };
         bgp = {
-          asn = 123;
+          asn = 4242420101;
           local_pref = 100;
+          multi_protocol = false;
         };
 
         addresses = {
           ipv4.local_address = "172.20.255.237";
           ipv4.remote_address = "172.20.255.238";
+          ipv4.prefix_length = 30;
           ipv6.local_address = "fe80::f00";
           ipv6.remote_address = "fe80::ccc:da";
+          ipv6.prefix_length = 64;
         };
       };
     };
