@@ -11,6 +11,11 @@ let
         default = false;
       };
 
+      mtu = lib.mkOption {
+        type = lib.types.ints.unsigned;
+        default = 1300;
+      };
+
       interfaceName = lib.mkOption {
         internal = true;
         type = lib.types.str;
@@ -122,11 +127,6 @@ in
             # With sufficient interconnects between all my nodes they should
             # always find a way to talk to each other – even indirectly.
             #
-            protocol device wg_device {
-              scan time 60;
-              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") babelInterfaces} {};
-            };
-
             protocol babel wg_backbone {
               randomize router id yes;
               interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") babelInterfaces} {
