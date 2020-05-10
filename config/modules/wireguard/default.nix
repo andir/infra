@@ -6,6 +6,11 @@ let
         type = lib.types.str;
       };
 
+      babel = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+      };
+
       interfaceName = lib.mkOption {
         internal = true;
         type = lib.types.str;
@@ -104,40 +109,27 @@ in
         enable = lib.mkDefault true;
         config = let
           interfaces = lib.mapAttrsToList (_: p: p.interfaceName) cfg.peers;
+          babelInterfaces = lib.mapAttrsToList (_: p: p.interfaceName)
+            (lib.filterAttrs (_: p: p.babel == true) cfg.peers);
         in
           ''
+            #
+            # Configuration for all the "internal" wireguard peerings between
+            # *MY* machines. This shouldn't be used for external peers as
+            # they'd ultimately be trusted for all DN42 prefixes.
+            # This propagates all routes learned from babel and all those that
+            # fall into the DN42 network range to all neighbours.
+            # With sufficient interconnects between all my nodes they should
+            # always find a way to talk to each other – even indirectly.
+            #
             protocol device wg_device {
               scan time 60;
-              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") interfaces} {};
+              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") babelInterfaces} {};
             };
 
-            protocol kernel wg_kv4 {
-              learn;
-              persist;
-              ipv4 {
-                import all;
-                export filter {
-                  if net ~ 172.20.0.0/14 then accept;
-                  reject;
-                };
-              };
-            };
-
-            protocol kernel wg_kv6 {
-              learn;
-              persist;
-              ipv6 {
-                import all;
-                export filter {
-                  if net ~ fd00::/8 then accept;
-                  reject;
-                };
-              };
-            };
-
-            protocol babel wgbackbone {
+            protocol babel wg_backbone {
               randomize router id yes;
-              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") interfaces} {
+              interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") babelInterfaces} {
                 type wired;
               };
               ipv4 {
@@ -148,7 +140,10 @@ in
                   }
                   reject;
                 };
-                import all;
+                import filter {
+                  if net ~ 172.20.0.0/14 then accept;
+                  reject;
+                };
               };
               ipv6 {
                 table master6;
@@ -156,6 +151,10 @@ in
                   if (source = RTS_BABEL) || (net ~ fd00::/8) then {
                     accept;
                   }
+                  reject;
+                };
+                import filter {
+                  if net ~ fd00::/8 then accept;
                   reject;
                 };
               };

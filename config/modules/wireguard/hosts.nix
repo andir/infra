@@ -25,6 +25,7 @@ let
       peerConfig = cfg.hosts.${peerName};
     in
       {
+        babel = lib.mkDefault true;
         remoteEndpoint = lib.mkDefault
           (
             if peerConfig ? hostName then
