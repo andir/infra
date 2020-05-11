@@ -23,6 +23,24 @@
         "url": "https://github.com/andir/c3schedule/archive/a34f2ab73e726b3a1bc95c8ec8263c3081157058.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "dn42-registry": {
+        "ref": "master",
+        "repo": "http://git.dn42.us/dn42/registry.git",
+        "rev": "b97e302106c7564d794f2b83f03125a7bb17fdf2",
+        "type": "git"
+    },
+    "dn42-regparse": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "andir",
+        "repo": "dn42-regparse",
+        "rev": "3615b084088818f57ea3030a88dc98eba75564e1",
+        "sha256": "0py5ils9i52jrzmh8q82a187bww6h187vaxnj3fkydwx27b9yyg5",
+        "type": "tarball",
+        "url": "https://github.com/andir/dn42-regparse/archive/3615b084088818f57ea3030a88dc98eba75564e1.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "knot_exporter": {
         "branch": "master",
         "description": "Prometheus exporter for Knot DNS",
@@ -71,10 +89,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "278db005f83e246bb59f2636b66e1a3f78076b88",
-        "sha256": "1rkrlp26gr7kpnbxisylw73bsx88h89vg3k8ba3swnk0jcipynkz",
+        "rev": "596739026bbe0c693708119e5cd3e1b3aa88fd2d",
+        "sha256": "1wqkxfb2i4xsi5pwvis66i2b4411bdaxz5g3wiip1s8b69nk3qhd",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/278db005f83e246bb59f2636b66e1a3f78076b88.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/596739026bbe0c693708119e5cd3e1b3aa88fd2d.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixos-mailserver": {
@@ -89,10 +107,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "d6c1b566b770cf4cf0c6d4a693da6bdf28c2c3b0",
-        "sha256": "00vm9shmpywx9dzaj0c7vap1ldimdsr7lw2n8p70qza87nmp9dai",
+        "rev": "5adf2a6c11646898742b0c08f7e94101620ba707",
+        "sha256": "0wf7pwma2qyfak39b242mcq8z7cdj65sds7hcjxchy0448shapzi",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/d6c1b566b770cf4cf0c6d4a693da6bdf28c2c3b0.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/5adf2a6c11646898742b0c08f7e94101620ba707.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {

@@ -25,4 +25,20 @@ self: super: {
       ];
     }
   );
+
+  dn42-regparse = self.callPackage sources.dn42-regparse {};
+  dn42-roa = let
+    roa = self.runCommand "dn42-roa" {
+      buildInputs = [ self.dn42-regparse ];
+      passthru = {
+        roa4 = "${roa}/roa.txt";
+        roa6 = "${roa}/roa6.txt";
+      };
+    } ''
+      mkdir $out
+      cd $out
+      roagen ${sources.dn42-registry}/data
+    '';
+  in
+    roa;
 }

@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let
   inherit (lib)
     attrValues
@@ -226,6 +226,24 @@ in
         roa4 table dn42_roa_v4;
         roa6 table dn42_roa_v6;
 
+        protocol static {
+          roa4 { table dn42_roa_v4; };
+          include "${pkgs.dn42-roa.roa4}";
+        };
+
+        protocol static {
+          roa6 { table dn42_roa_v6; };
+          include "${pkgs.dn42-roa.roa6}";
+        };
+
+        function dn42_roa_check(prefix n; bgppath p) {
+           case n.type {
+             NET_IP4: return (roa_check(dn42_roa_v4, net, p.last) = ROA_VALID);
+             NET_IP6: return (roa_check(dn42_roa_v6, net, p.last) = ROA_VALID);
+           }
+           return false;
+        }
+
         protocol pipe dn42_v4_pipe {
           peer table master4;
           table dn42_v4;
@@ -258,6 +276,7 @@ in
                bgp_path ~ [= * ${toString cfg.bgp.asn} * =] ||
                bgp_path ~ [= * ${toString cfg.bgp.asn} =] then
                  reject "Not accepting paths from my own ASN via eBGP.";
+            if !dn42_roa_check(net, bgp_path) then reject "DN42 ROA check failed";
 
             ${optionalString (peer.bgp.import_prepend != 0)
             (concatStrings (map (x: "bgp_path.prepend(${toString cfg.bgp.asn});\n") (range 0 peer.bgp.import_prepend)))}
@@ -273,6 +292,7 @@ in
             if proto !~ "dn42_*" then reject "Prefix is not from another dn42 protocol. Rejecting.";
             ${optionalString (peer.bgp.export_prepend != 0)
           (concatStrings (map (x: "bgp_path.prepend(${toString cfg.bgp.asn});\n") (range 0 peer.bgp.export_prepend)))}
+            if !dn42_roa_check(net, bgp_path) then reject "DN42 ROA check failed";
 
             accept "Prefix seems okay";
           }
