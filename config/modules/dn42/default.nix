@@ -287,8 +287,12 @@ in
             enable route refresh on;
             med metric on;
             direct;
+            #advertise ipv4 on;
 
             ipv4 {
+              import table on;
+              export table on;
+              gateway recursive;
               table dn42_v4;
               igp table master4;
               add paths on;
@@ -297,6 +301,8 @@ in
               ${optionalString (peer.bgp.import_limit != null) "import limit ${toString peer.bgp.import_limit} action block;"}
             };
             ipv6 {
+              import table on;
+              export table on;
               table dn42_v6;
               igp table master6;
               add paths on;
@@ -308,13 +314,9 @@ in
 
           ${if peer.bgp.multi_protocol then ''
           protocol bgp dn42_${peer.name} from dn42_${peer.name}_tpl {
-            #advertise ipv4 on;
             neighbor ${peer.remoteV6} as ${toString peer.bgp.asn};
             interface "${peer.interfaceName}";
-            ipv6 {
-              mandatory on;
-            };
-          }
+          };
         '' else ''
           protocol bgp dn42_${peer.name}_v4 from dn42_${peer.name}_tpl {
             neighbor ${peer.remoteV4} as ${toString peer.bgp.asn};
