@@ -105,6 +105,7 @@
           remotePublicKey = "iB8P2uuKGISflakJiHMGuBR7zKK44qx+ioqeBN0sEnk=";
         };
         bgp = {
+          accept = "all";
           asn = 4242420101;
           local_pref = 100;
           multi_protocol = false;

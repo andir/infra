@@ -76,12 +76,13 @@ in
                 type = types.submodule {
                   options = {
                     asn = mkOption { type = types.ints.unsigned; };
+                    announce = mkOption { type = types.enum [ "all" "own" ]; default = "own"; };
+                    accept = mkOption { type = types.enum [ "all" "own" ]; default = "own"; };
                     local_pref = mkOption { type = types.ints.unsigned; };
                     #export_med = mkOption { type = types.nullOr types.ints.unsigned; default = null; };
                     export_prepend = mkOption { type = types.ints.unsigned; default = 0; };
                     import_prepend = mkOption { type = types.ints.unsigned; default = 0; };
                     import_limit = mkOption { type = types.nullOr types.ints.unsigned; default = null; };
-
                     import_reject = mkOption { type = types.bool; default = false; };
                     export_reject = mkOption { type = types.bool; default = false; };
                     multi_protocol = mkOption { type = types.bool; default = true; };
@@ -267,15 +268,29 @@ in
 
           filter dn42_${peer.name}_import {
              ${optionalString peer.bgp.import_reject "reject;"}
-             if !dn42_is_valid_prefix(net) then reject "Not a valid DN42 prefix";
+             if !dn42_is_valid_prefix(net) then {
+               print "Not a valid DN42 prefix from asn ${toString peer.bgp.asn} net:" , net, " bgp_path: ", bgp_path;
+               reject;
+              }
              ${optionalString (peer.bgp.asn != cfg.bgp.asn)
           # eBGP isn't allowed to annouce me my own prefixes
           ''
+
+            if bgp_path.first != ${toString peer.bgp.asn} then reject "Not accepting spoofed AS path";
+
+            ${optionalString (peer.bgp.accept == "own") ''
+            if delete(bgp_path, [${toString peer.bgp.asn}]).len > 0 then {
+              print "rejecting prefix that isn't from the peer asn ${toString peer.bgp.asn}", " net: ", net, " bgp_path: ", bgp_path;
+              reject;
+            }
+            #if bgp_path.len > 1 && bgp_path.last != bgp_path.first then reject "Only accepting paths originating at the peer as";
+          ''}
+
             if dn42_is_own_prefix(net) then reject "Not accepting own prefix from eBGP peer.";
-            if bgp_path ~ [= ${toString cfg.bgp.asn} * =] ||
-               bgp_path ~ [= * ${toString cfg.bgp.asn} * =] ||
-               bgp_path ~ [= * ${toString cfg.bgp.asn} =] then
-                 reject "Not accepting paths from my own ASN via eBGP.";
+            if filter(bgp_path, [${toString cfg.bgp.asn}]).len > 0 then {
+                 print "Not accepting paths from my own ASN via eBGP from asn: ${toString peer.bgp.asn} net: ", net, " bgp_path: ", bgp_path;
+                 reject;
+            }
             if !dn42_roa_check(net, bgp_path) then reject "DN42 ROA check failed";
 
             ${optionalString (peer.bgp.import_prepend != 0)
@@ -288,6 +303,11 @@ in
           }
           filter dn42_${peer.name}_export {
             ${optionalString peer.bgp.export_reject "reject;"}
+
+            ${optionalString (peer.bgp.asn != cfg.bgp.asn && peer.bgp.announce == "own") ''
+          if proto !~ "dn42_static_*" && bgp_path !~ [= =] then reject "Only propagating own routes.";
+        ''}
+
             if !dn42_is_valid_prefix(net) then reject "Not a valid DN42 prefix";
             if proto !~ "dn42_*" then reject "Prefix is not from another dn42 protocol. Rejecting.";
             ${optionalString (peer.bgp.export_prepend != 0)
