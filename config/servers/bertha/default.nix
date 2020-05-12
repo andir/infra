@@ -224,6 +224,7 @@ in
         ip6 nexthdr udp udp dport 6696 accept # babel
         ip6 nexthdr tcp tcp dport 9100 accept # node-exporter
         ip6 nexthdr tcp tcp dport 9113 accept # nginx-exporter
+        ip6 nexthdr tcp tcp dport 179 accept # bgp
       }
 
       chain lan_input {
@@ -276,6 +277,7 @@ in
 
       chain forward_to_wg {
         iifname lan accept;
+       iifname "wg-*" accept;
       }
 
       chain forward_to_lan {
@@ -359,6 +361,27 @@ in
           ipv6.local_address = "fe80::1";
           ipv6.remote_address = "fe80::3";
           ipv6.prefix_length = 64;
+        };
+      };
+      kn = {
+        tunnelType = "wireguard";
+        mtu = 1408;
+        wireguardConfig = {
+          localPort = 42017;
+          remotePort = 42017;
+          remoteEndpoint = "t4-2.high5.nl";
+          remotePublicKey = "G1PuSw6I6nZYYD4LcqtkwxoDE/KLEuF2mZpCMTNONB4=";
+        };
+        bgp = {
+          asn = 4242421239;
+          local_pref = 100;
+        };
+        addresses = {
+          ipv6 = {
+            local_address = "fdfd:3ba:342d:a7d2::1";
+            remote_address = "fdfd:3ba:342d:a7d2::";
+            prefix_length = 127;
+          };
         };
       };
     };
