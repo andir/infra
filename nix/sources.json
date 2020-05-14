@@ -26,7 +26,7 @@
     "dn42-registry": {
         "ref": "master",
         "repo": "http://git.dn42.us/dn42/registry.git",
-        "rev": "b97e302106c7564d794f2b83f03125a7bb17fdf2",
+        "rev": "cd8cc10ccdb33dd5403e038e084569e246404592",
         "type": "git"
     },
     "dn42-regparse": {
@@ -89,10 +89,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "596739026bbe0c693708119e5cd3e1b3aa88fd2d",
-        "sha256": "1wqkxfb2i4xsi5pwvis66i2b4411bdaxz5g3wiip1s8b69nk3qhd",
+        "rev": "d858110e35b652a02e11deabe7fba2fc28f10945",
+        "sha256": "1b7sdy9nhk97s9wbn40yij67hmln3d8030mlkx9rwi0wgg90irc1",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/596739026bbe0c693708119e5cd3e1b3aa88fd2d.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/d858110e35b652a02e11deabe7fba2fc28f10945.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixos-mailserver": {
@@ -107,10 +107,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "5adf2a6c11646898742b0c08f7e94101620ba707",
-        "sha256": "0wf7pwma2qyfak39b242mcq8z7cdj65sds7hcjxchy0448shapzi",
+        "rev": "7829e5791ba1f6e6dbddbb9b43dda72024dd2bd1",
+        "sha256": "0hs9swpz0kibjc8l3nx4m10kig1fcjiyy35qy2zgzm0a33pj114w",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/5adf2a6c11646898742b0c08f7e94101620ba707.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/7829e5791ba1f6e6dbddbb9b43dda72024dd2bd1.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
@@ -119,10 +119,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "fce7562cf46727fdaf801b232116bc9ce0512049",
-        "sha256": "14rvi69ji61x3z88vbn17rg5vxrnw2wbnanxb7y0qzyqrj7spapx",
+        "rev": "8ba41a1e14961fe43523f29b8b39acb569b70e72",
+        "sha256": "0c2wn7si8vcx0yqwm92dpry8zqjglj9dfrvmww6ha6ihnjl6mfhh",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/fce7562cf46727fdaf801b232116bc9ce0512049.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/8ba41a1e14961fe43523f29b8b39acb569b70e72.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
