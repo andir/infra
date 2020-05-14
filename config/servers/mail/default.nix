@@ -115,6 +115,9 @@ in
       ) config.mailserver.domains
     )
   );
+
+  security.acme.certs."mx.h4ck.space".keyType = "rsa4096";
+
   mailserver = {
     enable = true;
     fqdn = "mx.h4ck.space";
