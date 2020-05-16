@@ -18,7 +18,7 @@
       publicKey = "6A8qvwQnxOqo8EPntT7VmoR6PVUI7fHhE6zs8P7rVGk=";
       hostName = null;
     };
-    gitlab-runner = {
+    iota = {
       addresses = [
         "fe80::3/64"
         "172.20.25.2/32"
