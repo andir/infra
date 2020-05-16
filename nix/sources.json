@@ -26,7 +26,7 @@
     "dn42-registry": {
         "ref": "master",
         "repo": "http://git.dn42.us/dn42/registry.git",
-        "rev": "cd8cc10ccdb33dd5403e038e084569e246404592",
+        "rev": "11ee5dae0ef0654732568c2a912f6eda36b1e085",
         "type": "git"
     },
     "dn42-regparse": {
@@ -107,10 +107,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "7829e5791ba1f6e6dbddbb9b43dda72024dd2bd1",
-        "sha256": "0hs9swpz0kibjc8l3nx4m10kig1fcjiyy35qy2zgzm0a33pj114w",
+        "rev": "a7c70f2e10bc7efc93b2a7cd73ddd4084d7c0099",
+        "sha256": "1fzprhcsxgwh5yh9kxyz99dsbshh0q9zfp6lz6cdwhzhzy8qvk4v",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/7829e5791ba1f6e6dbddbb9b43dda72024dd2bd1.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/a7c70f2e10bc7efc93b2a7cd73ddd4084d7c0099.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
