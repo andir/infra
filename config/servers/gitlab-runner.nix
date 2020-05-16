@@ -45,13 +45,16 @@
   system.stateVersion = "19.03";
 
 
+  # iota.h4ck.space
+  # v6 net block:
+  #  - fd42:4242:4201::/48
   h4ck.dn42 = {
     enable = true;
     bgp = {
       asn = 4242423991;
       staticRoutes = {
         ipv4 = [
-          "172.20.24.0/23"
+          #          "172.20.24.0/23"
           "172.20.25.0/25"
           "172.20.199.0/24"
         ];
@@ -74,6 +77,28 @@
           ipv6.prefix_length = 64;
         };
       };
+
+      cloudfiles_at = {
+        tunnelType = "wireguard";
+        mtu = 1408;
+        wireguardConfig = {
+          localPort = 42001;
+          remotePort = 42001;
+          remoteEndpoint = "2a01:4f8:c010:2346::2";
+          remotePublicKey = "OewZmkZsgKKOl//GEI0Ntudy98L/K0mKET7N+zdiJiY=";
+        };
+        bgp = {
+          asn = 4242423348;
+          local_pref = 100;
+        };
+        addresses = {
+          ipv4.local_address = "172.20.255.233";
+          ipv6.local_address = "fd42:4242:4201::1";
+          ipv4.remote_address = "172.20.33.49";
+          ipv6.remote_address = "fd00:4242:3348:65:3::1";
+        };
+      };
+
       kn = {
         tunnelType = "wireguard";
         mtu = 1408;
