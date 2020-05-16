@@ -139,7 +139,7 @@ in
               ipv4 {
                 table master4;
                 export filter {
-                  if (source = RTS_BABEL) || (net ~ 172.20.0.0/14) then {
+                  if (source = RTS_BABEL || source = RTS_STATIC || source = RTS_DEVICE) && (net ~ 172.20.0.0/14) then {
                     accept;
                   }
                   reject;
@@ -152,7 +152,7 @@ in
               ipv6 {
                 table master6;
                 export filter {
-                  if (source = RTS_BABEL) || (net ~ fd00::/8) then {
+                  if (source = RTS_BABEL || source = RTS_STATIC || source = RTS_DEVICE) && (net ~ fd00::/8) then {
                     accept;
                   }
                   reject;
