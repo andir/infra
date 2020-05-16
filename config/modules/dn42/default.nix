@@ -4,9 +4,12 @@ let
     attrValues
     concatMapStringsSep
     concatStrings
+    concatStringsSep
     filterAttrs
+    flatten
     hasAttr
     hasPrefix
+    listToAttrs
     mapAttrs
     mapAttrs'
     mapAttrsToList
@@ -136,8 +139,8 @@ in
     wireguardInterfaceNameMapping = mapAttrs (_: v: v.interfaceName) (filterAttrs (n: v: hasPrefix "wg-dn42_" (lib.traceVal v.interfaceName)) config.h4ck.wireguardBackbone.peers);
     wireguardInterfaceNames = attrValues wireguardInterfaceNameMapping;
 
-    interfaceNames = lib.traceValSeq wireguardInterfaceNames;
-    interfaceNameMapping = lib.traceValSeq wireguardInterfaceNameMapping;
+    interfaceNames = lib.traceValSeq wireguardInterfaceNames ++ (mapAttrsToList (_: p: p.interfaceName) (filterAttrs (_: p: p.interfaceName != null) cfg.peers));
+    interfaceNameMapping = wireguardInterfaceNameMapping;
 
 
     bgpPeers =
@@ -160,7 +163,52 @@ in
   in
     mkIf cfg.enable {
       h4ck.bird.enable = true;
-      networking.firewall.allowedTCPPorts = [ 179 ];
+
+      environment.systemPackages = with pkgs; [ mtr tcpdump ];
+
+      boot.kernel.sysctl = {
+        "net.ipv6.all.default.forwarding" = 1;
+      } // (
+        listToAttrs (map (iface: nameValuePair "net.ipv4.conf.${iface}.forwarding" 1) interfaceNames)
+      );
+      networking.firewall = {
+        checkReversePath = false;
+        interfaces = lib.listToAttrs (
+          map (
+            name: nameValuePair name {
+              allowedTCPPorts = [ 179 ];
+            }
+          ) interfaceNames
+        );
+        extraCommands = concatStringsSep "\n" (
+          flatten (
+            map (
+              iiface: (
+                map (
+                  oiface: if iiface != oiface then [
+                    "iptables -A FORWARD -i ${iiface} -o ${oiface} -j ACCEPT"
+                    "ip6tables -A FORWARD -i ${iiface} -o ${oiface} -j ACCEPT"
+                  ] else []
+                ) interfaceNames
+              )
+            ) interfaceNames
+          )
+        );
+        extraStopCommands = concatStringsSep "\n" (
+          flatten (
+            map (
+              iiface: (
+                map (
+                  oiface: if iiface != oiface then [
+                    "iptables -D FORWARD -i ${iiface} -o ${oiface} -j ACCEPT || :"
+                    "ip6tables -D FORWARD -i ${iiface} -o ${oiface} -j ACCEPT || :"
+                  ] else []
+                ) interfaceNames
+              )
+            ) interfaceNames
+          )
+        );
+      };
 
       h4ck.wireguardBackbone.peers = mapAttrs' (
         name: value: nameValuePair "dn42_${name}" (
@@ -291,7 +339,10 @@ in
                  print "Not accepting paths from my own ASN via eBGP from asn: ${toString peer.bgp.asn} net: ", net, " bgp_path: ", bgp_path;
                  reject;
             }
-            if !dn42_roa_check(net, bgp_path) then reject "DN42 ROA check failed";
+            if !dn42_roa_check(net, bgp_path) then {
+              printn "DN42 ROA check failed for ", net;
+              reject;
+            }
 
             ${optionalString (peer.bgp.import_prepend != 0)
             (concatStrings (map (x: "bgp_path.prepend(${toString cfg.bgp.asn});\n") (range 0 peer.bgp.import_prepend)))}
@@ -299,22 +350,31 @@ in
             bgp_local_pref = ${toString peer.bgp.local_pref};
 
           ''}
-             accept "Prefix seems okay";
+             accept;
           }
           filter dn42_${peer.name}_export {
             ${optionalString peer.bgp.export_reject "reject;"}
 
+            # only propagate static and BGP routes.
+            if source != RTS_STATIC && source != RTS_BGP then reject;
+
             ${optionalString (peer.bgp.asn != cfg.bgp.asn && peer.bgp.announce == "own") ''
-          if proto !~ "dn42_static_*" && bgp_path !~ [= =] then reject "Only propagating own routes.";
+          if source != RTS_STATIC && delete(bgp_path, [${toString cfg.bgp.asn}]).len > 0 then {
+            printn "Only propagating own routes. net: ", net, " source: ", source, " path: ", bgp_path, " deleted path: ", delete(bgp_path, [${toString cfg.bgp.asn}]);
+            reject;
+          }
         ''}
 
             if !dn42_is_valid_prefix(net) then reject "Not a valid DN42 prefix";
             if proto !~ "dn42_*" then reject "Prefix is not from another dn42 protocol. Rejecting.";
             ${optionalString (peer.bgp.export_prepend != 0)
           (concatStrings (map (x: "bgp_path.prepend(${toString cfg.bgp.asn});\n") (range 0 peer.bgp.export_prepend)))}
-            if !dn42_roa_check(net, bgp_path) then reject "DN42 ROA check failed";
+            if source = RTS_BGP && !dn42_roa_check(net, bgp_path) then {
+              printn "DN42 ROA check failed for ", net;
+              reject;
+            }
 
-            accept "Prefix seems okay";
+            accept;
           }
 
           template bgp dn42_${peer.name}_tpl {
@@ -355,7 +415,9 @@ in
           ${if peer.bgp.multi_protocol then ''
           protocol bgp dn42_${peer.name} from dn42_${peer.name}_tpl {
             neighbor ${peer.remoteV6} as ${toString peer.bgp.asn};
-            interface "${peer.interfaceName}";
+            ${optionalString (hasPrefix "fe80:" peer.remoteV6) ''
+          interface "${peer.interfaceName}";
+        ''}
           };
         '' else ''
           protocol bgp dn42_${peer.name}_v4 from dn42_${peer.name}_tpl {
@@ -365,7 +427,9 @@ in
           protocol bgp dn42_${peer.name}_v6 from dn42_${peer.name}_tpl {
             #advertise ipv4 off;
             neighbor ${peer.remoteV6} as ${toString peer.bgp.asn};
-            interface "${peer.interfaceName}";
+            ${optionalString (hasPrefix "fe80:" peer.remoteV6) ''
+          interface "${peer.interfaceName}";
+        ''}
           }
         ''}
         ''
