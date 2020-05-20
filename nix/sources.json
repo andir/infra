@@ -26,7 +26,7 @@
     "dn42-registry": {
         "ref": "master",
         "repo": "http://git.dn42.us/dn42/registry.git",
-        "rev": "96ac64bfd369f23a964eaee326b4766125c37793",
+        "rev": "005debf68341e584e31f772b2c525850b936da8e",
         "type": "git"
     },
     "dn42-regparse": {
@@ -35,10 +35,10 @@
         "homepage": null,
         "owner": "andir",
         "repo": "dn42-regparse",
-        "rev": "3615b084088818f57ea3030a88dc98eba75564e1",
-        "sha256": "0py5ils9i52jrzmh8q82a187bww6h187vaxnj3fkydwx27b9yyg5",
+        "rev": "455644586b893ff0badb8006aa8f46308438264a",
+        "sha256": "1zx6bi3b87dwzlx8ry0d303dbaxqnq2vz8pdaa8mhra7x13hyyiy",
         "type": "tarball",
-        "url": "https://github.com/andir/dn42-regparse/archive/3615b084088818f57ea3030a88dc98eba75564e1.tar.gz",
+        "url": "https://github.com/andir/dn42-regparse/archive/455644586b893ff0badb8006aa8f46308438264a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "knot_exporter": {
@@ -65,10 +65,10 @@
         "homepage": null,
         "owner": "DBCDK",
         "repo": "morph",
-        "rev": "8f68b52138300dd4d4e00e5dee1299a4668dbca2",
+        "rev": "4554e1685db14d43ac2705deabfd98112b2cf308",
         "sha256": "0g6jzhw3441pkv8hfj8b4jkqv6whbjhdw5rr16ypid17wzzn7z3r",
         "type": "tarball",
-        "url": "https://github.com/DBCDK/morph/archive/8f68b52138300dd4d4e00e5dee1299a4668dbca2.tar.gz",
+        "url": "https://github.com/DBCDK/morph/archive/4554e1685db14d43ac2705deabfd98112b2cf308.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
