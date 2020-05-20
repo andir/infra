@@ -80,7 +80,7 @@
 
       cloudfiles_at = {
         tunnelType = "wireguard";
-        mtu = 1408;
+        mtu = 1420;
         wireguardConfig = {
           localPort = 42001;
           remotePort = 42001;
