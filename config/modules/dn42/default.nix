@@ -216,9 +216,20 @@ in
             inherit (value.wireguardConfig) localPort remoteEndpoint remotePort remotePublicKey;
             remoteAddresses = (optional (value.addresses.ipv6 != null && value.addresses.ipv6 ? remote_address) value.addresses.ipv6.remote_address)
             ++ (optional (value.addresses.ipv4 != null && value.addresses.ipv4 ? remote_address) value.addresses.ipv4.remote_address);
-            localAddresses = (optional (value.addresses.ipv6 != null && value.addresses.ipv6 ? local_address) "${value.addresses.ipv6.local_address}/${toString value.addresses.ipv6.prefix_length}")
+            localAddresses = optional (value.addresses.ipv6 != null && value.addresses.ipv6 ? local_address)
+              (
+                if (value.addresses.ipv6.prefix_length != 128) then
+                  "${value.addresses.ipv6.local_address}/${toString value.addresses.ipv6.prefix_length}"
+                else
+                  {
+                    local = "${value.addresses.ipv6.local_address}/128";
+                    peer = "${toString value.addresses.ipv6.remote_address}/128";
+                  }
+              )
             ++ (optional (value.addresses.ipv4 != null && value.addresses.ipv4 ? local_address) "${value.addresses.ipv4.local_address}/${toString value.addresses.ipv4.prefix_length}");
-          } // optionalAttrs (value.mtu != null) { inherit (value) mtu; }
+          } // optionalAttrs (value.mtu != null) {
+            inherit (value) mtu;
+          }
         )
       ) wireguardPeers;
 
@@ -415,9 +426,7 @@ in
           ${if peer.bgp.multi_protocol then ''
           protocol bgp dn42_${peer.name} from dn42_${peer.name}_tpl {
             neighbor ${peer.remoteV6} as ${toString peer.bgp.asn};
-            ${optionalString (hasPrefix "fe80:" peer.remoteV6) ''
-          interface "${peer.interfaceName}";
-        ''}
+            interface "${peer.interfaceName}";
           };
         '' else ''
           protocol bgp dn42_${peer.name}_v4 from dn42_${peer.name}_tpl {

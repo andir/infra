@@ -1,5 +1,18 @@
 { config, pkgs, lib, ... }:
 let
+
+  localAddressOptions = { ... }: {
+    options = {
+      local = lib.mkOption {
+        type = lib.types.str;
+      };
+      peer = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
+    };
+  };
+
   wireguardPeerConfig = { name, ... }: {
     options = {
       name = lib.mkOption {
@@ -39,8 +52,18 @@ let
         default = [];
       };
       localAddresses = lib.mkOption {
-        type = lib.types.nullOr (lib.types.listOf lib.types.string);
+        type = lib.types.nullOr (lib.types.listOf (lib.types.either lib.types.string (lib.types.submodule localAddressOptions)));
         default = null;
+        apply = values: if values == null then null else
+          (
+            map (
+              value:
+                if builtins.trace (builtins.typeOf value) (builtins.typeOf value) == "string" then {
+                  local = value;
+                  peer = null;
+                } else value
+            ) values
+          );
       };
     };
     config = {
@@ -201,10 +224,23 @@ in
                     #                  IPv6AcceptRA = false;
                     LinkLocalAddressing = "ipv6";
                   };
-                  addresses = map (
-                    addr:
-                      { addressConfig.Address = addr; }
-                  ) (if peer.localAddresses == null then cfg.addresses else peer.localAddresses);
+                  addresses = let
+                    peerAddresses = map (
+                      { local, peer, ... }: {
+                        addressConfig = {
+                          Address = local;
+                        } // (if peer != null then { Peer = peer; } else {});
+                      }
+                    ) peer.localAddresses;
+                  in
+                    if (peer.localAddresses == null) then map (
+                      addr:
+                        {
+                          addressConfig = {
+                            Address = addr;
+                          };
+                        }
+                    ) cfg.addresses else peerAddresses;
                   routes = map (
                     addr:
                       { routeConfig = { Destination = addr; }; }
