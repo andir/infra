@@ -340,7 +340,7 @@ in
       asn = 4242423991;
       staticRoutes = {
         ipv4 = [
-          "172.20.24.0/23"
+          "172.20.24.0/24"
           "172.20.25.0/25"
           "172.20.199.0/24"
         ];
@@ -351,9 +351,9 @@ in
       };
     };
     peers = {
-      gitlab = {
+      iota = {
         tunnelType = null;
-        interfaceName = "wg-gitlab-run";
+        interfaceName = "wg-iota";
         bgp = {
           asn = 4242423991;
         };
