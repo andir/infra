@@ -163,7 +163,10 @@ in
       mail_plugins = $mail_plugins imap_zlib
     }
   '';
-  services.postfix.config.lmtp_destination_concurrency_limit = "10";
-
-
+  services.postfix.config = {
+    lmtp_destination_concurrency_limit = "10";
+    smtpd_recipient_restrictions = lib.mkBefore [
+      "check_recipient_access pcre:${builtins.toFile "inject-x-original-to.pcre" "/(.+)/  prepend X-Original-To: $1"}"
+    ];
+  };
 }
