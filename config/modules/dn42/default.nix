@@ -380,7 +380,7 @@ in
             if proto !~ "dn42_*" then reject "Prefix is not from another dn42 protocol. Rejecting.";
             ${optionalString (peer.bgp.export_prepend != 0)
           (concatStrings (map (x: "bgp_path.prepend(${toString cfg.bgp.asn});\n") (range 0 peer.bgp.export_prepend)))}
-            if source = RTS_BGP && !dn42_roa_check(net, bgp_path) then {
+            if source = RTS_BGP && !dn42_roa_check(net, bgp_path) && bgp_path.len > 0 then {
               printn "DN42 ROA check failed for ", net;
               reject "DN42 ROA check failed";
             } else if source = RTS_BGP && bgp_path.len = 0 && !dn42_roa_check(net, prepend(bgp_path, ${toString cfg.bgp.asn})) then {
