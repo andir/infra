@@ -363,6 +363,34 @@ in
           ipv6.prefix_length = 64;
         };
       };
+
+      cccda = {
+        tunnelType = "wireguard";
+        wireguardConfig = {
+          localPort = 43011;
+          remotePort = 43011;
+          remoteEndpoint = "core1.darmstadt.ccc.de";
+          remotePublicKey = "iB8P2uuKGISflakJiHMGuBR7zKK44qx+ioqeBN0sEnk=";
+        };
+        bgp = {
+          asn = 4242420101;
+          local_pref = 100;
+          multi_protocol = false;
+        };
+        addresses = {
+          ipv4 = {
+            local_address = "172.22.248.18";
+            remote_address = "172.22.248.17";
+            prefix_length = 30;
+          };
+          ipv6 = {
+            local_address = "fe80::f00";
+            remote_address = "fe80::ccc:da";
+            prefix_length = 64;
+          };
+        };
+      };
+
       kn = {
         tunnelType = "wireguard";
         mtu = 1408;
@@ -386,7 +414,4 @@ in
       };
     };
   };
-
-
-
 }
