@@ -1,6 +1,7 @@
 let
   inherit (import ./lib.nix) mkMachine;
   pkgs = import ../nix;
+  sources = import ../nix/sources.nix;
 in
 {
 
@@ -12,6 +13,12 @@ in
     #  set -ex
     #  echo "$@" > .buildpaths
     #''}";
+
+    evalConfig = machineName:
+      let
+        prefix = sources."${machineName}-nixpkgs" or pkgs.path;
+      in
+        import (prefix + "/nixos/lib/eval-config.nix");
   };
 
   "jh4all.de" = mkMachine ./servers/jh4all.nix;

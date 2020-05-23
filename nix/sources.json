@@ -1,14 +1,14 @@
 {
     "bertha-nixpkgs": {
-        "branch": "systemd-update-networkd-options",
+        "branch": "nixos-unstable",
         "description": "Nix Packages collection",
         "homepage": null,
-        "owner": "andir",
+        "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "00215e5bc0f046b0da8af5f5955b13ee8d915d51",
-        "sha256": "1l6pdxc9bzy3akyys9546nzzyk9qw6xgr4l85n3mflabdnr37lvc",
+        "rev": "0f5ce2fac0c726036ca69a5524c59a49e2973dd4",
+        "sha256": "0nkk492aa7pr0d30vv1aw192wc16wpa1j02925pldc09s9m9i0r3",
         "type": "tarball",
-        "url": "https://github.com/andir/nixpkgs/archive/00215e5bc0f046b0da8af5f5955b13ee8d915d51.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/0f5ce2fac0c726036ca69a5524c59a49e2973dd4.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
@@ -26,7 +26,7 @@
     "dn42-registry": {
         "ref": "master",
         "repo": "http://git.dn42.us/dn42/registry.git",
-        "rev": "866aa0727bbab51534878b9f7f52c374236af68c",
+        "rev": "d316424b7ba4f01e47361e94a7b30b7c0e1810e1",
         "type": "git"
     },
     "dn42-regparse": {

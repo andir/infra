@@ -1,4 +1,7 @@
 { sources }:
+let
+  unstable = import sources.nixpkgs-unstable {};
+in
 self: super: {
   knot_exporter = self.callPackage ./knot_exporter.nix {
     src = sources.knot_exporter;
@@ -12,6 +15,12 @@ self: super: {
       sha256 = "1franflr7xci8zdcd5qmqxxalnimjpz2yyhpa51la5d16mnmch9r";
     };
   };
+
+  morph = (unstable.callPackage (sources.morph + "/nix-packaging") {}).overrideAttrs (
+    _: {
+      patches = [ ./morph-evalConfig-machinename.patch ];
+    }
+  );
 
   bird2 = super.bird2.overrideAttrs (
     { patches ? [], ... }: {

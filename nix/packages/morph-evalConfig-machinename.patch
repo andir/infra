@@ -1,0 +1,32 @@
+commit 530b7507b00fedac745e08bb50b24a773c4f03d3 (HEAD -> master)
+Author: Andreas Rammhold <andreas@rammhold.de>
+Date:   Sat May 23 20:53:36 2020 +0200
+
+    evalConfig: pass machine name as argument and return function
+    
+    This allows passing a custom evalConfig function based ont he machines
+    name. Which in turn allows using a complelty different NixOS version for
+    a specific version.
+
+diff --git a/data/eval-machines.nix b/data/eval-machines.nix
+index 2ff6fbb..074a3af 100644
+--- a/data/eval-machines.nix
++++ b/data/eval-machines.nix
+@@ -5,7 +5,7 @@ let
+   network      = import networkExpr;
+   nwPkgs       = network.network.pkgs or {};
+   lib          = network.network.lib or nwPkgs.lib or (import <nixpkgs/lib>);
+-  evalConfig   = network.network.evalConfig or "${nwPkgs.path or <nixpkgs>}/nixos/lib/eval-config.nix";
++  evalConfig   = network.network.evalConfig or (_machineName: import "${nwPkgs.path or <nixpkgs>}/nixos/lib/eval-config.nix");
+   runCommand   = network.network.runCommand or nwPkgs.runCommand or ((import <nixpkgs> {}).runCommand);
+ in
+   with lib;
+@@ -21,7 +21,7 @@ rec {
+         modules = [ { imports = [ network.${machineName} ]; } { inherit (network) _file; } ];
+       in
+       { name = machineName;
+-        value = import evalConfig {
++        value = evalConfig machineName {
+           modules =
+             modules ++
+             [ ({ config, lib, options, ... }: {
