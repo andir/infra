@@ -26,7 +26,7 @@ let
 
       mtu = lib.mkOption {
         type = lib.types.ints.unsigned;
-        default = 1300;
+        default = 1420;
       };
 
       interfaceName = lib.mkOption {
