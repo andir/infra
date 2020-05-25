@@ -43,7 +43,7 @@ in
               }
               {
                 alert = "InstanceLowDiskAbs";
-                expr = ''node_filesystem_avail_bytes{fstype!~"(tmpfs|ramfs)",mountpoint!="/boot"} / 1024 / 1024 < 1024'';
+                expr = ''node_filesystem_avail_bytes{fstype!~"(tmpfs|ramfs)",mountpoint!~"^/boot"} / 1024 / 1024 < 1024'';
                 for = "1m";
                 labels = {
                   severity = "page";
