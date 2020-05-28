@@ -26,7 +26,7 @@
     "dn42-registry": {
         "ref": "master",
         "repo": "http://git.dn42.us/dn42/registry.git",
-        "rev": "d316424b7ba4f01e47361e94a7b30b7c0e1810e1",
+        "rev": "30efd22f25061769ce0b220537035f57a30edb9c",
         "type": "git"
     },
     "dn42-regparse": {
@@ -65,10 +65,10 @@
         "homepage": null,
         "owner": "DBCDK",
         "repo": "morph",
-        "rev": "4554e1685db14d43ac2705deabfd98112b2cf308",
-        "sha256": "0g6jzhw3441pkv8hfj8b4jkqv6whbjhdw5rr16ypid17wzzn7z3r",
+        "rev": "1e6b62d9c2deee784c9bf03a1d80a0304baa4bbd",
+        "sha256": "064ccvvq4yk17jy5jvi1nxfp5ajvnvn2k4zvh9v0n3ragcl3rd20",
         "type": "tarball",
-        "url": "https://github.com/DBCDK/morph/archive/4554e1685db14d43ac2705deabfd98112b2cf308.tar.gz",
+        "url": "https://github.com/DBCDK/morph/archive/1e6b62d9c2deee784c9bf03a1d80a0304baa4bbd.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -98,7 +98,7 @@
     "nixos-mailserver": {
         "ref": "master",
         "repo": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
-        "rev": "aed5d9e523de0e4be6ced3079b4c1f75203b0c07",
+        "rev": "87e66046c124f4f9a215e0570171a35f67bac199",
         "type": "git"
     },
     "nixpkgs": {
@@ -131,10 +131,10 @@
         "homepage": "",
         "owner": "cachix",
         "repo": "pre-commit-hooks.nix",
-        "rev": "f709c4652d4696dbe7c6a8354ebd5938f2bf807b",
-        "sha256": "0700c5awc2gjzgikhx69vjbpyshx6b5xljmpxrdzpgqyg3blxbkl",
+        "rev": "15a0b96c1cc06a25d8bf57529230947540a77b81",
+        "sha256": "0k36i41hmagj9lmx1wjpvzjyxwqbk19s119wgbqsghkqncprvjna",
         "type": "tarball",
-        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/f709c4652d4696dbe7c6a8354ebd5938f2bf807b.tar.gz",
+        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/15a0b96c1cc06a25d8bf57529230947540a77b81.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
