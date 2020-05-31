@@ -10,8 +10,9 @@ let
         domains = [];
         loginAccounts = {};
       };
+      exists = builtins.pathExists path;
     in
-      if builtins.trace path builtins.pathExists path then import path else default;
+      if exists then import path else default;
 in
 {
 

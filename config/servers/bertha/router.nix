@@ -224,7 +224,7 @@ in
           );
         };
       in
-        builtins.trace "${builtins.toJSON v.value}" v;
+        v;
       upstreamConfig = builtins.listToAttrs (map mkUpstreamIfConfig cfg.upstreamInterfaces);
       downstreamConfig = builtins.listToAttrs (map mkClientIfConfig cfg.downstreamInterfaces);
     in

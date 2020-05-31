@@ -58,7 +58,7 @@ let
           (
             map (
               value:
-                if builtins.trace (builtins.typeOf value) (builtins.typeOf value) == "string" then {
+                if (builtins.typeOf value) == "string" then {
                   local = value;
                   peer = null;
                 } else value
@@ -244,7 +244,7 @@ in
                   routes = map (
                     addr:
                       { routeConfig = { Destination = addr; }; }
-                  ) (lib.traceValSeq peer.remoteAddresses);
+                  ) peer.remoteAddresses;
                 };
               };
             }

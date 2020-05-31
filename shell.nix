@@ -7,7 +7,6 @@ let
 
   grafana-devel = pkgs.callPackage ./tools/grafana-devel.nix {};
 
-
   pre-commit-hooks = pkgs.nix-pre-commit-hooks.run {
     src = ./.;
     hooks = {
