@@ -8,8 +8,8 @@
     extraConfig = "name_servers='127.0.1.53'";
   };
   services.kresd = {
-    interfaces = lib.mkDefault [
-      "127.0.1.53"
+    listenPlain = lib.mkDefault [
+      "127.0.1.53:53"
     ];
   };
   services.unbound = {
