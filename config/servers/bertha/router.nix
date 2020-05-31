@@ -197,6 +197,7 @@ in
           ipv6PrefixDelegationConfig = {
             RouterLifetimeSec = 300;
             EmitDNS = true;
+            DNS = "_link_local";
           };
 
           extraConfig = lib.optionalString (conf.subnetId != null) ''
