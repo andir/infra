@@ -43,7 +43,7 @@ in
               }
               {
                 alert = "InstanceLowDiskAbs";
-                expr = ''node_filesystem_avail_bytes{fstype!~"(tmpfs|ramfs)",mountpoint!~"^/boot"} / 1024 / 1024 < 1024'';
+                expr = ''node_filesystem_avail_bytes{fstype!~"(tmpfs|ramfs)",mountpoint!~"^/boot.?/?.*"} / 1024 / 1024 < 1024'';
                 for = "1m";
                 labels = {
                   severity = "page";
@@ -54,6 +54,24 @@ in
                   value = "{{ $value }}";
                 };
               }
+              (
+                let
+                  low_megabyte = 70;
+                in
+                  {
+                    alert = "InstanceLowBootDiskAbs";
+                    expr = ''node_filesystem_avail_bytes{mountpoint=~"^/boot.?/?.*"} / 1024 / 1024 < ${toString low_megabyte}''; # a single kernel roughly consumes about ~40ish MB.
+                    for = "1m";
+                    labels = {
+                      severity = "page";
+                    };
+                    annotations = {
+                      description = "Less than ${toString low_megabyte}MB of free disk space left on one of the boot filesystem";
+                      summary = "Instance {{ $labels.instance }}: {{ $value }}MB free disk space on {{$labels.device }} @ {{$labels.mountpoint}}";
+                      value = "{{ $value }}";
+                    };
+                  }
+              )
               {
                 alert = "InstanceLowDiskPerc";
                 expr = "100 * (node_filesystem_free_bytes / node_filesystem_size_bytes) < 10";
