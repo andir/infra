@@ -52,7 +52,7 @@ let
         default = [];
       };
       localAddresses = lib.mkOption {
-        type = lib.types.nullOr (lib.types.listOf (lib.types.either lib.types.string (lib.types.submodule localAddressOptions)));
+        type = lib.types.nullOr (lib.types.listOf (lib.types.either lib.types.str (lib.types.submodule localAddressOptions)));
         default = null;
         apply = values: if values == null then null else
           (
