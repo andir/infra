@@ -1,0 +1,131 @@
+From 03278dabb0773a245d72a6084dc1994ba501ecb7 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Zbigniew=20J=C4=99drzejewski-Szmek?= <zbyszek@in.waw.pl>
+Date: Thu, 9 Apr 2020 11:18:26 +0200
+Subject: [PATCH 1/6] basic/parse-util: add safe_atoux64()
+
+(cherry picked from commit ce51632a357d347737bf40d3817df331cd8874cb)
+---
+ src/basic/parse-util.c     |  4 ++--
+ src/basic/parse-util.h     | 12 +++++++++++-
+ src/test/test-parse-util.c | 39 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 52 insertions(+), 3 deletions(-)
+
+diff --git a/src/basic/parse-util.c b/src/basic/parse-util.c
+index e0094b0f37..8de5cd5c56 100644
+--- a/src/basic/parse-util.c
++++ b/src/basic/parse-util.c
+@@ -395,7 +395,7 @@ int safe_atoi(const char *s, int *ret_i) {
+         return 0;
+ }
+ 
+-int safe_atollu(const char *s, long long unsigned *ret_llu) {
++int safe_atollu_full(const char *s, unsigned base, long long unsigned *ret_llu) {
+         char *x = NULL;
+         unsigned long long l;
+ 
+@@ -404,7 +404,7 @@ int safe_atollu(const char *s, long long unsigned *ret_llu) {
+         s += strspn(s, WHITESPACE);
+ 
+         errno = 0;
+-        l = strtoull(s, &x, 0);
++        l = strtoull(s, &x, base);
+         if (errno > 0)
+                 return -errno;
+         if (!x || x == s || *x != 0)
+diff --git a/src/basic/parse-util.h b/src/basic/parse-util.h
+index 6b30c727e3..584ddd4363 100644
+--- a/src/basic/parse-util.h
++++ b/src/basic/parse-util.h
+@@ -28,7 +28,6 @@ static inline int safe_atou(const char *s, unsigned *ret_u) {
+ }
+ 
+ int safe_atoi(const char *s, int *ret_i);
+-int safe_atollu(const char *s, unsigned long long *ret_u);
+ int safe_atolli(const char *s, long long int *ret_i);
+ 
+ int safe_atou8(const char *s, uint8_t *ret);
+@@ -55,6 +54,12 @@ static inline int safe_atoi32(const char *s, int32_t *ret_i) {
+         return safe_atoi(s, (int*) ret_i);
+ }
+ 
++int safe_atollu_full(const char *s, unsigned base, long long unsigned *ret_llu);
++
++static inline int safe_atollu(const char *s, long long unsigned *ret_llu) {
++        return safe_atollu_full(s, 0, ret_llu);
++}
++
+ static inline int safe_atou64(const char *s, uint64_t *ret_u) {
+         assert_cc(sizeof(uint64_t) == sizeof(unsigned long long));
+         return safe_atollu(s, (unsigned long long*) ret_u);
+@@ -65,6 +70,11 @@ static inline int safe_atoi64(const char *s, int64_t *ret_i) {
+         return safe_atolli(s, (long long int*) ret_i);
+ }
+ 
++static inline int safe_atoux64(const char *s, uint64_t *ret) {
++        assert_cc(sizeof(int64_t) == sizeof(long long unsigned));
++        return safe_atollu_full(s, 16, (long long unsigned*) ret);
++}
++
+ #if LONG_MAX == INT_MAX
+ static inline int safe_atolu(const char *s, unsigned long *ret_u) {
+         assert_cc(sizeof(unsigned long) == sizeof(unsigned));
+diff --git a/src/test/test-parse-util.c b/src/test/test-parse-util.c
+index d732f402f0..1627bc747d 100644
+--- a/src/test/test-parse-util.c
++++ b/src/test/test-parse-util.c
+@@ -561,6 +561,44 @@ static void test_safe_atoi64(void) {
+         assert_se(r == -EINVAL);
+ }
+ 
++static void test_safe_atoux64(void) {
++        int r;
++        uint64_t l;
++
++        r = safe_atoux64("12345", &l);
++        assert_se(r == 0);
++        assert_se(l == 0x12345);
++
++        r = safe_atoux64("  12345", &l);
++        assert_se(r == 0);
++        assert_se(l == 0x12345);
++
++        r = safe_atoux64("0x12345", &l);
++        assert_se(r == 0);
++        assert_se(l == 0x12345);
++
++        r = safe_atoux64("18446744073709551617", &l);
++        assert_se(r == -ERANGE);
++
++        r = safe_atoux64("-1", &l);
++        assert_se(r == -ERANGE);
++
++        r = safe_atoux64("  -1", &l);
++        assert_se(r == -ERANGE);
++
++        r = safe_atoux64("junk", &l);
++        assert_se(r == -EINVAL);
++
++        r = safe_atoux64("123x", &l);
++        assert_se(r == -EINVAL);
++
++        r = safe_atoux64("12.3", &l);
++        assert_se(r == -EINVAL);
++
++        r = safe_atoux64("", &l);
++        assert_se(r == -EINVAL);
++}
++
+ static void test_safe_atod(void) {
+         int r;
+         double d;
+@@ -838,6 +876,7 @@ int main(int argc, char *argv[]) {
+         test_safe_atoux16();
+         test_safe_atou64();
+         test_safe_atoi64();
++        test_safe_atoux64();
+         test_safe_atod();
+         test_parse_percent();
+         test_parse_percent_unbounded();
+-- 
+2.26.2
+

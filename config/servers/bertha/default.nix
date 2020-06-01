@@ -154,7 +154,7 @@ in
     downstreamInterfaces = [
       {
         interface = "lan";
-        subnetId = 10;
+        subnetId = "a";
         dnsOverTls = true;
         v4Addresses = [
           { address = "172.20.24.1"; prefixLength = 24; }
@@ -165,7 +165,7 @@ in
       }
       {
         interface = "oldlan";
-        subnetId = 11;
+        subnetId = "b";
         v4Addresses = [
           { address = "10.250.11.254"; prefixLength = 24; }
         ];

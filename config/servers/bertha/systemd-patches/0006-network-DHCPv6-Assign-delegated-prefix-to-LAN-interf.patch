@@ -1,0 +1,205 @@
+From 25cfd632d71eb757956c1142ad010672102f4b1a Mon Sep 17 00:00:00 2001
+From: Susant Sahani <ssahani@vmware.com>
+Date: Sat, 4 Apr 2020 20:07:18 +0200
+Subject: [PATCH 6/6] network: DHCPv6 Assign delegated prefix to LAN interface
+
+In DHCPv6-PD environment, where WAN interface requests IPv6 via DHCPv6,
+receives the address as well as delegated prefixes, with LAN interfaces
+serving those delegated prefixes in their router advertisement messages.
+The LAN interfaces on the router themselves do not have
+the IPv6 addresses assigned by networkd from the prefix it
+serves on that interface. Now this patch enables it.
+
+(cherry picked from commit e6c504d1670e315499a4ae2d06f522728f3134d4)
+---
+ man/systemd.network.xml                       | 14 +++++-
+ src/network/networkd-dhcp6.c                  | 50 +++++++++++++++++++
+ src/network/networkd-link.c                   |  2 +-
+ src/network/networkd-link.h                   |  1 +
+ src/network/networkd-network-gperf.gperf      |  1 +
+ src/network/networkd-network.c                |  2 +
+ src/network/networkd-network.h                |  1 +
+ .../fuzz-network-parser/directives.network    |  1 +
+ 8 files changed, 70 insertions(+), 2 deletions(-)
+
+diff --git a/man/systemd.network.xml b/man/systemd.network.xml
+index eb32466362..c984722f26 100644
+--- a/man/systemd.network.xml
++++ b/man/systemd.network.xml
+@@ -1696,6 +1696,15 @@
+           </listitem>
+         </varlistentry>
+ 
++        <varlistentry>
++          <term><varname>AssignAcquiredDelegatedPrefixAddress=</varname></term>
++          <listitem>
++            <para>Takes a boolean. Specifies whether to add an address from the delegated prefixes which are received
++            from the WAN interface by the <varname>IPv6PrefixDelegation=</varname>. When true (on LAN interfce), the EUI-64
++            algorithm will be used to form an interface identifier from the delegated prefixes. Defaults to true.</para>
++          </listitem>
++        </varlistentry>
++
+         <varlistentry>
+           <term><varname>PrefixDelegationHint=</varname></term>
+           <listitem>
+@@ -2879,7 +2888,10 @@ DHCP=ipv6</programlisting>
+ Name=enp2s0
+ 
+ [Network]
+-IPv6PrefixDelegation=dhcpv6</programlisting>
++IPv6PrefixDelegation=dhcpv6
++
++[DHCPv6]
++AssignAcquiredDelegatedPrefixAddress=yes</programlisting>
+ 
+       <para>This will enable IPv6 PD on the interface enp1s0 as an upstream interface where the
+       DHCPv6 client is running and enp2s0 as a downstream interface where the prefix is delegated to.</para>
+diff --git a/src/network/networkd-dhcp6.c b/src/network/networkd-dhcp6.c
+index cfa8c84478..cd6ac54224 100644
+--- a/src/network/networkd-dhcp6.c
++++ b/src/network/networkd-dhcp6.c
+@@ -26,6 +26,10 @@ static Link *dhcp6_prefix_get(Manager *m, struct in6_addr *addr);
+ static int dhcp6_prefix_add(Manager *m, struct in6_addr *addr, Link *link);
+ static int dhcp6_prefix_remove_all(Manager *m, Link *link);
+ static bool dhcp6_link_has_dhcpv6_prefix(Link *link);
++static int dhcp6_assign_delegated_prefix(Link *link, const struct in6_addr *prefix,
++                                         uint8_t prefix_len,
++                                         uint32_t lifetime_preferred,
++                                         uint32_t lifetime_valid);
+ 
+ static bool dhcp6_get_prefix_delegation(Link *link) {
+         if (!link->network)
+@@ -191,6 +195,12 @@ static int dhcp6_pd_prefix_assign(Link *link, struct in6_addr *prefix,
+         if (r < 0)
+                 return r;
+ 
++        if (link->network->dhcp6_pd_assign_prefix) {
++                r = dhcp6_assign_delegated_prefix(link, prefix, prefix_len, lifetime_preferred, lifetime_valid);
++                if (r < 0)
++                        return r;
++        }
++
+         return sd_radv_start(radv);
+ }
+ 
+@@ -976,3 +986,43 @@ static bool dhcp6_link_has_dhcpv6_prefix(Link *link) {
+ 
+         return false;
+ }
++
++static int dhcp6_assign_delegated_prefix(Link *link,
++                                         const struct in6_addr *prefix,
++                                         uint8_t prefix_len,
++                                         uint32_t lifetime_preferred,
++                                         uint32_t lifetime_valid) {
++        _cleanup_(address_freep) Address *address = NULL;
++        int r;
++
++        assert(link);
++        assert(link->network);
++        assert(prefix);
++
++        if (!link->network->dhcp6_pd_assign_prefix)
++                return 0;
++
++        r = address_new(&address);
++        if (r < 0)
++                return log_link_error_errno(link, r, "Could not allocate address: %m");
++
++        address->in_addr.in6 = *prefix;
++        r = generate_ipv6_eui_64_address(link, &address->in_addr.in6);
++        if (r < 0)
++                return log_link_warning_errno(link, r, "Failed to generate EUI64 address for DHCPv6 acquired delegated prefix: %m");
++
++        address->prefixlen = prefix_len;
++        address->family = AF_INET6;
++        address->cinfo.ifa_prefered = lifetime_preferred;
++        address->cinfo.ifa_valid = lifetime_valid;
++
++        link_set_state(link, LINK_STATE_CONFIGURING);
++
++        r = address_configure(address, link, address_handler, true);
++        if (r < 0)
++                return log_link_warning_errno(link, r, "Could not set addresses: %m");
++        if (r > 0)
++                link->address_messages++;
++
++        return 0;
++}
+diff --git a/src/network/networkd-link.c b/src/network/networkd-link.c
+index 99d4b29c31..aa1855dfbb 100644
+--- a/src/network/networkd-link.c
++++ b/src/network/networkd-link.c
+@@ -1173,7 +1173,7 @@ static int link_request_set_neighbors(Link *link) {
+         return 0;
+ }
+ 
+-static int address_handler(sd_netlink *rtnl, sd_netlink_message *m, Link *link) {
++int address_handler(sd_netlink *rtnl, sd_netlink_message *m, Link *link) {
+         int r;
+ 
+         assert(rtnl);
+diff --git a/src/network/networkd-link.h b/src/network/networkd-link.h
+index 59a5107311..e93edf0ff4 100644
+--- a/src/network/networkd-link.h
++++ b/src/network/networkd-link.h
+@@ -216,6 +216,7 @@ int link_request_set_routes(Link *link);
+ int link_request_set_nexthop(Link *link);
+ 
+ int link_reconfigure(Link *link, bool force);
++int address_handler(sd_netlink *rtnl, sd_netlink_message *m, Link *link);
+ 
+ int log_link_message_full_errno(Link *link, sd_netlink_message *m, int level, int err, const char *msg);
+ #define log_link_message_error_errno(link, m, err, msg)   log_link_message_full_errno(link, m, LOG_ERR, err, msg)
+diff --git a/src/network/networkd-network-gperf.gperf b/src/network/networkd-network-gperf.gperf
+index 930f9e780b..b8db9859d6 100644
+--- a/src/network/networkd-network-gperf.gperf
++++ b/src/network/networkd-network-gperf.gperf
+@@ -187,6 +187,7 @@ DHCPv6.UseDNS,                               config_parse_bool,
+ DHCPv6.UseNTP,                               config_parse_bool,                                        0,                             offsetof(Network, dhcp6_use_ntp)
+ DHCPv6.RapidCommit,                          config_parse_bool,                                        0,                             offsetof(Network, rapid_commit)
+ DHCPv6.ForceDHCPv6PDOtherInformation,        config_parse_bool,                                        0,                             offsetof(Network, dhcp6_force_pd_other_information)
++DHCPv6.AssignAcquiredDelegatedPrefixAddress, config_parse_bool,                                        0,                             offsetof(Network, dhcp6_pd_assign_prefix)
+ DHCPv6.PrefixDelegationHint,                 config_parse_dhcp6_pd_hint,                               0,                             0
+ IPv6AcceptRA.UseAutonomousPrefix,            config_parse_bool,                                        0,                             offsetof(Network, ipv6_accept_ra_use_autonomous_prefix)
+ IPv6AcceptRA.UseOnLinkPrefix,                config_parse_bool,                                        0,                             offsetof(Network, ipv6_accept_ra_use_onlink_prefix)
+diff --git a/src/network/networkd-network.c b/src/network/networkd-network.c
+index 15c481a25d..71564e2fd3 100644
+--- a/src/network/networkd-network.c
++++ b/src/network/networkd-network.c
+@@ -402,6 +402,8 @@ int network_load_one(Manager *manager, OrderedHashmap **networks, const char *fi
+                 .dhcp6_use_ntp = true,
+                 .dhcp6_use_dns = true,
+ 
++                .dhcp6_pd_assign_prefix = true,
++
+                 .dhcp_server_emit_dns = true,
+                 .dhcp_server_emit_ntp = true,
+                 .dhcp_server_emit_sip = true,
+diff --git a/src/network/networkd-network.h b/src/network/networkd-network.h
+index 473e37f96e..5c428b2369 100644
+--- a/src/network/networkd-network.h
++++ b/src/network/networkd-network.h
+@@ -173,6 +173,7 @@ struct Network {
+         bool dhcp6_force_pd_other_information; /* Start DHCPv6 PD also when 'O'
+                                                   RA flag is set, see RFC 7084,
+                                                   WPD-4 */
++        bool dhcp6_pd_assign_prefix;
+ 
+         /* Bridge Support */
+         int use_bpdu;
+diff --git a/test/fuzz/fuzz-network-parser/directives.network b/test/fuzz/fuzz-network-parser/directives.network
+index f51f42ec05..1cf0577fe0 100644
+--- a/test/fuzz/fuzz-network-parser/directives.network
++++ b/test/fuzz/fuzz-network-parser/directives.network
+@@ -107,6 +107,7 @@ UseDNS=
+ RapidCommit=
+ ForceDHCPv6PDOtherInformation=
+ PrefixDelegationHint=
++AssignAcquiredDelegatedPrefixAddress=
+ [Route]
+ Destination=
+ Protocol=
+-- 
+2.26.2
+
