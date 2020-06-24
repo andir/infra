@@ -108,6 +108,16 @@ in
       };
     };
 
+    "00-sc-agx-vlan" = {
+      netdevConfig = {
+        Name = "sc-agx";
+        Kind = "vlan";
+      };
+      vlanConfig = {
+        Id = 42;
+      };
+    };
+
   };
 
   systemd.network.networks = {
@@ -115,7 +125,7 @@ in
       matchConfig = {
         Name = "internal";
       };
-      vlan = [ "oldlan" "lan" "mgmt" ];
+      vlan = [ "oldlan" "lan" "mgmt" "sc-agx" ];
     };
     "00-bond0-1" = {
       matchConfig = {
@@ -182,6 +192,15 @@ in
           { address = "fd21:a07e:735e:ff02::"; prefixLength = 64; }
         ];
       }
+      {
+        interface = "sc-agx";
+        v4Addresses = [
+          { address = "10.250.42.1"; prefixLength = 24; }
+        ];
+        v6Addresses = [
+          { address = "fd21:a07e:735e:ff42::"; prefixLength = 64; }
+        ];
+      }
     ];
   };
 
@@ -208,6 +227,7 @@ in
         iifname lan jump lan_input
         iifname oldlan jump lan_input
         iifname mgmt accept;
+        iifname sc-agx jump agx_input
 
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
 
@@ -228,6 +248,14 @@ in
       }
 
       chain lan_input {
+        ip protocol icmp accept
+        ip6 nexthdr icmpv6 accept
+        udp sport bootpc udp dport bootps accept comment "DHCP clients"
+        udp dport { domain, domain-s } accept
+        tcp dport { domain, domain-s } accept
+      }
+
+      chain agx_input {
         ip protocol icmp accept
         ip6 nexthdr icmpv6 accept
         udp sport bootpc udp dport bootps accept comment "DHCP clients"
@@ -269,6 +297,10 @@ in
         oifname lan jump forward_to_lan
         oifname oldlan jump forward_to_lan
         oifname mgmt jump forward_to_mgmt
+
+        oifname sc-agx iifname lan accept;
+        oifname sc-agx iifname oldlan accept;
+        oifname sc-agx iifname uplink ip6 nexthdr tcp tcp dport 22 accept
 
         oifname "wg-*" jump forward_to_wg
 
