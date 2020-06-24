@@ -256,6 +256,7 @@ in
           "${cfg.serverName}" = {
             forceSSL = true;
             enableACME = true;
+            serverAliases = [ "upload.${cfg.serverName}" ];
             locations."/.xmpp/http-bind" = {
               extraConfig = ''
                 add_header Access-Control-Allow-Origin '*' always;
