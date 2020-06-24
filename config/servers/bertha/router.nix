@@ -110,6 +110,8 @@ in
             ./systemd-patches/0005-network-Introduce-method-to-generate-EUI-64-addresse.patch
             ./systemd-patches/0006-network-DHCPv6-Assign-delegated-prefix-to-LAN-interf.patch
             ./systemd-patches/0007-Add-some-dhcpv6-debug-statements.patch
+            ./systemd-patches/0008-libsystemd-network-add-logging-to-sd_radv_remove_pre.patch
+            ./systemd-patches/0009-networkd-re-assign-prefix-after-DHCPv6-PD-update.patch
           ];
         }
       )
