@@ -194,6 +194,7 @@ in
       }
       {
         interface = "sc-agx";
+        subnetId = "42";
         v4Addresses = [
           { address = "10.250.42.1"; prefixLength = 24; }
         ];
@@ -300,7 +301,7 @@ in
 
         oifname sc-agx iifname lan accept;
         oifname sc-agx iifname oldlan accept;
-        oifname sc-agx iifname uplink ip6 nexthdr tcp tcp dport 22 accept
+        oifname sc-agx ip6 nexthdr tcp tcp dport 22 accept
 
         oifname "wg-*" jump forward_to_wg
 
