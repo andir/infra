@@ -1,7 +1,8 @@
+{ pkgs, ... }:
 {
+  environment.systemPackages = [ pkgs.photoprism ];
   imports = [
     ../../profiles/hetzner-vm.nix
-    ./piwigo.nix
   ];
 
   deployment = {
@@ -16,5 +17,8 @@
       "2a01:4f8:c2c:2ae2::/128"
     ];
   };
+
+  h4ck.photoprism.enable = true;
+
   fileSystems."/".fsType = "btrfs";
 }

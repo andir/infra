@@ -13,5 +13,6 @@
     ../../modules/wireguard
     ../../modules/bird
     ../../modules/dn42
+    ../../modules/photoprism.nix
   ];
 }

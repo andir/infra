@@ -50,4 +50,9 @@ self: super: {
     '';
   in
     roa;
+
+
+  photoprism = self.callPackage ./photoprism {
+    src = sources.photoprism;
+  };
 }
