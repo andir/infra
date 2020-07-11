@@ -30,4 +30,6 @@ in
   mon = mkMachine ./servers/mon;
 
   bertha = mkMachine ./servers/bertha;
+
+  gallery = mkMachine ./servers/gallery;
 }
