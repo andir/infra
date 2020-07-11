@@ -7,7 +7,7 @@
     ../../modules/gitlab-runner2.nix
     ../../modules/knot_exporter.nix
     ../../modules/monitoring.nix
-    ../../modules/prosody.nix
+    ../../modules/prosody
     ../../modules/ssh-unlock.nix
     ../../modules/syncserver
     ../../modules/wireguard
