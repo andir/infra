@@ -11,9 +11,15 @@ let
 in
 {
 
+  imports = [ ./turn.nix ];
+
   options = {
     h4ck.prosody = {
       enable = lib.mkEnableOption "Enable prosody";
+      extraCommunityModules = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+      };
       serverName = lib.mkOption {
         type = lib.types.str;
       };
@@ -48,7 +54,7 @@ in
             "vcard_muc"
             "bookmarks"
             "conversejs"
-          ];
+          ] ++ cfg.extraCommunityModules;
         };
         allowRegistration = false;
         admins = [ cfg.adminJID ];
@@ -158,7 +164,7 @@ in
           "websocket" # enable accessing the server via WS over HTTPS
           "bookmark"
           "conversejs"
-        ];
+        ] ++ cfg.extraCommunityModules;
 
         # all the different domains this server serves go here
         virtualHosts = {
