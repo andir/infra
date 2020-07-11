@@ -1,9 +1,10 @@
 { src
+, stdenv
 , fetchzip
 , runCommand
 , buildGoModule
 , python3Packages
-,
+, nodejs-12_x
 }:
 buildGoModule {
   name = "test";
@@ -16,7 +17,37 @@ buildGoModule {
 
   vendorSha256 = "1g1vycmgcr4a6d255ll6mmdc9qndpyvqxc02ahg0jkpfk1p2y8nh";
 
-  passthru = {
+  passthru = rec {
+
+    frontend =
+      stdenv.mkDerivation {
+        name = "photoprism-frontend";
+        nativeBuildInputs = [ nodejs-12_x ];
+        outputHash = "0wwizcfcr4dzzjrww0apzgq7hnhgavbii7wwwdi8ab16gn8m1jmn";
+        outputHashAlgo = "sha256";
+        outputHashMode = "recursive";
+        inherit src;
+
+        HOME = "/tmp";
+        NODE_ENV = "production";
+
+        sourceRoot = "photoprism-src/frontend";
+
+        postUnpack = ''
+          chmod -R +rw .
+        '';
+
+        buildPhase = ''
+          npm install
+          patchShebangs node_modules
+          npm run build
+        '';
+        installPhase = ''
+          cp -rv ../assets/static/build $out
+        '';
+
+      };
+
     assets = let
       nasnet = fetchzip {
         url = "https://dl.photoprism.org/tensorflow/nasnet.zip";
@@ -32,8 +63,8 @@ buildGoModule {
       runCommand "photoprims-assets" {} ''
         cp -rv ${src}/assets $out
         chmod -R +rw $out
-        # TODO: node build
-
+        rm -rf $out/static/build
+        cp -rv ${frontend} $out/static/build
         ln -s ${nsfw} $out/nsfw
         ln -s ${nasnet} $out/nasnet
       '';
