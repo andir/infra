@@ -1,5 +1,8 @@
 {
-  imports = [ ../../profiles/hetzner-vm.nix ];
+  imports = [
+    ../../profiles/hetzner-vm.nix
+    ./piwigo.nix
+  ];
 
   deployment = {
     targetHost = "159.69.192.67";
