@@ -18,6 +18,8 @@
     ];
   };
 
+  networking.hostName = "gallery.rammhold.de";
+
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
   services.nginx = {
