@@ -59,5 +59,6 @@ self: super: {
 
   photoprism = self.callPackage ./photoprism {
     src = sources.photoprism;
+    ranz2nix = sources.ranz2nix;
   };
 }

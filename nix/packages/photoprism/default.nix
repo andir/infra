@@ -1,10 +1,13 @@
 { src
+, ranz2nix
 , stdenv
+, fetchurl
 , fetchzip
 , runCommand
 , buildGoModule
 , python3Packages
 , nodejs-12_x
+, callPackage
 }:
 buildGoModule {
   name = "test";
@@ -19,17 +22,28 @@ buildGoModule {
 
   passthru = rec {
 
-    frontend =
+    frontend = let
+      noderanz = callPackage ranz2nix {
+        nodejs = nodejs-12_x;
+        sourcePath = src + "/frontend";
+        packageOverride = name: spec: if name == "minimist" && spec ? resolved && spec.resolved == "" then {
+          resolved = "file://" + (
+            toString (
+              fetchurl {
+                url = "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz";
+                sha256 = "0w7jll4vlqphxgk9qjbdjh3ni18lkrlfaqgsm7p14xl3f7ghn3gc";
+              }
+            )
+          );
+        } else {};
+      };
+      node_modules = noderanz.patchedBuild;
+    in
       stdenv.mkDerivation {
         name = "photoprism-frontend";
         nativeBuildInputs = [ nodejs-12_x ];
-        outputHash = "0wwizcfcr4dzzjrww0apzgq7hnhgavbii7wwwdi8ab16gn8m1jmn";
-        outputHashAlgo = "sha256";
-        outputHashMode = "recursive";
-        inherit src;
 
-        HOME = "/tmp";
-        NODE_ENV = "production";
+        inherit src;
 
         sourceRoot = "photoprism-src/frontend";
 
@@ -37,15 +51,17 @@ buildGoModule {
           chmod -R +rw .
         '';
 
+        NODE_ENV = "production";
+
         buildPhase = ''
-          npm install
-          patchShebangs node_modules
+          export HOME=$(mktemp -d)
+          ln -sf ${node_modules}/node_modules node_modules
+          ln -sf ${node_modules.lockFile} package-lock.json
           npm run build
         '';
         installPhase = ''
           cp -rv ../assets/static/build $out
         '';
-
       };
 
     assets = let

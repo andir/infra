@@ -148,5 +148,17 @@
         "type": "tarball",
         "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/16d4ca0a800bd7716f4d786c259ee35b14804180.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "ranz2nix": {
+        "branch": "master",
+        "description": "cheap approach at building node environments with Nix. Very hacky.",
+        "homepage": null,
+        "owner": "andir",
+        "repo": "ranz2nix",
+        "rev": "637276c3110716d2a798e737fe62e54b37190d50",
+        "sha256": "0jaxw74srgabzz5sawy6nv27rpghmwxw53m5csnrhgy39a9yaki4",
+        "type": "tarball",
+        "url": "https://github.com/andir/ranz2nix/archive/637276c3110716d2a798e737fe62e54b37190d50.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
