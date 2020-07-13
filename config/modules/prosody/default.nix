@@ -36,26 +36,42 @@ in
         #ciphers = "HIGH+kEECDH:HIGH+kEDH:!DSS:!ECDSA:!3DES:!aNULL:@STRENGTH";
         #options = [ "no_sslv2" "no_sslv3" "no_ticket" "no_compression" "cipher_server_preference" ];
       };
+
+      turnTransportPatch = pkgs.fetchpatch {
+        url = "https://hg.prosody.im/prosody-modules/raw-rev/bbfcd786cc78";
+        sha256 = "1igj4wjm6fx9h8zlqvidn8xp8sdxfsvdilrj8mkb4mpibg1wlkb1";
+      };
+
     in
       {
         enable = true;
-        package = pkgs.prosody.override {
-          withCommunityModules = [
-            "carbons_adhoc"
-            "cloud_notify"
-            "csi"
-            "http_upload"
-            "mam_adhoc"
-            "omemo_all_access"
-            "reload_modules"
-            "smacks"
-            "throttle_presence"
-            "filter_chatstates"
-            "vcard_muc"
-            "bookmarks"
-            "conversejs"
-          ] ++ cfg.extraCommunityModules;
-        };
+        package = (
+          pkgs.prosody.override {
+            withCommunityModules = [
+              "carbons_adhoc"
+              "cloud_notify"
+              "csi"
+              "http_upload"
+              "mam_adhoc"
+              "omemo_all_access"
+              "reload_modules"
+              "smacks"
+              "throttle_presence"
+              "filter_chatstates"
+              "vcard_muc"
+              "bookmarks"
+              "conversejs"
+            ] ++ cfg.extraCommunityModules;
+          }
+        ).overrideAttrs (
+          { postInstall, ... }: {
+            postInstall = postInstall + ''
+              cd $out/lib/prosody/modules/
+              chmod +rw -R mod_turncredentials
+              patch -p1 <${turnTransportPatch}
+            '';
+          }
+        );
         allowRegistration = false;
         admins = [ cfg.adminJID ];
         ssl = {
