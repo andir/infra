@@ -51,6 +51,11 @@ self: super: {
   in
     roa;
 
+  coturn = super.coturn.overrideAttrs (
+    { buildInputs, ... }: {
+      buildInputs = buildInputs ++ [ self.sqlite ];
+    }
+  );
 
   photoprism = self.callPackage ./photoprism {
     src = sources.photoprism;
