@@ -18,7 +18,7 @@ buildGoModule {
 
   buildInputs = [ python3Packages.tensorflow.libtensorflow ];
 
-  vendorSha256 = "1g1vycmgcr4a6d255ll6mmdc9qndpyvqxc02ahg0jkpfk1p2y8nh";
+  vendorSha256 = "1dwsagxznlfjrbvs8d0yshgnx00p8ild92hrbn2qrw6kmgqlgcdf";
 
   passthru = rec {
 
