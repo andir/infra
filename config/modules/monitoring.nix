@@ -104,6 +104,17 @@ let
       targetName = name;
     };
   };
+
+  fpingMonitoringEntry = { name, ... }: {
+    options = {
+      targetName = mkOption {
+        type = types.str;
+      };
+      config = {
+        targetName = name;
+      };
+    };
+  };
 in
 {
   options.h4ck.monitoring = {
@@ -133,6 +144,34 @@ in
       type = types.attrsOf (types.submodule smtpMonitoringEntry);
       default = {};
     };
+
+    fping4 = mkOption {
+      type = types.attrsOf (types.submodule fpingMonitoringEntry);
+      default = {
+        "google.com" = {};
+        "as6766.net" = {};
+        "nynex.de" = {};
+        "hetzner.de" = {};
+        "eqixfr5-bb1.nynex.de" = {};
+        "eqixfr5-bb2.nynex.de" = {};
+        "ixfr3-bb1.nynex.de" = {};
+        "usi-corea.nynex.de" = {};
+      };
+    };
+
+    fping6 = mkOption {
+      type = types.attrsOf (types.submodule fpingMonitoringEntry);
+      default = {
+        "google.com" = {};
+        "as6766.net" = {};
+        "nynex.de" = {};
+        "hetzner.de" = {};
+        "eqixfr5-bb1.nynex.de" = {};
+        "eqixfr5-bb2.nynex.de" = {};
+        "ixfr3-bb1.nynex.de" = {};
+      };
+    };
+
   };
   config = mkIf config.h4ck.monitoring.enable (
     mkMerge [
@@ -237,6 +276,95 @@ in
           ]
         )
       )
+
+      (
+        mkIf (config.h4ck.monitoring.fping4 != {} || config.h4ck.monitoring.fping6 != {}) (
+          mkMerge [
+            {
+              h4ck.prometheus.exporters.fping_exporter.enable = true;
+              h4ck.monitoring.targets.fping_exporter4 = {
+                port = config.h4ck.prometheus.exporters.fping_exporter.port4;
+              };
+              h4ck.monitoring.targets.fping_exporter6 = {
+                port = config.h4ck.prometheus.exporters.fping_exporter.port6;
+              };
+            }
+            (mkFirewallRules "fping4" config.h4ck.prometheus.exporters.fping_exporter.port4)
+            (mkFirewallRules "fping6" config.h4ck.prometheus.exporters.fping_exporter.port6)
+            {
+              h4ck.monitoring.targets = (
+                lib.mapAttrs' (
+                  target: _: lib.nameValuePair "fping4_${target}" {
+                    port = config.h4ck.prometheus.exporters.fping_exporter.port4;
+                    job_config = {
+                      metrics_path = "/probe";
+                      static_configs = [
+                        {
+                          targets = [
+                            target
+                          ];
+                        }
+                      ];
+                      relabel_configs = [
+                        {
+                          source_labels = [ "__address__" ];
+                          target_label = "__param_target";
+                        }
+                        {
+                          source_labels = [ "__param_target" ];
+                          target_label = "instance";
+                        }
+                        {
+                          target_label = "__address__";
+                          replacement = config.h4ck.monitoring.targetHost + ":${toString config.h4ck.prometheus.exporters.fping_exporter.port4}";
+                        }
+                      ];
+                    };
+
+                  }
+                )
+                  config.h4ck.monitoring.fping4
+              );
+            }
+            {
+              h4ck.monitoring.targets = (
+                lib.mapAttrs' (
+                  target: _: lib.nameValuePair "fping6_${target}" {
+                    port = config.h4ck.prometheus.exporters.fping_exporter.port6;
+                    job_config = {
+                      metrics_path = "/probe";
+                      static_configs = [
+                        {
+                          targets = [
+                            target
+                          ];
+                        }
+                      ];
+                      relabel_configs = [
+                        {
+                          source_labels = [ "__address__" ];
+                          target_label = "__param_target";
+                        }
+                        {
+                          source_labels = [ "__param_target" ];
+                          target_label = "instance";
+                        }
+                        {
+                          target_label = "__address__";
+                          replacement = config.h4ck.monitoring.targetHost + ":${toString config.h4ck.prometheus.exporters.fping_exporter.port6}";
+                        }
+                      ];
+                    };
+                  }
+                )
+                  config.h4ck.monitoring.fping6
+              );
+            }
+
+          ]
+        )
+      )
+
 
       (
         mkIf (config.h4ck.monitoring.dns != {} || config.h4ck.monitoring.icmp != {} || config.h4ck.monitoring.smtp != {}) (

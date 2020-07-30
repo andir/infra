@@ -61,4 +61,6 @@ self: super: {
     src = sources.photoprism;
     ranz2nix = sources.ranz2nix;
   };
+
+  fping_exporter = self.callPackage ./fping-exporter.nix {};
 }

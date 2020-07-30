@@ -14,5 +14,6 @@
     ../../modules/bird
     ../../modules/dn42
     ../../modules/photoprism.nix
+    ../../modules/fping-exporter.nix
   ];
 }

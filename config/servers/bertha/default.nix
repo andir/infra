@@ -245,6 +245,8 @@ in
         ip6 nexthdr udp udp dport 6696 accept # babel
         ip6 nexthdr tcp tcp dport 9100 accept # node-exporter
         ip6 nexthdr tcp tcp dport 9113 accept # nginx-exporter
+        ip6 nexthdr tcp tcp dport 9604 accept # fping4
+        ip6 nexthdr tcp tcp dport 9606 accept # fping6
         ip6 nexthdr tcp tcp dport 179 accept # bgp
       }
 
