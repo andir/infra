@@ -312,7 +312,7 @@ in
                         }
                         {
                           source_labels = [ "__param_target" ];
-                          target_label = "instance";
+                          target_label = "target";
                         }
                         {
                           target_label = "__address__";

@@ -3,7 +3,7 @@
   services.grafana.provision.dashboards = [
     {
       name = "Static dashboards";
-      options.path = ./grafana-dashboards;
+      options.path = pkgs.grafana-dashboards;
     }
   ];
 }

@@ -12,4 +12,11 @@ buildGoModule {
   };
 
   vendorSha256 = "1a47040znkgsg9qbwd8m1j3gf2ibmbn0pd1f5xvd2l32q74b3i0p";
+
+  outputs = [ "out" "dashboard" ];
+
+  postInstall = ''
+    mkdir $dashboard
+    cp grafana-dashboard.json $dashboard/fping_exporter.json
+  '';
 }

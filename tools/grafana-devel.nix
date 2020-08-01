@@ -1,52 +1,61 @@
-{ stdenv, lib, grafana, writeScriptBin, symlinkJoin, writeTextFile, grafanaPlugins ? {} }:
+{ stdenv, lib, grafana, writeScriptBin, symlinkJoin, writeTextFile, grafanaPlugins ? {}, grafana-dashboards }:
 let
   provision = symlinkJoin {
     name = "provision-files";
     paths = [
-      (writeTextFile {
-        name = "default.json";
-        destination = "/dashboards/default.yaml";
-        text = builtins.toJSON {
-          apiVersion = 1;
-          providers = [{
-            name = "Static dashboards";
-            folder = "";
-            options.path = ../config/servers/mon/grafana-dashboards;
-            orgId = 1;
-            type = "file";
-            updateIntervalSeconds = 60;
-          }];
-        };
-      })
-      (writeTextFile {
-        name = "default.json";
-        destination = "/datasources/default.yaml";
-        text = builtins.toJSON {
-          apiVersion = 1;
-          datasources = [{
-            access = "proxy";
-            basicAuth = null;
-            basicAuthPassword = null;
-            basicAuthUser = null;
-            database = null;
-            editable = false;
-            isDefault = true;
-            jsonData = null;
-            name = "prometheus";
-            orgId = 1;
-            password = null;
-            secureJsonData = null;
-            type = "prometheus";
-            url = "http://mon.h4ck.space:9090";
-            user = null;
-            version = 1;
-            withCredentials = false;
-          }];
-        };
-      })
+      (
+        writeTextFile {
+          name = "default.json";
+          destination = "/dashboards/default.yaml";
+          text = builtins.toJSON {
+            apiVersion = 1;
+            providers = [
+              {
+                name = "Static dashboards";
+                folder = "";
+                options.path = grafana-dashboards;
+                orgId = 1;
+                type = "file";
+                updateIntervalSeconds = 60;
+              }
+            ];
+          };
+        }
+      )
+      (
+        writeTextFile {
+          name = "default.json";
+          destination = "/datasources/default.yaml";
+          text = builtins.toJSON {
+            apiVersion = 1;
+            datasources = [
+              {
+                access = "proxy";
+                basicAuth = null;
+                basicAuthPassword = null;
+                basicAuthUser = null;
+                database = null;
+                editable = false;
+                isDefault = true;
+                jsonData = null;
+                name = "prometheus";
+                orgId = 1;
+                password = null;
+                secureJsonData = null;
+                type = "prometheus";
+                url = "http://mon.h4ck.space:9090";
+                user = null;
+                version = 1;
+                withCredentials = false;
+              }
+            ];
+          };
+        }
+      )
     ];
   };
-in writeScriptBin "grafana-devel" ''
+in
+writeScriptBin "grafana-devel" ''
   #! ${stdenv.shell}
 
   set -ex
@@ -76,9 +85,11 @@ in writeScriptBin "grafana-devel" ''
 
   ln -sf ${grafana}/share/grafana/conf conf
   ln -sf ${grafana}/share/grafana/tools tools
-  ${lib.concatStringsSep "\n" (lib.mapAttrsToList (
+  ${lib.concatStringsSep "\n" (
+  lib.mapAttrsToList (
     pluginName: plugin:
       "ln -s ${toString plugin} plugins/${pluginName}"
-  ) grafanaPlugins)}
+  ) grafanaPlugins
+)}
   exec ${grafana}/bin/grafana-server "$@"
 ''

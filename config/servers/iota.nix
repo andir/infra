@@ -12,7 +12,7 @@
   networking.firewall.allowedUDPPorts = [ 11001 11002 ];
 
   deployment = {
-    targetHost = "95.216.155.219";
+    targetHost = "iota.h4ck.space";
     targetUser = "morph";
     substituteOnDestination = true;
 
@@ -31,8 +31,7 @@
     ];
   };
 
-  # FIXME: this host needs a proper DNS rentry
-  h4ck.monitoring.targetHost = "95.216.155.219";
+  h4ck.monitoring.targetHost = "iota.h4ck.space";
 
   services.gitlab-runner2 = {
     enable = true;
