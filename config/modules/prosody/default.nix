@@ -354,6 +354,7 @@ in
 
     security.acme.certs = {
       "${cfg.serverName}" = {
+        keyType = "rsa4096";
         group = "kackcerts";
         extraDomains."upload.${cfg.serverName}" = null;
         extraDomains."conference.${cfg.serverName}" = null;
