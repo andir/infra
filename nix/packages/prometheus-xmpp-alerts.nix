@@ -7,9 +7,9 @@ python3.pkgs.buildPythonApplication {
   version = "git";
 
   src = fetchFromGitHub {
-    owner = "andir";
+    owner = "jelmer";
     repo = pname;
-    rev = "a7626e7e8df2fa623875890dd183c432e6aa6d99";
+    rev = "7ef30a86b08a006ac47cfc1d644f2167a55e538f";
     sha256 = "1cp7nijlr3r1cz5ddqkzsbaaabaafc74d53vk4n27n542hfpssn7";
   };
 
