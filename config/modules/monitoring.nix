@@ -148,7 +148,11 @@ in
     fping4 = mkOption {
       type = types.attrsOf (types.submodule fpingMonitoringEntry);
       default = {
+        "1.1.1.1" = {};
+        "8.8.8.8" = {};
+        "9.9.9.9" = {};
         "google.com" = {};
+        "chaos-darmstadt.de" = {};
         "as6766.net" = {};
         "nynex.de" = {};
         "hetzner.de" = {};
@@ -162,7 +166,11 @@ in
     fping6 = mkOption {
       type = types.attrsOf (types.submodule fpingMonitoringEntry);
       default = {
+        "2606:4700:4700::1111" = {};
+        "2001:4860:4860::8888" = {};
+        "2620:fe::fe" = {};
         "google.com" = {};
+        "chaos-darmstadt.de" = {};
         "as6766.net" = {};
         "nynex.de" = {};
         "hetzner.de" = {};
