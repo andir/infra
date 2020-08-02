@@ -17,5 +17,13 @@
       forceSSL = true;
       root = "/var/lib/s.h4ck.space";
     };
+
+    virtualHosts."goerigk.rammhold.de" = {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        return = "302 https://gallery.rammhold.de/s/3ktn78spkw/hochzeit-nils-and-anja";
+      };
+    };
   };
 }
