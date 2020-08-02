@@ -40,4 +40,16 @@
   h4ck.photoprism.enable = true;
 
   fileSystems."/".fsType = "btrfs";
+
+  services.borgbackup.jobs = {
+    "gallery" = {
+      inherit (config.h4ck.backup) paths;
+      compression = "lz4";
+      repo = "borg@zeta.rammhold.de:/tank/enc/borg/gallery";
+      encryption = {
+        mode = "repokey";
+        passCommand = "cat /var/lib/secrets/borg.password";
+      };
+    };
+  };
 }

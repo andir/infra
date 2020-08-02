@@ -19,6 +19,7 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    h4ck.backup.paths = [ "/var/lib/photoprism" ];
     systemd.services.photoprism = {
       wantedBy = [ "multi-user.target" ];
       path = with pkgs; [
