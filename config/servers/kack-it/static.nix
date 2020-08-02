@@ -22,7 +22,7 @@
       enableACME = true;
       forceSSL = true;
       locations."/" = {
-        return = "302 https://gallery.rammhold.de/s/3ktn78spkw/hochzeit-nils-and-anja";
+        return = "302 https://gallery.rammhold.de/s/20wynykmzl/hochzeit-nils-and-anja";
       };
     };
   };
