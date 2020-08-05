@@ -147,8 +147,6 @@ in
                 proxy65_address = "${cfg.serverName}"
                 proxy65_acl = { "${cfg.serverName}" }
 
-        Component "upload.${cfg.serverName}" "http_upload"
-
         Component "conference.${cfg.serverName}" "muc"
                 name = "kack.it's MUCs"
                 restrict_room_creation = "local"
