@@ -276,7 +276,6 @@ in
           "${cfg.serverName}" = {
             forceSSL = true;
             enableACME = true;
-            serverAliases = [ "upload.${cfg.serverName}" ];
             locations."/.xmpp/http-bind" = {
               extraConfig = ''
                 add_header Access-Control-Allow-Origin '*' always;
@@ -349,12 +348,10 @@ in
           };
         };
       };
-
     security.acme.certs = {
       "${cfg.serverName}" = {
         keyType = "rsa4096";
         group = "kackcerts";
-        extraDomains."upload.${cfg.serverName}" = null;
         extraDomains."conference.${cfg.serverName}" = null;
         extraDomains."proxy.${cfg.serverName}" = null;
         # after creating new certificates reload prosody
