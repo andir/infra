@@ -3,6 +3,7 @@
   environment.systemPackages = [ pkgs.photoprism ];
   imports = [
     ../../profiles/hetzner-vm.nix
+    ./ftp.nix
   ];
 
   deployment = {
