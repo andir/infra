@@ -116,8 +116,8 @@ in
         http_external_url = "https://${cfg.serverName}/.xmpp/"
 
         -- http upload
-        http_upload_file_size_limit = 16777216
-        http_max_content_size = 25165824
+        http_upload_file_size_limit = ${toString (50 * 1024 * 1024)}
+        http_max_content_size = ${toString (50 * 1024 * 1024)}
 
         -- module: bosh
         bosh_max_inactivity = 180
@@ -304,6 +304,7 @@ in
                 proxy_pass http://127.0.0.1:${toString prosodyHttpPort}/;
                 proxy_set_header Host $host;
                 proxy_set_header X-Forwarded-For $remote_addr;
+                client_max_body_size 50M;
               '';
             };
             locations."=/converse" = {
