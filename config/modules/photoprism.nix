@@ -28,6 +28,7 @@ in
         ffmpeg
         exiftool
         libheif
+        rawtherapee
       ];
       environment = (
         lib.mapAttrs' (n: v: lib.nameValuePair "PHOTOPRISM_${n}" (toString v)) {
