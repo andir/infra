@@ -18,7 +18,7 @@ buildGoModule {
 
   buildInputs = [ python3Packages.tensorflow.libtensorflow ];
 
-  vendorSha256 = "1fjhym7p6zgi7db2l0i9187da0c01cs012nnw9sniivmbs0siyr5";
+  vendorSha256 = "0wl38p398v815pgfpv25y9dmmwy45is4ij4j1wncbwsw4z2p44ip";
 
   passthru = rec {
 
@@ -26,7 +26,7 @@ buildGoModule {
       noderanz = callPackage ranz2nix {
         nodejs = nodejs-12_x;
         sourcePath = src + "/frontend";
-        packageOverride = name: spec: if name == "minimist" && spec ? resolved && spec.resolved == "" then {
+        packageOverride = name: spec: if name == "minimist" && spec ? resolved && spec.resolved == "" && spec.version == "1.2.0" then {
           resolved = "file://" + (
             toString (
               fetchurl {
