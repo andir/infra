@@ -31,6 +31,14 @@
       "95.216.144.32/32"
       "2a01:4f9:c010:c50::/128"
     ];
+    vm.persistentDisks."/data".id = 6865535;
+  };
+  fileSystems = {
+    "/var/lib/prometheus2" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/prometheus2";
+    };
   };
 
   services.prometheus = {
