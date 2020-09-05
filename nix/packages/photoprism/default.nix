@@ -18,6 +18,10 @@ buildGoModule {
 
   buildInputs = [ python3Packages.tensorflow.libtensorflow ];
 
+  prePatch = ''
+    sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
+  '';
+
   vendorSha256 = "0wl38p398v815pgfpv25y9dmmwy45is4ij4j1wncbwsw4z2p44ip";
 
   passthru = rec {
