@@ -17,7 +17,12 @@
       "159.69.192.67/32"
       "2a01:4f8:c2c:2ae2::/128"
     ];
+    vm.persistentDisks."/data".id = 6913583;
   };
+
+  systemd.tmpfiles.rules = [
+    "d /data/photoprism 0755 photoprism -"
+  ];
 
   networking.hostName = "gallery.rammhold.de";
 
@@ -33,12 +38,16 @@
         proxyWebsockets = true;
         extraConfig = ''
           client_max_body_size 100M;
+          proxy_read_timeout 300s;
         '';
       };
     };
   };
 
-  h4ck.photoprism.enable = true;
+  h4ck.photoprism = {
+    enable = true;
+    storagePath = "/data/photoprism";
+  };
 
   fileSystems."/".fsType = "btrfs";
 
