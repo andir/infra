@@ -215,18 +215,49 @@ in
       # and the new configuration syntax doesn't seem to work :(
       (
         mkIf (config.services.dovecot2.enable) (
-          {
-            h4ck.monitoring.targets.prometheus = {
-              port = 9166;
-            };
-            services.dovecot2.extraConfig = ''
-              service stats {
-                inet_listener http {
-                  port = 9166
-                }
+          mkMerge [
+            (mkFirewallRules "dovecot2" 9166)
+            (
+              {
+                h4ck.monitoring.targets.prometheus = {
+                  port = 9166;
+                };
+                services.dovecot2.extraConfig = ''
+                  service stats {
+                    inet_listener http {
+                      port = 9166
+                    }
+                  }
+
+                  metric imap_command {
+                    event_name = imap_command_finished
+                    filter {
+                      tagged_reply_state = OK
+                    }
+                    fields = bytes_in bytes_out
+                    group_by = cmd_name
+                  }
+
+                  metric imap_select_no {
+                    event_name = imap_command_finished
+                    filter {
+                      name = SELECT
+                      tagged_reply_state = NO
+                    }
+                    fields = bytes_in bytes_out
+                  }
+                  metric imap_select_no_notfound {
+                    event_name = imap_command_finished
+                    filter {
+                      name = SELECT
+                      tagged_reply = NO*Mailbox doesn't exist:*
+                    }
+                    fields = bytes_in bytes_out
+                  }
+                '';
               }
-            '';
-          }
+            )
+          ]
         )
       )
 
