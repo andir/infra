@@ -347,7 +347,6 @@ in
     "d /run/unbound 550 unbound nogroup - "
   ];
   security.acme.certs."epsilon.rammhold.de" = {
-    allowKeysForGroup = true;
     group = "cert-users";
   };
   users.groups.cert-users.members = [ "nginx" "unbound" ];

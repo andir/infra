@@ -99,23 +99,6 @@ in
 
     systemd.services."systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
 
-    systemd.package = (
-      pkgs.systemd.overrideAttrs (
-        { patches ? [], ... }: {
-          patches = patches ++ [
-            ./systemd-patches/0001-basic-parse-util-add-safe_atoux64.patch
-            ./systemd-patches/0002-in-addr-util-introduce-in_addr_prefix_nth.patch
-            ./systemd-patches/0003-in-addr-util-removed-in_addr_prefix_next-implementat.patch
-            ./systemd-patches/0004-networkd-Add-support-for-setting-a-preferred-subnet-.patch
-            ./systemd-patches/0005-network-Introduce-method-to-generate-EUI-64-addresse.patch
-            ./systemd-patches/0006-network-DHCPv6-Assign-delegated-prefix-to-LAN-interf.patch
-            ./systemd-patches/0007-Add-some-dhcpv6-debug-statements.patch
-            ./systemd-patches/0008-libsystemd-network-add-logging-to-sd_radv_remove_pre.patch
-            ./systemd-patches/0009-networkd-re-assign-prefix-after-DHCPv6-PD-update.patch
-          ];
-        }
-      )
-    );
     systemd.network = let
       mkUpstreamIfConfig = name: nameValuePair "00-${name}" {
         enable = true;
@@ -210,8 +193,9 @@ in
 
           extraConfig = (
             lib.optionalString (conf.subnetId != null) ''
-              [Network]
-              IPv6PDSubnetId=${conf.subnetId}
+              [DHCPv6PrefixDelegation]
+              SubnetId=${conf.subnetId}
+              Assign=true
             ''
           )
             #  + ''
