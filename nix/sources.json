@@ -42,6 +42,18 @@
         "url": "https://github.com/andir/dn42-regparse/archive/455644586b893ff0badb8006aa8f46308438264a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "felix-prosody-nixpkgs": {
+        "branch": "prosody-0-11-6",
+        "description": "Nix Packages collection",
+        "homepage": null,
+        "owner": "NinjaTrappeur",
+        "repo": "nixpkgs",
+        "rev": "b47cabb6acc98fee8f47b780456844bc88c975d8",
+        "sha256": "1kxwzfiq9790qkwm385xmv12z8v0d5mh9gv2jm1d0z39c8ad7vdc",
+        "type": "tarball",
+        "url": "https://github.com/NinjaTrappeur/nixpkgs/archive/b47cabb6acc98fee8f47b780456844bc88c975d8.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "knot_exporter": {
         "branch": "master",
         "description": "Prometheus exporter for Knot DNS",

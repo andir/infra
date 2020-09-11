@@ -36,12 +36,6 @@ in
         #ciphers = "HIGH+kEECDH:HIGH+kEDH:!DSS:!ECDSA:!3DES:!aNULL:@STRENGTH";
         #options = [ "no_sslv2" "no_sslv3" "no_ticket" "no_compression" "cipher_server_preference" ];
       };
-
-      turnTransportPatch = pkgs.fetchpatch {
-        url = "https://hg.prosody.im/prosody-modules/raw-rev/bbfcd786cc78";
-        sha256 = "1igj4wjm6fx9h8zlqvidn8xp8sdxfsvdilrj8mkb4mpibg1wlkb1";
-      };
-
     in
       {
         enable = true;
@@ -62,14 +56,6 @@ in
               "bookmarks"
               "conversejs"
             ] ++ cfg.extraCommunityModules;
-          }
-        ).overrideAttrs (
-          { postInstall, ... }: {
-            postInstall = postInstall + ''
-              cd $out/lib/prosody/modules/
-              chmod +rw -R mod_turncredentials
-              patch -p1 <${turnTransportPatch}
-            '';
           }
         );
         allowRegistration = false;
