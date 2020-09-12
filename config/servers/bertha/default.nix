@@ -297,13 +297,15 @@ in
         oifname lan iifname oldlan accept
         oifname oldlan iifname lan accept
 
+
         oifname lan jump forward_to_lan
         oifname oldlan jump forward_to_lan
         oifname mgmt jump forward_to_mgmt
 
-        oifname sc-agx iifname lan accept;
-        oifname sc-agx iifname oldlan accept;
+        oifname sc-agx iifname lan accept
+        oifname sc-agx iifname oldlan accept
         oifname sc-agx ip6 nexthdr tcp tcp dport 22 accept
+
 
         oifname "wg-*" jump forward_to_wg
 
@@ -319,7 +321,7 @@ in
         tcp dport { 22 } accept
         tcp dport { 6882 } accept;
 
-        ip6 nexthdr tcp tcp dport { 22, 80, 443, 4001, 9100, 22000 } accept
+        ip6 nexthdr tcp tcp dport { 22, 80, 443, 4001, 9100, 22000, 16686 } accept
 
         reject
       }
