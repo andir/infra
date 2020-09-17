@@ -20,15 +20,6 @@ let
         };
       }
     )
-    # FIXME: remove this once it works/broke things
-    (
-      _: _: let
-        pkgs = import sources.felix-prosody-nixpkgs {};
-      in
-        {
-          inherit (pkgs) prosody;
-        }
-    )
   ];
 
 in
