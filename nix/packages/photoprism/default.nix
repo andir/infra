@@ -22,7 +22,7 @@ buildGoModule {
     sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
   '';
 
-  vendorSha256 = "0rwww8i986k46wp4q1skxxgzfz7hkrrkkm5jqpx6250zgq4pyq5m";
+  vendorSha256 = "12g0fywzqpvnmmz4rkzanvbg2m0aj5qa3q30dwczpqwbyarsg0yl";
 
   passthru = rec {
 

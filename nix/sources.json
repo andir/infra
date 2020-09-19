@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "f2bfa3144ab5ac2c1f9713ec97daa6d5663bf278",
+        "rev": "fa75958a17b2f3187ecacf9136e98b059e52181d",
         "type": "git"
     },
     "dn42-regparse": {
@@ -101,7 +101,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
-        "rev": "358cfcdfbe6ca137983c6629e174a98c306209cd",
+        "rev": "5cd6f8e7b3f5d5bf56e407c5e79a682cb250d911",
         "type": "git"
     },
     "nixpkgs": {
@@ -110,10 +110,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs-channels",
-        "rev": "5177665caf1c642913d506faeb163838dc845bb7",
-        "sha256": "1pcwigqjvcfpy31pg7wzzx6ag2nh4dfgqiw802kn967wpg09iwxp",
+        "rev": "985047d3c9fb16bb05bc8cde7d2a1a703f670eae",
+        "sha256": "028bq6gwhp5nbvl2m7fxzdan195ajnk99rqw93k1mxgpr8c449ic",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs-channels/archive/5177665caf1c642913d506faeb163838dc845bb7.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs-channels/archive/985047d3c9fb16bb05bc8cde7d2a1a703f670eae.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
