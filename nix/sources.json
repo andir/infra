@@ -156,7 +156,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://git.darmstadt.ccc.de/cda/publictransport.git",
-        "rev": "9406aee722a380dc6690f894cc1ad7f9cf926883",
+        "rev": "e053865387c6243e22c546314d963fead2e515b4",
         "type": "git"
     },
     "ranz2nix": {
