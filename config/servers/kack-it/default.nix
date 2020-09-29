@@ -98,6 +98,14 @@
     };
   };
 
+  h4ck.publictransport = {
+    enable = true;
+    virtualHost = "darmstadt.io";
+  };
+  services.nginx.virtualHosts."darmstadt.io" = {
+    enableACME = true;
+    forceSSL = true;
+  };
 
   system.stateVersion = "19.03";
 }

@@ -152,6 +152,13 @@
         "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/4dd50ef441796b439a56f1e0f8b127d4129f8947.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "publictransport": {
+        "branch": "master",
+        "ref": "master",
+        "repo": "https://git.darmstadt.ccc.de/cda/publictransport.git",
+        "rev": "9406aee722a380dc6690f894cc1ad7f9cf926883",
+        "type": "git"
+    },
     "ranz2nix": {
         "branch": "master",
         "description": "cheap approach at building node environments with Nix. Very hacky.",
