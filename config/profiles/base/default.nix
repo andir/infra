@@ -38,4 +38,6 @@
     The code for this host can be found at https://github.com/andir/infra.git
     ******
   '';
+
+  time.timeZone = "UTC";
 }
