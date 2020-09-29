@@ -2,7 +2,15 @@
 {
   services.unifi = {
     enable = true;
-    unifiPackage = pkgs.unifiStable;
+    unifiPackage = pkgs.unifiStable.overrideAttrs (
+      _: rec {
+        version = "6.0.23";
+        src = pkgs.fetchurl {
+          url = "https://dl.ubnt.com/unifi/${version}/unifi_sysvinit_all.deb";
+          sha256 = "0yiwg5bpnmfk922grjd7k80fg655w1j2sv97gg00j2il95839yxp";
+        };
+      }
+    );
   };
 
   services.nginx = {
