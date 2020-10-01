@@ -124,7 +124,7 @@ in
     };
     targetHost = mkOption {
       type = types.str;
-      default = config.networking.hostName;
+      default = config.networking.hostName + (lib.optionalString (config.networking.domain != null) ".${config.networking.domain}");
     };
     targets = mkOption {
       type = types.attrsOf (types.submodule monitoringTarget);
