@@ -107,7 +107,7 @@ in
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
         EnvironmentFile = "${cfg.registrationConfigFile}";
-        ExecStartPre = ''${cfg.package.bin}/bin/gitlab-runner register \
+        ExecStartPre = ''${cfg.package}/bin/gitlab-runner register \
             --non-interactive=true \
             --name gitlab-runner \
             --tag-list "${lib.concatStringsSep "," cfg.tags}" \
@@ -125,12 +125,12 @@ in
             --env "NIX_SSL_CERT_FILE=/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt" \
             --env "NIX_PATH=nixpkgs=/root/.nix-defexpr/channels/nixpkgs"
           '';
-        ExecStart = ''${cfg.package.bin}/bin/gitlab-runner run \
+        ExecStart = ''${cfg.package}/bin/gitlab-runner run \
             --working-directory ${cfg.workDir} \
             --user gitlab-runner \
             --service gitlab-runner \
           '';
-        ExecStopPost = ''${cfg.package.bin}/bin/gitlab-runner unregister \
+        ExecStopPost = ''${cfg.package}/bin/gitlab-runner unregister \
             --name gitlab-runner
           '';
 

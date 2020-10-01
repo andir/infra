@@ -6,6 +6,17 @@ let
   haveV6 = cfg.networking.ipv6.address != null;
   haveV4Route = cfg.networking.ipv4.gateway != null;
   haveV6Route = cfg.networking.ipv6.gateway != null;
+
+  hostKeysPath = "/var/lib/initrd-ssh-hostkeys";
+  emptySecret = pkgs.writeText "dummy" "";
+  postUploadCommands = pkgs.writeShellScript "generate-initrd-ssh-host-keys" ''
+    # ${emptySecret} -- keep it in the closure
+    mkdir -p ${hostKeysPath}
+    chown root:root ${hostKeysPath}
+    chmod 700 ${hostKeysPath}
+    test -f ${hostKeysPath}/ssh_host_rsa.key || ${pkgs.openssh}/bin/ssh-keygen -t rsa -N "" -f ${hostKeysPath}/ssh_host_rsa.key
+    test -f ${hostKeysPath}/ssh_host_ed25519.key || ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -N "" -f ${hostKeysPath}/ssh_host_ed25519.key
+  '';
 in
 {
   options.h4ck.ssh-unlock = {
@@ -50,6 +61,13 @@ in
 
   config = mkIf cfg.enable (
     {
+      system.activationScripts.initrd-ssh-host-keys = "${postUploadCommands}";
+      deployment.secrets."initrd-ssh-host-keys" = {
+        source = toString (emptySecret);
+        destination = "/var/lib/secrets/initrd-ssh-host-keys-uploaded";
+        action = [ "sudo" (toString postUploadCommands) ];
+      };
+
       #assert haveV4 || haveV6;
       boot.initrd = {
         kernelModules = [ "ipv6" ];
@@ -79,6 +97,10 @@ in
           ssh = {
             enable = true;
             authorizedKeys = cfg.authorizedKeys;
+            hostKeys = [
+              (hostKeysPath + "/ssh_host_rsa.key")
+              (hostKeysPath + "/ssh_host_ed25519.key")
+            ];
           };
         };
       };

@@ -24,7 +24,7 @@
     serverAliases = [ "mail.jh4all.de" "webmail.kack.it" ];
   };
 
-  security.acme.certs."mx.h4ck.space".extraDomains = {
-    "mail.jh4all.de" = null;
-  };
+  security.acme.certs."mx.h4ck.space".extraDomainNames = [
+    "mail.jh4all.de"
+  ];
 }

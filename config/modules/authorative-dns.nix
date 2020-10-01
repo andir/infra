@@ -62,7 +62,7 @@ let
         type = types.listOf types.str;
       };
       tsigKeyFile = mkOption {
-        types = types.listOf types.str;
+        type = types.listOf types.str;
         default = [];
       };
       dnssecSigning = mkOption {

@@ -17,7 +17,7 @@ in
       default = 2342;
     };
     storagePath = lib.mkOption {
-      type = lib.types.string;
+      type = lib.types.str;
       default = "/var/lib/photoprism";
     };
   };

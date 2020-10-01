@@ -39,6 +39,7 @@ in
     in
       {
         enable = true;
+        xmppComplianceSuite = false; # FIXME: after updating migrate to a more NixOS'ish configuration
         package = (
           pkgs.prosody.override {
             withCommunityModules = [
@@ -339,10 +340,11 @@ in
       "${cfg.serverName}" = {
         keyType = "rsa4096";
         group = "kackcerts";
-        extraDomains."conference.${cfg.serverName}" = null;
-        extraDomains."proxy.${cfg.serverName}" = null;
+        extraDomainNames = [
+          "conference.${cfg.serverName}"
+          "proxy.${cfg.serverName}"
+        ];
         # after creating new certificates reload prosody
-        allowKeysForGroup = true;
         postRun = ''
           ${config.services.prosody.package}/bin/prosodyctl reload
         '';

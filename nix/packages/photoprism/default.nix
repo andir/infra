@@ -5,7 +5,7 @@
 , fetchzip
 , runCommand
 , buildGoModule
-, python3Packages
+, python37Packages
 , nodejs-12_x
 , callPackage
 }:
@@ -16,7 +16,7 @@ buildGoModule {
   goPackagePath = "github.com/photoprism/photoprism";
   subPackages = [ "cmd/photoprism" ];
 
-  buildInputs = [ python3Packages.tensorflow.libtensorflow ];
+  buildInputs = [ python37Packages.tensorflow.libtensorflow ];
 
   prePatch = ''
     sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
