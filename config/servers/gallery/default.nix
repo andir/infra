@@ -24,7 +24,10 @@
     "d /data/photoprism 0755 photoprism -"
   ];
 
-  networking.hostName = "gallery.rammhold.de";
+  networking = {
+    hostName = "gallery";
+    domain = "rammhold.de";
+  };
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 

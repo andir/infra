@@ -31,7 +31,10 @@
     ];
   };
 
-  h4ck.monitoring.targetHost = "iota.h4ck.space";
+  networking = {
+    hostName = "iota";
+    domain = "h4ck.space";
+  };
 
   services.gitlab-runner2 = {
     enable = true;

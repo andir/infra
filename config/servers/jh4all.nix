@@ -40,7 +40,10 @@ in
     vm.persistentDisks."/data".id = 3842340;
   };
 
-  networking.hostName = "jh4all.de";
+  networking = {
+    hostName = "jh4all";
+    domain = "de";
+  };
 
   fileSystems = {
     "/var/www/" = {

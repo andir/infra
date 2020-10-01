@@ -19,12 +19,15 @@
   };
 
   deployment = {
-    targetHost = "95.216.144.32";
+    targetHost = "mon.h4ck.space";
     targetUser = "morph";
     substituteOnDestination = true;
   };
 
-  networking.hostName = "mon.h4ck.space";
+  networking = {
+    hostName = "mon";
+    domain = "h4ck.space";
+  };
 
   mods.hetzner = {
     networking.ipAddresses = [

@@ -30,7 +30,10 @@ in
     substituteOnDestination = true;
   };
 
-  networking.hostName = "mx.h4ck.space";
+  networking = {
+    hostName = "mx";
+    domain = "h4ck.space";
+  };
 
   boot.initrd.luks.devices = {
     "rootfs".device = "/dev/disk/by-uuid/f7f8b86e-c0c4-42a1-b4ff-8e90a3c2b72d";

@@ -30,7 +30,7 @@ let
           (
             if peerConfig ? hostName then
               peerConfig.hostName
-            else nodes.${peerName}.config.networking.hostName
+            else nodes.${peerName}.config.h4ck.fqdn
           );
         remotePort = lib.mkDefault port;
         localPort = lib.mkDefault port;

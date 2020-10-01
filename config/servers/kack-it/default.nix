@@ -23,7 +23,8 @@
   };
 
   networking = {
-    hostName = "kack.it";
+    hostName = "kack";
+    domain = "it";
   };
 
   fileSystems."/".fsType = "btrfs";
