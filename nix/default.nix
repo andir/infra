@@ -20,6 +20,8 @@ let
         };
       }
     )
+    # With 20.09 nixos-install will have another version of Nix in it's closure for flakes support.
+    (_: pkgs: { nixUnstable = pkgs.nix; })
   ];
 
 in
