@@ -1,15 +1,33 @@
-{ config, lib, ... }: {
+{ config, lib, pkgs, ... }:
+let
+  radicale_auth_crypt = pkgs.python3.pkgs.buildPythonPackage {
+    pname = "radicale_auth_crypt";
+    version = "0.0";
+    src = ./radicale_auth_crypt;
+    checkInputs = [
+      pkgs.radicale3
+    ];
+  };
+in
+{
   services.radicale = {
     enable = true;
+    package = pkgs.radicale3.overrideAttrs (
+      { propagatedBuildInputs, ... }: {
+        propagatedBuildInputs = propagatedBuildInputs ++ [
+          radicale_auth_crypt
+        ];
+      }
+    );
     config = ''
       [server]
       hosts = 127.0.0.1:5232
 
       [auth]
       delay = 1
-      type = htpasswd
+      type = radicale_auth_crypt
       htpasswd_filename = ${builtins.toFile "passwd" (lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "${name}:${value.hashedPassword}") config.mailserver.loginAccounts)) }
-      htpasswd_encryption = crypt
+      # htpasswd_encryption = crypt
 
       [storage]
       filesystem_folder = ${config.users.users.radicale.home}

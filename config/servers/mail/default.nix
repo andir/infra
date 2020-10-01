@@ -20,7 +20,7 @@ in
     snms
     ../../profiles/hetzner-vm.nix
     ./backup.nix
-    ./radicale.nix
+    ./radicale
     ./roundcube.nix
   ];
 
