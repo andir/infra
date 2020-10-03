@@ -1,11 +1,12 @@
 { src
 , ranz2nix
+, coreutils
 , stdenv
 , fetchurl
 , fetchzip
 , runCommand
 , buildGoModule
-, python37Packages
+, libtensorflow-bin
 , nodejs-12_x
 , callPackage
 }:
@@ -16,9 +17,10 @@ buildGoModule {
   goPackagePath = "github.com/photoprism/photoprism";
   subPackages = [ "cmd/photoprism" ];
 
-  buildInputs = [ python37Packages.tensorflow.libtensorflow ];
+  buildInputs = [ libtensorflow-bin ];
 
   prePatch = ''
+    substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
     sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
   '';
 
