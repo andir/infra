@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "e881259c298a3db848e30262ddf6bdc2eb2c06a6",
+        "rev": "1dd6b016c9bb8009aedda90ff63f2a4276c95464",
         "type": "git"
     },
     "dn42-regparse": {
@@ -101,7 +101,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
-        "rev": "5cd6f8e7b3f5d5bf56e407c5e79a682cb250d911",
+        "rev": "c813f1205f0da413ec532cca868f57a57b7f8448",
         "type": "git"
     },
     "nixpkgs": {
@@ -109,7 +109,7 @@
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
-        "repo": "nixpkgs-channels",
+        "repo": "nixpkgs",
         "rev": "0cfe5377e8993052f9b0dd56d058f8008af45bd9",
         "sha256": "0i3ybddi2mrlaz3di3svdpgy93zwmdglpywih4s9rd3wj865gzn1",
         "type": "tarball",
@@ -134,10 +134,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "c5b657ba0549fad852502a866e723512f34e6e0a",
-        "sha256": "0c41r63884kfxlv7src2l55xrjv3ljk89fa6l2pzgns538r3ggfq",
+        "rev": "2e51e846051011e09719c2d8a8acc5034a3521ab",
+        "sha256": "075q4skcqfw3n62mi0vc2npmq9v8rjbnvqwxza6hj0iy9v9h0zf6",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/c5b657ba0549fad852502a866e723512f34e6e0a.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/2e51e846051011e09719c2d8a8acc5034a3521ab.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
