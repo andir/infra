@@ -5,5 +5,10 @@
     default = null;
   };
 
-  config.h4ck.fqdn = config.networking.hostName + (lib.optionalString (config.networking.domain != null) ".${config.networking.domain}");
+  config = {
+    h4ck.fqdn = config.networking.hostName + (lib.optionalString (config.networking.domain != null) ".${config.networking.domain}");
+
+    # FIXME: upstream this change if it turns out to really fix the unbound being unavailable during acme run
+    systemd.services.acme-fixperms.after = lib.mkIf (config.systemd.services ? acme-fixperms) [ "nss-lookup.target" ];
+  };
 }
