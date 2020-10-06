@@ -6,8 +6,7 @@
     ./dns.nix
   ];
 
-  # FIXME: on the systemd v245 nixpkgs branch mosh fails to build
-  programs.mosh.enable = config.networking.hostName != "bertha";
+  programs.mosh.enable = true;
 
   environment.systemPackages = with pkgs; [
     tmux
