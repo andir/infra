@@ -9,11 +9,15 @@ let
       to_jid = "andi@kack.it";
       amtool_allowed = [ "andi@kack.it" ];
       format = "full";
+      alertmanager_url = "http://127.0.0.1:9093";
     }
   );
 in
 {
   systemd.services.prometheus-xmpp-alerts = {
+    path = [
+      pkgs.prometheus-alertmanager
+    ];
     script = ''
       exec ${pkgs.prometheus-xmpp-alerts}/bin/prometheus-xmpp-alerts --config ${config}
     '';
