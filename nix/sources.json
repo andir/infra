@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "d96dee0b315919a597e9cd3f8b0b9f976c842a98",
+        "rev": "6dddd860baf24c0f0053fb63b8417f5fd9abe477",
         "type": "git"
     },
     "dn42-regparse": {
@@ -110,10 +110,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ad3a5d5092eb24c525d6dd1f8035cf2ec0c5b0b2",
-        "sha256": "04v6fw3xsxgi8jdfjrchls7i96zm7mdn5nzrvgk0x229xxidyyar",
+        "rev": "7badbf18c45b7490d893452beb8950d966327831",
+        "sha256": "0snk9dvj4hxg1ch704symxfz2kic06l0vf1b5aax9gdlflzg8fmj",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/ad3a5d5092eb24c525d6dd1f8035cf2ec0c5b0b2.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/7badbf18c45b7490d893452beb8950d966327831.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
@@ -134,10 +134,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "61b326d9a541b020d3f3790a4cc7e1c305889347",
-        "sha256": "07bjnjjgnijdnghqvbx0g5p298071i484qic3mnq2c2psy20lspv",
+        "rev": "dcc0c91afa12c2bbcdef179ff9b49f219f843779",
+        "sha256": "0hg6iz9ai2n2cn9if6vakh8gwx97mjva415k8iwddxb0fq1fnf7l",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/61b326d9a541b020d3f3790a4cc7e1c305889347.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/dcc0c91afa12c2bbcdef179ff9b49f219f843779.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
@@ -156,7 +156,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://git.darmstadt.ccc.de/cda/publictransport.git",
-        "rev": "e053865387c6243e22c546314d963fead2e515b4",
+        "rev": "32a67ce658e960e06b83845afa5fbb2ef7e67627",
         "type": "git"
     },
     "ranz2nix": {
