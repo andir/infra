@@ -33,7 +33,7 @@ let
     git clone "$GIT_DIR" "$TMPDIR"
     unset GIT_DIR
     cd "$TMPDIR"
-    exec nix-build "$TMPDIR" -A build -o ${home}/current
+    exec nix-build "$TMPDIR" -A build --argstr baseUrl "https://andreas.rammhold.de/" -o ${home}/current
   '';
 
 
