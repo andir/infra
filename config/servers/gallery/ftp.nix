@@ -8,7 +8,7 @@ let
   pasv_max_port = 15400;
 
 in
-{
+lib.mkIf false {
   services.vsftpd = {
     enable = true;
     writeEnable = true;
@@ -22,15 +22,16 @@ in
     rsaCertFile = config.security.acme.certs."gallery.rammhold.de".directory + "/cert.pem";
     rsaKeyFile = config.security.acme.certs."gallery.rammhold.de".directory + "/key.pem";
 
-    userDbPath = let
-      plainUsersDb = pkgs.writeText "vwftpd-plain-user-db" (lib.concatStrings (lib.attrValues (lib.mapAttrs (user: password: "${user}\n${password}\n") users)));
-      bdb = pkgs.runCommand "vsftpd-user-db" { buildInputs = [ pkgs.db ]; } ''
-        cp ${plainUsersDb} logins.txt
-        cat logins.txt
-        mkdir $out
-        db_load -T -t hash -f logins.txt $out/logins.db
-      '';
-    in
+    userDbPath =
+      let
+        plainUsersDb = pkgs.writeText "vwftpd-plain-user-db" (lib.concatStrings (lib.attrValues (lib.mapAttrs (user: password: "${user}\n${password}\n") users)));
+        bdb = pkgs.runCommand "vsftpd-user-db" { buildInputs = [ pkgs.db ]; } ''
+          cp ${plainUsersDb} logins.txt
+          cat logins.txt
+          mkdir $out
+          db_load -T -t hash -f logins.txt $out/logins.db
+        '';
+      in
       toString (bdb + "/logins");
 
 
