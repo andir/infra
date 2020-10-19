@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "0e33d296c44364739edfc0f681f816dbbec32a66",
+        "rev": "4b13bfe76a50cd78c28847743656037a8b0fd842",
         "type": "git"
     },
     "dn42-regparse": {
@@ -134,10 +134,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "8fff2c0963c2cf0cac95200c3cdcf3e028f038ca",
-        "sha256": "1qk0mb0l5h9jp6y2qq3jln3ixrpqzpcjssvcnkkga10m3wy0nxgw",
+        "rev": "1aaec319b1dcd17025406cf4bd284e23375a8450",
+        "sha256": "11883h4ifq9mcxl6khwill9m42708yw82gs00ha8l65rsdl71xiv",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/8fff2c0963c2cf0cac95200c3cdcf3e028f038ca.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/1aaec319b1dcd17025406cf4bd284e23375a8450.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
@@ -146,10 +146,10 @@
         "homepage": "",
         "owner": "cachix",
         "repo": "pre-commit-hooks.nix",
-        "rev": "938e2c8bd2a36d67aabbd3976731049c175ab3e8",
-        "sha256": "0rp962rs4hghmzi4xn2l720jnzy043rjbh2hdbz7qk4nvnq2fp5d",
+        "rev": "519988762d02e8ed7204723349f15cc31cb8a38e",
+        "sha256": "169nhrg3bkvm0zqnrciapbpdvqdy3i772ijx9zjv6490i6ilp072",
         "type": "tarball",
-        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/938e2c8bd2a36d67aabbd3976731049c175ab3e8.tar.gz",
+        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/519988762d02e8ed7204723349f15cc31cb8a38e.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "publictransport": {
