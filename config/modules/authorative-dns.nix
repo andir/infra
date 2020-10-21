@@ -23,7 +23,7 @@ let
       };
       slaves = mkOption {
         type = types.attrsOf (types.submodule slaveOptions);
-        default = {};
+        default = { };
       };
     };
     config = {
@@ -63,7 +63,7 @@ let
       };
       tsigKeyFile = mkOption {
         type = types.listOf types.str;
-        default = [];
+        default = [ ];
       };
       dnssecSigning = mkOption {
         type = types.bool;
@@ -106,11 +106,11 @@ in
 
     authZones = mkOption {
       type = types.attrsOf (types.submodule authZoneOptions);
-      default = {};
+      default = { };
     };
     slaveZones = mkOption {
       type = types.attrsOf (types.submodule slaveZoneOptions);
-      default = {};
+      default = { };
     };
 
     enableStats = mkOption {
@@ -122,7 +122,7 @@ in
   config = mkIf cfg.enable {
     assertions = [
       {
-        assertion = (builtins.intersectAttrs cfg.authZones cfg.slaveZones) == {};
+        assertion = (builtins.intersectAttrs cfg.authZones cfg.slaveZones) == { };
         message = "auth zones can't overlap with slave zones (yet)";
       }
     ];
@@ -135,144 +135,152 @@ in
     services.knot = {
       enable = true;
       extraArgs = mkIf cfg.verbose [ "-v" ];
-      extraConfig = let
+      extraConfig =
+        let
+          mkCheckedZone = zoneName: file: pkgs.runCommand "${zoneName}.zone"
+            {
+              buildInputs = [ pkgs.knot-dns ];
+            } ''
+            ln -s ${file} $out
+            kzonecheck -o ${zoneName} -v $out
+          '';
 
-        mkCheckedZone = zoneName: file: pkgs.runCommand "${zoneName}.zone" {
-          buildInputs = [ pkgs.knot-dns ];
-        } ''
-          ln -s ${file} $out
-          kzonecheck -o ${zoneName} -v $out
-        '';
+          authZoneFilesDir = pkgs.runCommand "zonefiles" { } (
+            ''
+              mkdir $out
+            ''
+            + lib.concatStringsSep "\n" (
+              lib.mapAttrsToList
+                (
+                  _: zone: ''
+                    ln -s $(readlink -f "${mkCheckedZone zone.name zone.zoneFile}") "$out/${zone.name}.zone"
+                  ''
+                )
+                cfg.authZones
+            )
+          );
 
-        authZoneFilesDir = pkgs.runCommand "zonefiles" {} (
-          ''
-            mkdir $out
-          ''
-          + lib.concatStringsSep "\n" (
-            lib.mapAttrsToList (
-              _: zone: ''
-                ln -s $(readlink -f "${mkCheckedZone zone.name zone.zoneFile}") "$out/${zone.name}.zone"
-              ''
-            ) cfg.authZones
-          )
-        );
+          authZoneFile = name: zone: pkgs.writeText "zone-${name}.conf" ''
+                      remote:
+                      ${lib.concatStringsSep "\n" (
+                      lib.mapAttrsToList
+                        (
+                          _: slave: ''
+                            - id: ${name}-${slave.name}
+                              address: ${slave.address}@${toString slave.port}
+                          ''
+                        )
+            zone.slaves
+                    )
+                    }
+                      acl:
+                      ${lib.concatStringsSep "\n" (
+                      lib.mapAttrsToList
+                        (
+                          _: slave: ''
+                            - id: ${slave.name}-${zone.name}
+                              action: ["transfer", "notify"]
+                              address: ${slave.address}
+                              ${lib.optionalString (slave.keyName != null) "key: ${slave.keyName}"}
+                          ''
+                        )
+            zone.slaves
+                    )
+                    }
+                      zone:
+                        - domain: ${name}
+                          file: ${zone.name}.zone
+                          acl: [${lib.concatMapStringsSep "," (slave: "\"${slave.name}-${zone.name}\"") (lib.attrValues zone.slaves)}]
+                          ${lib.optionalString (zone.slaves != { }) ''
+                      notify: [${lib.concatStringsSep ", " (
+                      lib.mapAttrsToList
+                        (_: slave: "${name}-${slave.name}")
+            zone.slaves
+                    )
+                    }]
+                    ''}
+          '';
 
-        authZoneFile = name: zone: pkgs.writeText "zone-${name}.conf" ''
-          remote:
-          ${lib.concatStringsSep "\n" (
-          lib.mapAttrsToList
+          slaveZoneFile = name: zone: pkgs.writeText "zone-${name}.conf" ''
+                      remote:
+                      ${lib.concatMapStringsSep "\n"
             (
-              _: slave: ''
-                - id: ${name}-${slave.name}
-                  address: ${slave.address}@${toString slave.port}
-              ''
-            ) zone.slaves
-        )
-        }
-          acl:
-          ${lib.concatStringsSep "\n" (
-          lib.mapAttrsToList
-            (
-              _: slave: ''
-                - id: ${slave.name}-${zone.name}
-                  action: ["transfer", "notify"]
-                  address: ${slave.address}
-                  ${lib.optionalString (slave.keyName != null) "key: ${slave.keyName}"}
-              ''
-            ) zone.slaves
-        )
-        }
-          zone:
-            - domain: ${name}
-              file: ${zone.name}.zone
-              acl: [${lib.concatMapStringsSep "," (slave: "\"${slave.name}-${zone.name}\"") (lib.attrValues zone.slaves)}]
-              ${lib.optionalString (zone.slaves != {}) ''
-          notify: [${lib.concatStringsSep ", " (
-          lib.mapAttrsToList
-            (_: slave: "${name}-${slave.name}") zone.slaves
-        )
-        }]
-        ''}
-        '';
+                      master: ''
+                        - id: ${name}-${master}
+                          address: ${master}
+                      ''
+                    )
+            zone.masters}
+                      acl:
+                        - id: ${name}_notify
+                          address: [${lib.concatStringsSep ", " zone.masters}]
+                          action: notify
+                      zone:
+                        - domain: ${name}
+                          acl: ${name}_notify
+                          semantic-checks: ${asBool zone.semanticChecks}
+                          dnssec-signing: ${asBool zone.dnssecSigning}
+                          storage: ${zone.storage}
+                          zonefile-sync: 0
+                          zonefile-load: whole
+                          journal-content: changes
+                          master: [${lib.concatStringsSep ", " (map (x: "${name}-${x}") zone.masters)}]
+          '';
 
-        slaveZoneFile = name: zone: pkgs.writeText "zone-${name}.conf" ''
-          remote:
-          ${lib.concatMapStringsSep "\n" (
-          master: ''
-            - id: ${name}-${master}
-              address: ${master}
-          ''
-        ) zone.masters}
-          acl:
-            - id: ${name}_notify
-              address: [${lib.concatStringsSep ", " zone.masters}]
-              action: notify
-          zone:
-            - domain: ${name}
-              acl: ${name}_notify
-              semantic-checks: ${asBool zone.semanticChecks}
-              dnssec-signing: ${asBool zone.dnssecSigning}
-              storage: ${zone.storage}
-              zonefile-sync: 0
-              zonefile-load: whole
-              journal-content: changes
-              master: [${lib.concatStringsSep ", " (map (x: "${name}-${x}") zone.masters)}]
-        '';
+          authZoneFiles = lib.mapAttrsToList authZoneFile cfg.authZones;
+          slaveZoneFiles = lib.mapAttrsToList slaveZoneFile cfg.slaveZones;
 
-        authZoneFiles = lib.mapAttrsToList authZoneFile cfg.authZones;
-        slaveZoneFiles = lib.mapAttrsToList slaveZoneFile cfg.slaveZones;
-
-      in
+        in
         ''
-          log:
-            - target: syslog
-              control: debug
-              zone: debug
-          server:
-          ${lib.concatMapStringsSep "\n" (addr: "  listen: ${addr}") cfg.listenAddresses}
+            log:
+              - target: syslog
+                control: debug
+                zone: debug
+            server:
+            ${lib.concatMapStringsSep "\n" (addr: "  listen: ${addr}") cfg.listenAddresses}
 
-          ${lib.optionalString cfg.enableStats ''
-          mod-stats:
-            - id: stats
-              request-protocol: true
-              server-operation: true
-              request-bytes: true
-              response-bytes: true
-              edns-presence: true
-              flag-presence: true
-              response-code: true
-              request-edns-option: true
-              response-edns-option: true
-              reply-nodata: true
-              query-type: true
-              query-size: true
-              reply-size: true
-        ''}
+            ${lib.optionalString cfg.enableStats ''
+            mod-stats:
+              - id: stats
+                request-protocol: true
+                server-operation: true
+                request-bytes: true
+                response-bytes: true
+                edns-presence: true
+                flag-presence: true
+                response-code: true
+                request-edns-option: true
+                response-edns-option: true
+                reply-nodata: true
+                query-type: true
+                query-size: true
+                reply-size: true
+          ''}
 
-          template:
-            - id: default
-              storage: ${authZoneFilesDir}
-              zonefile-sync: -1
-              zonefile-load: difference
-              journal-content: changes
-              journal-db: /var/lib/knot/journal
-              kasp-db: /var/lib/knot/kasp
-              timer-db: /var/lib/knot/timer
-              ${lib.optionalString cfg.enableStats "module: mod-stats/stats"}
+            template:
+              - id: default
+                storage: ${authZoneFilesDir}
+                zonefile-sync: -1
+                zonefile-load: difference
+                journal-content: changes
+                journal-db: /var/lib/knot/journal
+                kasp-db: /var/lib/knot/kasp
+                timer-db: /var/lib/knot/timer
+                ${lib.optionalString cfg.enableStats "module: mod-stats/stats"}
 
-          policy:
-            - id: rsa
-              zsk-size: 2048
-              ksk-size: 1024
-              algorithm: "RSASHA256"
-              nsec3: true
+            policy:
+              - id: rsa
+                zsk-size: 2048
+                ksk-size: 1024
+                algorithm: "RSASHA256"
+                nsec3: true
 
-          keystore:
-            - id: default
-              backend: pem
-              config: /var/lib/knot/keys
-          ${lib.concatMapStringsSep "\n" (file: "include: ${file}") authZoneFiles}
-          ${lib.concatMapStringsSep "\n" (file: "include: ${file}") slaveZoneFiles}
+            keystore:
+              - id: default
+                backend: pem
+                config: /var/lib/knot/keys
+            ${lib.concatMapStringsSep "\n" (file: "include: ${file}") authZoneFiles}
+            ${lib.concatMapStringsSep "\n" (file: "include: ${file}") slaveZoneFiles}
         '';
     };
   };

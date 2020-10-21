@@ -1,13 +1,13 @@
 { sources }:
 let
-  unstable = import sources.nixpkgs-unstable {};
+  unstable = import sources.nixpkgs-unstable { };
 in
 self: super: {
   inherit sources;
   knot_exporter = self.callPackage ./knot_exporter.nix {
     src = sources.knot_exporter;
   };
-  prometheus-xmpp-alerts = self.callPackage ./prometheus-xmpp-alerts.nix {};
+  prometheus-xmpp-alerts = self.callPackage ./prometheus-xmpp-alerts.nix { };
   grafanaPlugins = {
     statusmap = super.fetchFromGitHub {
       owner = "flant";
@@ -17,14 +17,14 @@ self: super: {
     };
   };
 
-  morph = (unstable.callPackage (sources.morph + "/nix-packaging") {}).overrideAttrs (
+  morph = (unstable.callPackage (sources.morph + "/nix-packaging") { }).overrideAttrs (
     _: {
       patches = [ ./morph-evalConfig-machinename.patch ];
     }
   );
 
   bird2 = super.bird2.overrideAttrs (
-    { patches ? [], ... }: {
+    { patches ? [ ], ... }: {
       patches = patches ++ [
         (
           super.fetchpatch {
@@ -36,20 +36,22 @@ self: super: {
     }
   );
 
-  dn42-regparse = self.callPackage sources.dn42-regparse {};
-  dn42-roa = let
-    roa = self.runCommand "dn42-roa" {
-      buildInputs = [ self.dn42-regparse ];
-      passthru = {
-        roa4 = "${roa}/roa.txt";
-        roa6 = "${roa}/roa6.txt";
-      };
-    } ''
-      mkdir $out
-      cd $out
-      roagen ${sources.dn42-registry}/data
-    '';
-  in
+  dn42-regparse = self.callPackage sources.dn42-regparse { };
+  dn42-roa =
+    let
+      roa = self.runCommand "dn42-roa"
+        {
+          buildInputs = [ self.dn42-regparse ];
+          passthru = {
+            roa4 = "${roa}/roa.txt";
+            roa6 = "${roa}/roa6.txt";
+          };
+        } ''
+        mkdir $out
+        cd $out
+        roagen ${sources.dn42-registry}/data
+      '';
+    in
     roa;
 
   coturn = super.coturn.overrideAttrs (
@@ -63,5 +65,5 @@ self: super: {
     ranz2nix = sources.ranz2nix;
   };
 
-  fping_exporter = self.callPackage ./fping-exporter.nix {};
+  fping_exporter = self.callPackage ./fping-exporter.nix { };
 }

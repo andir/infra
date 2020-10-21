@@ -3,11 +3,11 @@ with lib;
 let
   cfg = config.c3schedule;
   configTemplate = pkgs.writeText "sopel.conf" (
-    lib.generators.toINI {} (
+    lib.generators.toINI { } (
       cfg.config // {
-        core = (cfg.config.core or {}) // {
+        core = (cfg.config.core or { }) // {
           extra = toString (
-            pkgs.runCommand "extra-modules" {} ''
+            pkgs.runCommand "extra-modules" { } ''
               mkdir $out
               ln -s ${pkgs.c3schedule.sopelModule} $out/c3schedule
             ''
@@ -22,7 +22,7 @@ in
     enable = mkEnableOption "Enable c3schedule";
     config = mkOption {
       type = types.attrs;
-      default = {};
+      default = { };
     };
   };
 

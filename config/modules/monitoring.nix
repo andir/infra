@@ -132,51 +132,51 @@ in
 
     dns = mkOption {
       type = types.attrsOf (types.submodule dnsMonitoringEntry);
-      default = {};
+      default = { };
     };
 
     icmp = mkOption {
       type = types.attrsOf (types.submodule icmpMonitoringEntry);
-      default = {};
+      default = { };
     };
 
     smtp = mkOption {
       type = types.attrsOf (types.submodule smtpMonitoringEntry);
-      default = {};
+      default = { };
     };
 
     fping4 = mkOption {
       type = types.attrsOf (types.submodule fpingMonitoringEntry);
       default = {
-        "1.1.1.1" = {};
-        "8.8.8.8" = {};
-        "9.9.9.9" = {};
-        "google.com" = {};
-        "chaos-darmstadt.de" = {};
-        "as6766.net" = {};
-        "nynex.de" = {};
-        "hetzner.de" = {};
-        "eqixfr5-bb1.nynex.de" = {};
-        "eqixfr5-bb2.nynex.de" = {};
-        "ixfr3-bb1.nynex.de" = {};
-        "usi-corea.nynex.de" = {};
+        "1.1.1.1" = { };
+        "8.8.8.8" = { };
+        "9.9.9.9" = { };
+        "google.com" = { };
+        "chaos-darmstadt.de" = { };
+        "as6766.net" = { };
+        "nynex.de" = { };
+        "hetzner.de" = { };
+        "eqixfr5-bb1.nynex.de" = { };
+        "eqixfr5-bb2.nynex.de" = { };
+        "ixfr3-bb1.nynex.de" = { };
+        "usi-corea.nynex.de" = { };
       };
     };
 
     fping6 = mkOption {
       type = types.attrsOf (types.submodule fpingMonitoringEntry);
       default = {
-        "2606:4700:4700::1111" = {};
-        "2001:4860:4860::8888" = {};
-        "2620:fe::fe" = {};
-        "google.com" = {};
-        "chaos-darmstadt.de" = {};
-        "as6766.net" = {};
-        "nynex.de" = {};
-        "hetzner.de" = {};
-        "eqixfr5-bb1.nynex.de" = {};
-        "eqixfr5-bb2.nynex.de" = {};
-        "ixfr3-bb1.nynex.de" = {};
+        "2606:4700:4700::1111" = { };
+        "2001:4860:4860::8888" = { };
+        "2620:fe::fe" = { };
+        "google.com" = { };
+        "chaos-darmstadt.de" = { };
+        "as6766.net" = { };
+        "nynex.de" = { };
+        "hetzner.de" = { };
+        "eqixfr5-bb1.nynex.de" = { };
+        "eqixfr5-bb2.nynex.de" = { };
+        "ixfr3-bb1.nynex.de" = { };
       };
     };
 
@@ -202,7 +202,7 @@ in
       (
         mkIf config.services.nginx.enable (
           mkMerge [
-            (mkExporter "nginx" 9113 {})
+            (mkExporter "nginx" 9113 { })
             {
               services.nginx.statusPage = mkDefault true;
             }
@@ -277,7 +277,7 @@ in
       )
 
       (
-        mkIf (config.h4ck.monitoring.fping4 != {} || config.h4ck.monitoring.fping6 != {}) (
+        mkIf (config.h4ck.monitoring.fping4 != { } || config.h4ck.monitoring.fping6 != { }) (
           mkMerge [
             {
               h4ck.prometheus.exporters.fping_exporter.enable = true;
@@ -292,70 +292,72 @@ in
             (mkFirewallRules "fping6" config.h4ck.prometheus.exporters.fping_exporter.port6)
             {
               h4ck.monitoring.targets = (
-                lib.mapAttrs' (
-                  target: _: lib.nameValuePair "fping4_${target}" {
-                    port = config.h4ck.prometheus.exporters.fping_exporter.port4;
-                    job_config = {
-                      metrics_path = "/probe";
-                      static_configs = [
-                        {
-                          targets = [
-                            target
-                          ];
-                        }
-                      ];
-                      relabel_configs = [
-                        {
-                          source_labels = [ "__address__" ];
-                          target_label = "__param_target";
-                        }
-                        {
-                          source_labels = [ "__param_target" ];
-                          target_label = "target";
-                        }
-                        {
-                          target_label = "__address__";
-                          replacement = config.h4ck.monitoring.targetHost + ":${toString config.h4ck.prometheus.exporters.fping_exporter.port4}";
-                        }
-                      ];
-                    };
+                lib.mapAttrs'
+                  (
+                    target: _: lib.nameValuePair "fping4_${target}" {
+                      port = config.h4ck.prometheus.exporters.fping_exporter.port4;
+                      job_config = {
+                        metrics_path = "/probe";
+                        static_configs = [
+                          {
+                            targets = [
+                              target
+                            ];
+                          }
+                        ];
+                        relabel_configs = [
+                          {
+                            source_labels = [ "__address__" ];
+                            target_label = "__param_target";
+                          }
+                          {
+                            source_labels = [ "__param_target" ];
+                            target_label = "target";
+                          }
+                          {
+                            target_label = "__address__";
+                            replacement = config.h4ck.monitoring.targetHost + ":${toString config.h4ck.prometheus.exporters.fping_exporter.port4}";
+                          }
+                        ];
+                      };
 
-                  }
-                )
+                    }
+                  )
                   config.h4ck.monitoring.fping4
               );
             }
             {
               h4ck.monitoring.targets = (
-                lib.mapAttrs' (
-                  target: _: lib.nameValuePair "fping6_${target}" {
-                    port = config.h4ck.prometheus.exporters.fping_exporter.port6;
-                    job_config = {
-                      metrics_path = "/probe";
-                      static_configs = [
-                        {
-                          targets = [
-                            target
-                          ];
-                        }
-                      ];
-                      relabel_configs = [
-                        {
-                          source_labels = [ "__address__" ];
-                          target_label = "__param_target";
-                        }
-                        {
-                          source_labels = [ "__param_target" ];
-                          target_label = "target";
-                        }
-                        {
-                          target_label = "__address__";
-                          replacement = config.h4ck.monitoring.targetHost + ":${toString config.h4ck.prometheus.exporters.fping_exporter.port6}";
-                        }
-                      ];
-                    };
-                  }
-                )
+                lib.mapAttrs'
+                  (
+                    target: _: lib.nameValuePair "fping6_${target}" {
+                      port = config.h4ck.prometheus.exporters.fping_exporter.port6;
+                      job_config = {
+                        metrics_path = "/probe";
+                        static_configs = [
+                          {
+                            targets = [
+                              target
+                            ];
+                          }
+                        ];
+                        relabel_configs = [
+                          {
+                            source_labels = [ "__address__" ];
+                            target_label = "__param_target";
+                          }
+                          {
+                            source_labels = [ "__param_target" ];
+                            target_label = "target";
+                          }
+                          {
+                            target_label = "__address__";
+                            replacement = config.h4ck.monitoring.targetHost + ":${toString config.h4ck.prometheus.exporters.fping_exporter.port6}";
+                          }
+                        ];
+                      };
+                    }
+                  )
                   config.h4ck.monitoring.fping6
               );
             }
@@ -366,7 +368,7 @@ in
 
 
       (
-        mkIf (config.h4ck.monitoring.dns != {} || config.h4ck.monitoring.icmp != {} || config.h4ck.monitoring.smtp != {}) (
+        mkIf (config.h4ck.monitoring.dns != { } || config.h4ck.monitoring.icmp != { } || config.h4ck.monitoring.smtp != { }) (
           mkMerge [
             {
               services.prometheus.exporters.blackbox.enable = true;
@@ -389,50 +391,55 @@ in
                               query_name = params.queryName;
                             };
                           }
-                      ) config.h4ck.monitoring.dns
+                      )
+                      config.h4ck.monitoring.dns
                   )
                   // (
                     lib.mapAttrs'
                       (
                         target: params: lib.nameValuePair
-                          "icmp_${target}" {
-                          prober = "icmp";
-                          timeout = "1s";
-                          icmp =
-                            (
-                              lib.optionalAttrs (params.protocol != null) {
-                                preferred_ip_protocol = params.protocol;
-                                ip_protocol_fallback = true;
-                              }
-                            )
-                          ;
-                        }
-                      ) config.h4ck.monitoring.icmp
+                          "icmp_${target}"
+                          {
+                            prober = "icmp";
+                            timeout = "1s";
+                            icmp =
+                              (
+                                lib.optionalAttrs (params.protocol != null) {
+                                  preferred_ip_protocol = params.protocol;
+                                  ip_protocol_fallback = true;
+                                }
+                              )
+                            ;
+                          }
+                      )
+                      config.h4ck.monitoring.icmp
                   )
                   // (
                     lib.mapAttrs'
                       (
                         target: params: lib.nameValuePair
-                          "smtp_${target}" {
-                          prober = "tcp";
-                          timeout = "5s";
-                          tcp.query_response = [
-                            { expect = "^220 ([^ ]+) ESMTP (.+)$"; }
-                            { send = "EHLO prober"; }
-                          ] ++ (
-                            lib.optionals params.startTls [
-                              { expect = "^250-STARTTLS"; }
-                              { send = "STARTTLS"; }
-                              { expect = "^220"; }
-                              { starttls = true; }
+                          "smtp_${target}"
+                          {
+                            prober = "tcp";
+                            timeout = "5s";
+                            tcp.query_response = [
+                              { expect = "^220 ([^ ]+) ESMTP (.+)$"; }
                               { send = "EHLO prober"; }
-                              { expect = "^250-AUTH"; }
-                            ]
-                          ) ++ [
-                            { send = "QUIT"; }
-                          ];
-                        }
-                      ) config.h4ck.monitoring.smtp
+                            ] ++ (
+                              lib.optionals params.startTls [
+                                { expect = "^250-STARTTLS"; }
+                                { send = "STARTTLS"; }
+                                { expect = "^220"; }
+                                { starttls = true; }
+                                { send = "EHLO prober"; }
+                                { expect = "^250-AUTH"; }
+                              ]
+                            ) ++ [
+                              { send = "QUIT"; }
+                            ];
+                          }
+                      )
+                      config.h4ck.monitoring.smtp
                   )
                 ;
               };
@@ -440,106 +447,114 @@ in
             (
               {
                 h4ck.monitoring.targets = (
-                  lib.mapAttrs' (
-                    zone: params: lib.nameValuePair
-                      "blackbox_dns_${zone}"
-                      {
-                        port = 9115;
-                        job_config = {
-                          params.module = [ "dns_${zone}" ];
-                          metrics_path = "/probe";
-                          static_configs = [
-                            {
-                              targets = [
-                                "1.1.1.1"
-                                "8.8.4.4"
-                                "8.8.8.8"
-                                "9.9.9.9"
-                              ];
-                            }
-                          ];
-                          relabel_configs = [
-                            {
-                              source_labels = [ "__address__" ];
-                              target_label = "__param_target";
-                            }
-                            {
-                              source_labels = [ "__param_target" ];
-                              target_label = "instance";
-                            }
-                            {
-                              target_label = "__address__";
-                              replacement = config.h4ck.monitoring.targetHost + ":9115";
-                            }
+                  lib.mapAttrs'
+                    (
+                      zone: params: lib.nameValuePair
+                        "blackbox_dns_${zone}"
+                        {
+                          port = 9115;
+                          job_config = {
+                            params.module = [ "dns_${zone}" ];
+                            metrics_path = "/probe";
+                            static_configs = [
+                              {
+                                targets = [
+                                  "1.1.1.1"
+                                  "8.8.4.4"
+                                  "8.8.8.8"
+                                  "9.9.9.9"
+                                ];
+                              }
+                            ];
+                            relabel_configs = [
+                              {
+                                source_labels = [ "__address__" ];
+                                target_label = "__param_target";
+                              }
+                              {
+                                source_labels = [ "__param_target" ];
+                                target_label = "instance";
+                              }
+                              {
+                                target_label = "__address__";
+                                replacement = config.h4ck.monitoring.targetHost + ":9115";
+                              }
 
-                          ];
-                        };
-                      }
-                  ) config.h4ck.monitoring.dns
-                ) // (
-                  lib.mapAttrs' (
-                    target: params: lib.nameValuePair
-                      "blackbox_icmp_${target}" {
-                      port = 9115;
-                      job_config = {
-                        params.module = [ "icmp_${target}" ];
-                        metrics_path = "/probe";
-                        static_configs = [
-                          {
-                            targets = [
-                              params.targetName
                             ];
-                          }
-                        ];
-                        relabel_configs = [
-                          {
-                            source_labels = [ "__address__" ];
-                            target_label = "__param_target";
-                          }
-                          {
-                            source_labels = [ "__param_target" ];
-                            target_label = "instance";
-                          }
-                          {
-                            target_label = "__address__";
-                            replacement = config.h4ck.monitoring.targetHost + ":9115";
-                          }
-                        ];
-                      };
-                    }
-                  ) config.h4ck.monitoring.icmp
+                          };
+                        }
+                    )
+                    config.h4ck.monitoring.dns
                 ) // (
-                  lib.mapAttrs' (
-                    target: params: lib.nameValuePair
-                      "smtp_${target}" {
-                      port = 9115;
-                      job_config = {
-                        params.module = [ "smtp_${target}" ];
-                        metrics_path = "/probe";
-                        static_configs = [
-                          {
-                            targets = [
-                              params.targetName
+                  lib.mapAttrs'
+                    (
+                      target: params: lib.nameValuePair
+                        "blackbox_icmp_${target}"
+                        {
+                          port = 9115;
+                          job_config = {
+                            params.module = [ "icmp_${target}" ];
+                            metrics_path = "/probe";
+                            static_configs = [
+                              {
+                                targets = [
+                                  params.targetName
+                                ];
+                              }
                             ];
-                          }
-                        ];
-                        relabel_configs = [
-                          {
-                            source_labels = [ "__address__" ];
-                            target_label = "__param_target";
-                          }
-                          {
-                            source_labels = [ "__param_target" ];
-                            target_label = "instance";
-                          }
-                          {
-                            target_label = "__address__";
-                            replacement = config.h4ck.monitoring.targetHost + ":9115";
-                          }
-                        ];
-                      };
-                    }
-                  ) config.h4ck.monitoring.smtp
+                            relabel_configs = [
+                              {
+                                source_labels = [ "__address__" ];
+                                target_label = "__param_target";
+                              }
+                              {
+                                source_labels = [ "__param_target" ];
+                                target_label = "instance";
+                              }
+                              {
+                                target_label = "__address__";
+                                replacement = config.h4ck.monitoring.targetHost + ":9115";
+                              }
+                            ];
+                          };
+                        }
+                    )
+                    config.h4ck.monitoring.icmp
+                ) // (
+                  lib.mapAttrs'
+                    (
+                      target: params: lib.nameValuePair
+                        "smtp_${target}"
+                        {
+                          port = 9115;
+                          job_config = {
+                            params.module = [ "smtp_${target}" ];
+                            metrics_path = "/probe";
+                            static_configs = [
+                              {
+                                targets = [
+                                  params.targetName
+                                ];
+                              }
+                            ];
+                            relabel_configs = [
+                              {
+                                source_labels = [ "__address__" ];
+                                target_label = "__param_target";
+                              }
+                              {
+                                source_labels = [ "__param_target" ];
+                                target_label = "instance";
+                              }
+                              {
+                                target_label = "__address__";
+                                replacement = config.h4ck.monitoring.targetHost + ":9115";
+                              }
+                            ];
+                          };
+                        }
+                    )
+                    config.h4ck.monitoring.smtp
                 );
               }
             )

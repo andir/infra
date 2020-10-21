@@ -52,7 +52,7 @@
       {
         scheme = "http";
         path_prefix = "/";
-        static_configs = [ { targets = [ "localhost:${toString config.services.prometheus.alertmanager.port}" ]; } ];
+        static_configs = [{ targets = [ "localhost:${toString config.services.prometheus.alertmanager.port}" ]; }];
       }
     ];
   };
@@ -103,10 +103,12 @@
   };
 
   # use my custom `grafanaPlugins` attribute to enable plugins on the installed grafana
-  systemd.tmpfiles.rules = lib.mapAttrsToList (
-    pluginName: plugin:
-      "L ${config.services.grafana.dataDir}/plugins/${pluginName} - - - - ${plugin}"
-  ) (pkgs.grafanaPlugins or {});
+  systemd.tmpfiles.rules = lib.mapAttrsToList
+    (
+      pluginName: plugin:
+        "L ${config.services.grafana.dataDir}/plugins/${pluginName} - - - - ${plugin}"
+    )
+    (pkgs.grafanaPlugins or { });
 
   services.grafana = {
     enable = true;

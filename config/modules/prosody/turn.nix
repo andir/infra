@@ -5,9 +5,10 @@ let
 
   secretFileDir = "/var/lib/coturn-secret";
 
-  coturnInitialDB = pkgs.runCommand "coturn-sql-schema" {
-    nativeBuildInputs = [ pkgs.sqlite ];
-  } ''
+  coturnInitialDB = pkgs.runCommand "coturn-sql-schema"
+    {
+      nativeBuildInputs = [ pkgs.sqlite ];
+    } ''
     sqlite3 coturn.sqlite < ${pkgs.coturn.src}/turndb/schema.sql
     mv coturn.sqlite $out
   '';
@@ -27,7 +28,7 @@ in
       enable = true;
       realm = "stun.${pcfg.serverName}";
       use-auth-secret = true;
-      listening-ips = [];
+      listening-ips = [ ];
       min-port = 20000;
       max-port = 20100;
       extraConfig = ''

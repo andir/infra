@@ -1,22 +1,24 @@
 { pkgs, lib, config, ... }:
 let
-  verifiedNetfilter = text: let
-    file = pkgs.writeText "netfilter" text;
-    check = pkgs.vmTools.runInLinuxVM (
-      pkgs.runCommand "nft-check" {
-        buildInputs = [ pkgs.nftables ];
-        inherit file;
-      } ''
-        set -ex
-        # make sure protocols & services are known
-        ln -s ${pkgs.iana-etc}/etc/protocol /etc/protocol
-        ln -s ${pkgs.iana-etc}/etc/services /etc/services
+  verifiedNetfilter = text:
+    let
+      file = pkgs.writeText "netfilter" text;
+      check = pkgs.vmTools.runInLinuxVM (
+        pkgs.runCommand "nft-check"
+          {
+            buildInputs = [ pkgs.nftables ];
+            inherit file;
+          } ''
+          set -ex
+          # make sure protocols & services are known
+          ln -s ${pkgs.iana-etc}/etc/protocol /etc/protocol
+          ln -s ${pkgs.iana-etc}/etc/services /etc/services
 
-        # test the configuration
-        nft --file $file
-      ''
-    );
-  in
+          # test the configuration
+          nft --file $file
+        ''
+      );
+    in
     "#checked with ${check}\n" + text;
 in
 {
@@ -355,10 +357,11 @@ in
   };
   users.groups.cert-users.members = [ "nginx" "unbound" ];
   systemd.services.unbound.wantedBy = [ "network-online.target" ];
-  services.unbound.extraConfig = let
-    privateKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/key.pem";
-    publicKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/cert.pem";
-  in
+  services.unbound.extraConfig =
+    let
+      privateKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/key.pem";
+      publicKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/cert.pem";
+    in
     ''
       server:
         tls-service-key: ${privateKey}

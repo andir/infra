@@ -6,9 +6,10 @@ let
     exec ${pyEnv}/bin/python ${src}/knot_exporter "$@"
   '';
 
-  pkg = runCommand "knot-exporter-tested" {
-    buildInputs = [ script ];
-  } ''
+  pkg = runCommand "knot-exporter-tested"
+    {
+      buildInputs = [ script ];
+    } ''
     set -e
     knot_exporter --help
     ln -s ${script}/bin/knot_exporter $out

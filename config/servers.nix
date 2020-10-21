@@ -18,7 +18,7 @@ in
       let
         prefix = sources."${machineName}-nixpkgs" or pkgs.path;
       in
-        import (prefix + "/nixos/lib/eval-config.nix");
+      import (prefix + "/nixos/lib/eval-config.nix");
   };
 
   "jh4all.de" = mkMachine ./servers/jh4all.nix;

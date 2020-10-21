@@ -1,6 +1,5 @@
 { config, pkgs, lib, ... }:
 let
-
   localAddressOptions = { ... }: {
     options = {
       local = lib.mkOption {
@@ -49,21 +48,23 @@ let
       };
       remoteAddresses = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = [];
+        default = [ ];
       };
       localAddresses = lib.mkOption {
         type = lib.types.nullOr (lib.types.listOf (lib.types.either lib.types.str (lib.types.submodule localAddressOptions)));
         default = null;
         apply = values: if values == null then null else
-          (
-            map (
+        (
+          map
+            (
               value:
-                if (builtins.typeOf value) == "string" then {
-                  local = value;
-                  peer = null;
-                } else value
-            ) values
-          );
+              if (builtins.typeOf value) == "string" then {
+                local = value;
+                peer = null;
+              } else value
+            )
+            values
+        );
       };
     };
     config = {
@@ -90,22 +91,23 @@ in
     };
 
     addresses = lib.mkOption {
-      default = [];
+      default = [ ];
       type = lib.types.listOf (lib.types.str);
     };
 
     peers = lib.mkOption {
       type = lib.types.attrsOf (lib.types.submodule wireguardPeerConfig);
-      default = {};
+      default = { };
     };
   };
 
-  config = let
-    cfg = config.h4ck.wireguardBackbone;
-    firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) cfg.addresses);
-    firstV4Address = lib.head (builtins.split "/" firstV4Net);
-  in
-    lib.mkIf (cfg.peers != {} && cfg.addresses != []) {
+  config =
+    let
+      cfg = config.h4ck.wireguardBackbone;
+      firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) cfg.addresses);
+      firstV4Address = lib.head (builtins.split "/" firstV4Net);
+    in
+    lib.mkIf (cfg.peers != { } && cfg.addresses != [ ]) {
       environment.systemPackages = [ pkgs.wireguard ];
       systemd.tmpfiles.rules = [
         "d ${config.h4ck.wireguardBackbone.dataDir} 700 systemd-network systemd-network - -"
@@ -139,11 +141,12 @@ in
       };
       services.bird2 = {
         enable = lib.mkDefault true;
-        config = let
-          interfaces = lib.mapAttrsToList (_: p: p.interfaceName) cfg.peers;
-          babelInterfaces = lib.mapAttrsToList (_: p: p.interfaceName)
-            (lib.filterAttrs (_: p: p.babel == true) cfg.peers);
-        in
+        config =
+          let
+            interfaces = lib.mapAttrsToList (_: p: p.interfaceName) cfg.peers;
+            babelInterfaces = lib.mapAttrsToList (_: p: p.interfaceName)
+              (lib.filterAttrs (_: p: p.babel == true) cfg.peers);
+          in
           ''
             #
             # Configuration for all the "internal" wireguard peerings between
@@ -190,65 +193,74 @@ in
       };
       networking.firewall.allowedUDPPorts = [ 6696 ] ++ lib.mapAttrsToList (_: peer: peer.localPort) config.h4ck.wireguardBackbone.peers;
       systemd.network = lib.mkMerge (
-        lib.mapAttrsToList (
-          name: peer:
-            {
-              enable = lib.mkDefault true;
-              netdevs = {
-                "40-${peer.interfaceName}" = {
-                  netdevConfig = {
-                    Kind = "wireguard";
-                    MTUBytes = toString peer.mtu;
-                    Name = "${peer.interfaceName}";
-                  };
-                  extraConfig = ''
-                    [WireGuard]
-                    PrivateKeyFile = ${toString cfg.privateKeyFile}
-                    ListenPort = ${toString peer.localPort}
+        lib.mapAttrsToList
+          (
+            name: peer:
+              {
+                enable = lib.mkDefault true;
+                netdevs = {
+                  "40-${peer.interfaceName}" = {
+                    netdevConfig = {
+                      Kind = "wireguard";
+                      MTUBytes = toString peer.mtu;
+                      Name = "${peer.interfaceName}";
+                    };
+                    extraConfig = ''
+                      [WireGuard]
+                      PrivateKeyFile = ${toString cfg.privateKeyFile}
+                      ListenPort = ${toString peer.localPort}
 
-                    [WireGuardPeer]
-                    PublicKey = ${peer.remotePublicKey}
-                    AllowedIPs=::/0, 0.0.0.0/0
-                    ${lib.optionalString (peer.remoteEndpoint != null) "Endpoint=${peer.remoteEndpoint}:${toString peer.remotePort}"}
-                  '';
+                      [WireGuardPeer]
+                      PublicKey = ${peer.remotePublicKey}
+                      AllowedIPs=::/0, 0.0.0.0/0
+                      ${lib.optionalString (peer.remoteEndpoint != null) "Endpoint=${peer.remoteEndpoint}:${toString peer.remotePort}"}
+                    '';
+                  };
                 };
-              };
 
-              networks = {
-                "40-${peer.interfaceName}" = {
-                  matchConfig = {
-                    Name = "${peer.interfaceName}";
+                networks = {
+                  "40-${peer.interfaceName}" = {
+                    matchConfig = {
+                      Name = "${peer.interfaceName}";
+                    };
+                    networkConfig = {
+                      #                  DHCP = false;
+                      #                  IPv6AcceptRA = false;
+                      LinkLocalAddressing = "ipv6";
+                    };
+                    addresses =
+                      let
+                        peerAddresses = map
+                          (
+                            { local, peer, ... }: {
+                              addressConfig = {
+                                Address = local;
+                              } // (if peer != null then { Peer = peer; } else { });
+                            }
+                          )
+                          peer.localAddresses;
+                      in
+                      if (peer.localAddresses == null) then
+                        map
+                          (
+                            addr:
+                            {
+                              addressConfig = {
+                                Address = addr;
+                              };
+                            }
+                          )
+                          cfg.addresses else peerAddresses;
+                    routes = map
+                      (
+                        addr:
+                        { routeConfig = { Destination = addr; }; }
+                      )
+                      peer.remoteAddresses;
                   };
-                  networkConfig = {
-                    #                  DHCP = false;
-                    #                  IPv6AcceptRA = false;
-                    LinkLocalAddressing = "ipv6";
-                  };
-                  addresses = let
-                    peerAddresses = map (
-                      { local, peer, ... }: {
-                        addressConfig = {
-                          Address = local;
-                        } // (if peer != null then { Peer = peer; } else {});
-                      }
-                    ) peer.localAddresses;
-                  in
-                    if (peer.localAddresses == null) then map (
-                      addr:
-                        {
-                          addressConfig = {
-                            Address = addr;
-                          };
-                        }
-                    ) cfg.addresses else peerAddresses;
-                  routes = map (
-                    addr:
-                      { routeConfig = { Destination = addr; }; }
-                  ) peer.remoteAddresses;
                 };
-              };
-            }
-        )
+              }
+          )
           config.h4ck.wireguardBackbone.peers
       );
     };

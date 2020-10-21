@@ -4,12 +4,12 @@ let
     let
       path = ../../../secrets/alerts.nix;
       default = {
-        config = {};
-        rules = [];
+        config = { };
+        rules = [ ];
       };
       exists = builtins.pathExists path;
     in
-      if exists then import path else default;
+    if exists then import path else default;
 in
 {
 
@@ -59,19 +59,19 @@ in
                 let
                   low_megabyte = 70;
                 in
-                  {
-                    alert = "InstanceLowBootDiskAbs";
-                    expr = ''node_filesystem_avail_bytes{mountpoint=~"^/boot.?/?.*"} / 1024 / 1024 < ${toString low_megabyte}''; # a single kernel roughly consumes about ~40ish MB.
-                    for = "1m";
-                    labels = {
-                      severity = "page";
-                    };
-                    annotations = {
-                      description = "Less than ${toString low_megabyte}MB of free disk space left on one of the boot filesystem";
-                      summary = "Instance {{ $labels.instance }}: {{ $value }}MB free disk space on {{$labels.device }} @ {{$labels.mountpoint}}";
-                      value = "{{ $value }}";
-                    };
-                  }
+                {
+                  alert = "InstanceLowBootDiskAbs";
+                  expr = ''node_filesystem_avail_bytes{mountpoint=~"^/boot.?/?.*"} / 1024 / 1024 < ${toString low_megabyte}''; # a single kernel roughly consumes about ~40ish MB.
+                  for = "1m";
+                  labels = {
+                    severity = "page";
+                  };
+                  annotations = {
+                    description = "Less than ${toString low_megabyte}MB of free disk space left on one of the boot filesystem";
+                    summary = "Instance {{ $labels.instance }}: {{ $value }}MB free disk space on {{$labels.device }} @ {{$labels.mountpoint}}";
+                    value = "{{ $value }}";
+                  };
+                }
               )
               {
                 alert = "InstanceLowDiskPerc";

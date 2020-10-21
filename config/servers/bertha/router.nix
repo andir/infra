@@ -73,17 +73,19 @@ in
     services.unbound.interfaces = lib.mkForce (
       [ "127.0.1.52" "::1" ] ++ (
         lib.flatten (
-          map (
-            iface:
+          map
+            (
+              iface:
               (map (addr: addr.address) iface.v4Addresses)
               ++ (map (addr: addr.address) iface.v6Addresses)
               ++ (
-                if iface.dnsOverTls then (
-                  (map (addr: "${addr.address}@853") iface.v4Addresses)
-                  ++ (map (addr: "${addr.address}@853") iface.v6Addresses)
-                ) else []
+                if iface.dnsOverTls then
+                  (
+                    (map (addr: "${addr.address}@853") iface.v4Addresses)
+                    ++ (map (addr: "${addr.address}@853") iface.v6Addresses)
+                  ) else [ ]
               )
-          )
+            )
             cfg.downstreamInterfaces
         )
       )
@@ -99,134 +101,140 @@ in
 
     systemd.services."systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
 
-    systemd.network = let
-      mkUpstreamIfConfig = name: nameValuePair "00-${name}" {
-        enable = true;
-        networkConfig = {
-          Description = "upstream network config for ${name}";
-          IPv6AcceptRA = true;
-          #ipmasquerade = true; # fixme: hows does that work on the inside?
-          #ipforward = "yes";
-          DHCP = "yes";
-          #ipv6prefixdelegation = "dhcpv6";
-        };
-        linkConfig = {
-          RequiredForOnline = "routable";
-        };
-        matchConfig = {
-          Name = name;
-        };
-        dhcpV4Config = {
-          UseDNS = false;
-          UseRoutes = true;
-        };
-        dhcpV6Config = {
-          PrefixDelegationHint = "::/48";
-        };
-        ipv6PrefixDelegationConfig = {
-          Managed = true;
-          OtherInformation = true;
-        };
-        routes = [
-          {
-            routeConfig = {
-              Destination = "fd00::/8";
-              Type = "blackhole";
-            };
-          }
-          {
-            routeConfig = {
-              Destination = "10.0.0.0/8";
-              Type = "blackhole";
-            };
-          }
-          {
-            routeConfig = {
-              Destination = "172.16.0.0/12";
-              Type = "blackhole";
-            };
-          }
-          {
-            routeConfig = {
-              Destination = "192.168.0.0/16";
-              Type = "blackhole";
-            };
-          }
-
-        ];
-      };
-      mkClientIfConfig = conf: let
-        v = nameValuePair "00-${conf.interface}" {
+    systemd.network =
+      let
+        mkUpstreamIfConfig = name: nameValuePair "00-${name}" {
           enable = true;
-          matchConfig = {
-            Name = conf.interface;
-          };
-
-          addresses = (
-            map (
-              addr:
-                { addressConfig.Address = "${addr.address}/${toString addr.prefixLength}"; }
-            ) (conf.v4Addresses ++ conf.v6Addresses)
-          )
-          ++ [ { addressConfig.Address = "::/64"; } ];
-
           networkConfig = {
-            DHCPServer = mkDefault true;
-            IPv6PrefixDelegation = "yes";
+            Description = "upstream network config for ${name}";
+            IPv6AcceptRA = true;
+            #ipmasquerade = true; # fixme: hows does that work on the inside?
+            #ipforward = "yes";
+            DHCP = "yes";
+            #ipv6prefixdelegation = "dhcpv6";
           };
-
-          dhcpServerConfig = {
-            PoolOffset = 10;
-            EmitDNS = true;
-            DNS = (map (addr: addr.address) conf.v4Addresses);
-            EmitNTP = true;
-            EmitRouter = true;
-            EmitTimezone = true;
-            Timezone = "Europe/Berlin";
+          linkConfig = {
+            RequiredForOnline = "routable";
           };
-
+          matchConfig = {
+            Name = name;
+          };
+          dhcpV4Config = {
+            UseDNS = false;
+            UseRoutes = true;
+          };
+          dhcpV6Config = {
+            PrefixDelegationHint = "::/48";
+          };
           ipv6PrefixDelegationConfig = {
-            RouterLifetimeSec = 300;
-            EmitDNS = true;
-            DNS = "_link_local";
+            Managed = true;
+            OtherInformation = true;
           };
-
-          extraConfig = (
-            lib.optionalString (conf.subnetId != null) ''
-              [DHCPv6PrefixDelegation]
-              SubnetId=${conf.subnetId}
-              Assign=true
-            ''
-          )
-            #  + ''
-            #  [DHCPv6]
-            #  AssignAcquiredDelegatedPrefixAddress=yes
-            #''
-          ;
-
-          ipv6Prefixes = [
+          routes = [
             {
-              ipv6PrefixConfig = {
-                AddressAutoconfiguration = true;
-                PreferredLifetimeSec = 1800;
-                ValidLifetimeSec = 1800;
+              routeConfig = {
+                Destination = "fd00::/8";
+                Type = "blackhole";
               };
             }
-          ] ++ (
-            map (
-              addr: {
-                ipv6PrefixConfig = {
-                  Prefix = "${addr.address}/${toString addr.prefixLength}";
-                };
-              }
-            ) conf.v6Addresses
-          );
+            {
+              routeConfig = {
+                Destination = "10.0.0.0/8";
+                Type = "blackhole";
+              };
+            }
+            {
+              routeConfig = {
+                Destination = "172.16.0.0/12";
+                Type = "blackhole";
+              };
+            }
+            {
+              routeConfig = {
+                Destination = "192.168.0.0/16";
+                Type = "blackhole";
+              };
+            }
+
+          ];
         };
+        mkClientIfConfig = conf:
+          let
+            v = nameValuePair "00-${conf.interface}" {
+              enable = true;
+              matchConfig = {
+                Name = conf.interface;
+              };
+
+              addresses = (
+                map
+                  (
+                    addr:
+                    { addressConfig.Address = "${addr.address}/${toString addr.prefixLength}"; }
+                  )
+                  (conf.v4Addresses ++ conf.v6Addresses)
+              )
+              ++ [{ addressConfig.Address = "::/64"; }];
+
+              networkConfig = {
+                DHCPServer = mkDefault true;
+                IPv6PrefixDelegation = "yes";
+              };
+
+              dhcpServerConfig = {
+                PoolOffset = 10;
+                EmitDNS = true;
+                DNS = (map (addr: addr.address) conf.v4Addresses);
+                EmitNTP = true;
+                EmitRouter = true;
+                EmitTimezone = true;
+                Timezone = "Europe/Berlin";
+              };
+
+              ipv6PrefixDelegationConfig = {
+                RouterLifetimeSec = 300;
+                EmitDNS = true;
+                DNS = "_link_local";
+              };
+
+              extraConfig = (
+                lib.optionalString (conf.subnetId != null) ''
+                  [DHCPv6PrefixDelegation]
+                  SubnetId=${conf.subnetId}
+                  Assign=true
+                ''
+              )
+                #  + ''
+                #  [DHCPv6]
+                #  AssignAcquiredDelegatedPrefixAddress=yes
+                #''
+              ;
+
+              ipv6Prefixes = [
+                {
+                  ipv6PrefixConfig = {
+                    AddressAutoconfiguration = true;
+                    PreferredLifetimeSec = 1800;
+                    ValidLifetimeSec = 1800;
+                  };
+                }
+              ] ++ (
+                map
+                  (
+                    addr: {
+                      ipv6PrefixConfig = {
+                        Prefix = "${addr.address}/${toString addr.prefixLength}";
+                      };
+                    }
+                  )
+                  conf.v6Addresses
+              );
+            };
+          in
+          v;
+        upstreamConfig = builtins.listToAttrs (map mkUpstreamIfConfig cfg.upstreamInterfaces);
+        downstreamConfig = builtins.listToAttrs (map mkClientIfConfig cfg.downstreamInterfaces);
       in
-        v;
-      upstreamConfig = builtins.listToAttrs (map mkUpstreamIfConfig cfg.upstreamInterfaces);
-      downstreamConfig = builtins.listToAttrs (map mkClientIfConfig cfg.downstreamInterfaces);
-    in
       {
         enable = true;
         networks = mkMerge [

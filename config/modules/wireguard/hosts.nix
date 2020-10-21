@@ -24,28 +24,29 @@ let
 
       peerConfig = cfg.hosts.${peerName};
     in
-      {
-        babel = lib.mkDefault true;
-        remoteEndpoint = lib.mkDefault
-          (
-            if peerConfig ? hostName then
-              peerConfig.hostName
-            else nodes.${peerName}.config.h4ck.fqdn
-          );
-        remotePort = lib.mkDefault port;
-        localPort = lib.mkDefault port;
-        remoteAddresses = lib.mkDefault peerConfig.addresses;
-        remotePublicKey = lib.mkDefault peerConfig.publicKey;
-      };
+    {
+      babel = lib.mkDefault true;
+      remoteEndpoint = lib.mkDefault
+        (
+          if peerConfig ? hostName then
+            peerConfig.hostName
+          else nodes.${peerName}.config.h4ck.fqdn
+        );
+      remotePort = lib.mkDefault port;
+      localPort = lib.mkDefault port;
+      remoteAddresses = lib.mkDefault peerConfig.addresses;
+      remotePublicKey = lib.mkDefault peerConfig.publicKey;
+    };
 
   mkConfig = hostName:
-  # generate the wireguard configuration for the given hostname based on the configuration in
-  # cfg.hosts
+    # generate the wireguard configuration for the given hostname based on the configuration in
+    # cfg.hosts
     let
       mesh = wireLib.mesh { servers = cfg.hosts; };
     in
-      if mesh ? ${hostName} then
-        lib.filterAttrs (k: _: ! builtins.elem k [ "hostName" "connections" ]) (
+    if mesh ? ${hostName} then
+      lib.filterAttrs (k: _: ! builtins.elem k [ "hostName" "connections" ])
+        (
           mesh.${hostName} // {
             peers = builtins.listToAttrs (
               map
@@ -54,7 +55,7 @@ let
             );
           }
         )
-      else {};
+    else { };
 in
 {
   # executed in the context of a single node

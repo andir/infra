@@ -1,4 +1,4 @@
-{ lib ? (import <nixpkgs> {}).lib }:
+{ lib ? (import <nixpkgs> { }).lib }:
 let
   # sort :: [ T ] -> [ T ]
   sort = lib.sort (a: b: a < b);
@@ -13,17 +13,19 @@ let
     assert server ? connection -> !builtins.isList server.connections -> builtins.throw "`server.connections` should be a list";
     sort (
       lib.attrNames (
-        lib.filterAttrs (
-          peerName: peer:
+        lib.filterAttrs
+          (
+            peerName: peer:
 
-          # do not connect to self
-            (peerName != name)
-            && # if server.connections is set only connect to those
-            (if server ? connections then builtins.elem peerName server.connections else true)
-            && # if peer.connections is set only connect to those
-            (if peer ? connections then builtins.elem name peer.connections else true)
+              # do not connect to self
+              (peerName != name)
+              && # if server.connections is set only connect to those
+              (if server ? connections then builtins.elem peerName server.connections else true)
+              && # if peer.connections is set only connect to those
+              (if peer ? connections then builtins.elem name peer.connections else true)
 
-        ) servers
+          )
+          servers
       )
     );
 
@@ -31,7 +33,7 @@ let
     let
       toToml = s: "x = 0x${builtins.substring 0 15 s}";
     in
-      (builtins.fromTOML (toToml str)).x;
+    (builtins.fromTOML (toToml str)).x;
   mod = n: m:
     n - ((builtins.div n m) * m);
 in
@@ -41,11 +43,13 @@ in
   mesh = { servers }:
     assert !builtins.isAttrs servers -> builtins.throw "`servers` should be an attribute set, got ${builtins.typeOf servers}";
 
-    lib.mapAttrs (
-      name: server: {
-        connections = generateNeighbours { inherit name server servers; };
-      }
-    ) servers;
+    lib.mapAttrs
+      (
+        name: server: {
+          connections = generateNeighbours { inherit name server servers; };
+        }
+      )
+      servers;
 
   genPort = minPort: maxPort: serverA: serverB:
     assert !builtins.isString serverA -> builtins.throw "`serverA` should be a string, got ${builtins.typeOf serverA}";
@@ -53,8 +57,8 @@ in
     let
       width = maxPort - minPort;
     in
-      assert width <= 0 -> builtins.throw "maxPort - minPort must be >= 1";
+    assert width <= 0 -> builtins.throw "maxPort - minPort must be >= 1";
 
-      minPort + (mod ((md5ToInt (builtins.hashString "md5" serverA)) + (md5ToInt (builtins.hashString "md5" serverB))) width);
+    minPort + (mod ((md5ToInt (builtins.hashString "md5" serverA)) + (md5ToInt (builtins.hashString "md5" serverB))) width);
 
 }

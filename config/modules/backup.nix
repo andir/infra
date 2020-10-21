@@ -5,7 +5,7 @@ in
 {
   options.h4ck.backup.paths = lib.mkOption {
     type = lib.types.listOf lib.types.path;
-    default = [];
+    default = [ ];
   };
   config.h4ck.backup.paths = [ "/etc/nixos" ];
 }

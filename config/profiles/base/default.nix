@@ -17,7 +17,7 @@
   };
 
   h4ck.ssh-unlock = {
-    enable = config.boot.initrd.luks.devices != {};
+    enable = config.boot.initrd.luks.devices != { };
     authorizedKeys = lib.splitString "\n" (builtins.readFile ./andi.pub);
   };
 

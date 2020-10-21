@@ -1,5 +1,5 @@
 let
-  pkgs = import <nixpkgs> {};
+  pkgs = import <nixpkgs> { };
   src = builtins.fetchTarball https://github.com/nix-community/nixos-generators/archive/942232e3000e80b4b4ad34cb3c07923415c27493.tar.gz;
   generator = import (src + "/nixos-generate.nix");
 

@@ -22,7 +22,7 @@ in
       fping6.source = "${pkgs.fping}/bin/fping";
     };
 
-    users.users.fping_exporter = {};
+    users.users.fping_exporter = { };
     systemd.services.fping_exporter4 = {
       after = [ "network.target" "knot.service" ];
       wantedBy = [ "multi-user.target" ];

@@ -1,4 +1,4 @@
-{ lib ? (import <nixpkgs> {}).lib }:
+{ lib ? (import <nixpkgs> { }).lib }:
 let
   inherit (import ./lib.nix { inherit lib; }) mesh genPort mod;
 in
@@ -56,7 +56,7 @@ lib.debug.runTests {
       servers = {
         foo = {
           hostName = "foo.h4ck.space";
-          connections = [];
+          connections = [ ];
         };
         bar = {
           hostName = "bar.h4ck.space";
@@ -69,7 +69,7 @@ lib.debug.runTests {
     };
 
     expected = {
-      foo.connections = [];
+      foo.connections = [ ];
       bar.connections = [ "zes" ];
       zes.connections = [ "bar" ];
     };

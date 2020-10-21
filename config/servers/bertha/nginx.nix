@@ -7,7 +7,7 @@
       enableACME = true;
       root = pkgs.symlinkJoin {
         name = "webroot";
-        paths = [];
+        paths = [ ];
       };
       locations."/weechat" = {
         proxyPass = "https://[fd21:a07e:735e:ff01:ae1f:6bff:fe45:be15]:9001";

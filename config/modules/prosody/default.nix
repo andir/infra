@@ -18,7 +18,7 @@ in
       enable = lib.mkEnableOption "Enable prosody";
       extraCommunityModules = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = [];
+        default = [ ];
       };
       serverName = lib.mkOption {
         type = lib.types.str;
@@ -31,12 +31,13 @@ in
 
   config = lib.mkIf cfg.enable {
     h4ck.backup.paths = [ "/var/lib/prosody" ];
-    services.prosody = let
-      sslOptions = {
-        #ciphers = "HIGH+kEECDH:HIGH+kEDH:!DSS:!ECDSA:!3DES:!aNULL:@STRENGTH";
-        #options = [ "no_sslv2" "no_sslv3" "no_ticket" "no_compression" "cipher_server_preference" ];
-      };
-    in
+    services.prosody =
+      let
+        sslOptions = {
+          #ciphers = "HIGH+kEECDH:HIGH+kEDH:!DSS:!ECDSA:!3DES:!aNULL:@STRENGTH";
+          #options = [ "no_sslv2" "no_sslv3" "no_ticket" "no_compression" "cipher_server_preference" ];
+        };
+      in
       {
         enable = true;
         xmppComplianceSuite = false; # FIXME: after updating migrate to a more NixOS'ish configuration
@@ -195,68 +196,69 @@ in
     ];
 
     # enable nginx with ACME for our certificates
-    services.nginx = let
-      host-meta-json = pkgs.writeText "host-meta.json" (
-        builtins.toJSON {
-          links = [
-            {
-              rel = "urn:xmpp:alt-connections:xbosh";
-              href = "https://${cfg.serverName}/.xmpp/http-bind";
-            }
-            {
-              rel = "urn:xmpp:alt-connections:websocket";
-              href = "wss://${cfg.serverName}/.xmpp/ws";
-            }
+    services.nginx =
+      let
+        host-meta-json = pkgs.writeText "host-meta.json" (
+          builtins.toJSON {
+            links = [
+              {
+                rel = "urn:xmpp:alt-connections:xbosh";
+                href = "https://${cfg.serverName}/.xmpp/http-bind";
+              }
+              {
+                rel = "urn:xmpp:alt-connections:websocket";
+                href = "wss://${cfg.serverName}/.xmpp/ws";
+              }
 
-          ];
-        }
-      );
-      host-meta = pkgs.writeText "host-meta.xml" ''
-        <?xml version='1.0' encoding='utf-8'?>
-        <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
-          <Link rel="urn:xmpp:alt-connections:xbosh" href="https://${cfg.serverName}/.xmpp/http-bind" />
-          <Link rel="urn:xmpp:alt-connections:websocket" href="wss://${cfg.serverName}/.xmpp/ws" />
-        </XRD>
-      '';
+            ];
+          }
+        );
+        host-meta = pkgs.writeText "host-meta.xml" ''
+          <?xml version='1.0' encoding='utf-8'?>
+          <XRD xmlns='http://docs.oasis-open.org/ns/xri/xrd-1.0'>
+            <Link rel="urn:xmpp:alt-connections:xbosh" href="https://${cfg.serverName}/.xmpp/http-bind" />
+            <Link rel="urn:xmpp:alt-connections:websocket" href="wss://${cfg.serverName}/.xmpp/ws" />
+          </XRD>
+        '';
 
-      signal = pkgs.fetchurl {
-        url = "https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
-        sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
-      };
+        signal = pkgs.fetchurl {
+          url = "https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
+          sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
+        };
 
-      js = pkgs.fetchurl {
-        url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.js";
-        sha256 = "05d8dyhqh3pq69ifjhr65c937d3ll08iaxdxqjrjv08yki9micxk";
-      };
+        js = pkgs.fetchurl {
+          url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.js";
+          sha256 = "05d8dyhqh3pq69ifjhr65c937d3ll08iaxdxqjrjv08yki9micxk";
+        };
 
-      css = pkgs.fetchurl {
-        url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.css";
-        sha256 = "1w4g6y9ji9jx84ic5fl452dyv116h5x96vj572y4f62xw7dlrfi7";
-      };
+        css = pkgs.fetchurl {
+          url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.css";
+          sha256 = "1w4g6y9ji9jx84ic5fl452dyv116h5x96vj572y4f62xw7dlrfi7";
+        };
 
-      index = pkgs.writeText "index.html" ''
-        <!doctype html>
-        <html lang="en">
-        <head>
-          <meta chartset="utf-8"/>
-          <link rel="stylesheet" type="text/css" media="screen" href="converse.css">
-          <script src="signal.js" charset="utf-8"></script>
-          <script src="converse.js" charset="utf-8"></script>
-        </head>
-        <body class="converse-fullscreen">
-        <div id="conversejs-bg"></div>
+        index = pkgs.writeText "index.html" ''
+          <!doctype html>
+          <html lang="en">
+          <head>
+            <meta chartset="utf-8"/>
+            <link rel="stylesheet" type="text/css" media="screen" href="converse.css">
+            <script src="signal.js" charset="utf-8"></script>
+            <script src="converse.js" charset="utf-8"></script>
+          </head>
+          <body class="converse-fullscreen">
+          <div id="conversejs-bg"></div>
 
-        <script>
-          converse.initialize({
-              authentication: 'login',
-              bosh_service_url: 'https://${cfg.serverName}/.xmpp/http-bind/',
-              view_mode: 'fullscreen'
-          });
-        </script>
-        </body>
-        </html>
-      '';
-    in
+          <script>
+            converse.initialize({
+                authentication: 'login',
+                bosh_service_url: 'https://${cfg.serverName}/.xmpp/http-bind/',
+                view_mode: 'fullscreen'
+            });
+          </script>
+          </body>
+          </html>
+        '';
+      in
       {
         enable = true;
         virtualHosts = {

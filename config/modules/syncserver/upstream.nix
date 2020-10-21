@@ -2,9 +2,7 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-
 let
-
   # pull the python dependencies from an older nixpkgs checkout untiil I have a
   # more elegant way
   oldPkgs = import (import ../../../nix/sources.nix).nixos-1909 {
@@ -41,7 +39,6 @@ let
   user = "syncserver";
   group = "syncserver";
 in
-
 {
 
   options = {
@@ -185,6 +182,6 @@ in
       isSystemUser = true;
     };
 
-    users.groups.${group} = {};
+    users.groups.${group} = { };
   };
 }

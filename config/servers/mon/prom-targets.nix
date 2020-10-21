@@ -4,9 +4,9 @@ let
 
   hashConfig = config:
     let
-      h = if config == null || config == {} then "" else builtins.hashString "sha256" (builtins.toJSON config);
+      h = if config == null || config == { } then "" else builtins.hashString "sha256" (builtins.toJSON config);
     in
-      lib.substring 0 8 h;
+    lib.substring 0 8 h;
 
   # targetNames :: List String
   targetNames = lib.unique (lib.flatten (lib.attrValues (forAllNodes (_: v: lib.attrNames v.config.h4ck.monitoring.targets))));
@@ -15,23 +15,25 @@ let
     let
       nodesWithTarget = lib.filterAttrs (_: v: v != null) (forAllNodes (_: v: v.config.h4ck.monitoring.targets.${targetName} or null));
     in
-      lib.mapAttrs' (
+    lib.mapAttrs'
+      (
         _: v:
           let
-            job_config = let val = v.job_config or {}; in if val == null then {} else val;
+            job_config = let val = v.job_config or { }; in if val == null then { } else val;
             hash = hashConfig job_config;
             name = if hash != "" then "${targetName}-${hash}" else targetName;
           in
-            {
-              inherit name;
-              value = {
-                inherit job_config;
-                nodes = nodesWithTarget;
-              };
-            }
-      ) nodesWithTarget;
+          {
+            inherit name;
+            value = {
+              inherit job_config;
+              nodes = nodesWithTarget;
+            };
+          }
+      )
+      nodesWithTarget;
 
-  targetSets = lib.fold (a: b: a // b) {} (map targetConfigurations targetNames);
+  targetSets = lib.fold (a: b: a // b) { } (map targetConfigurations targetNames);
 
   targets =
     assert builtins.isAttrs targetSets;
@@ -44,19 +46,21 @@ let
             // (
               if (lib.attrByPath [ "static_configs" ] false conf.job_config) == false then {
                 static_configs =
-                  lib.mapAttrsToList (
-                    n: v:
-                      let
-                        targetHost = if v ? targetHost && v.targetHost != null then v.targetHost else
+                  lib.mapAttrsToList
+                    (
+                      n: v:
+                        let
+                          targetHost = if v ? targetHost && v.targetHost != null then v.targetHost else
                           nodes.${n}.config.h4ck.monitoring.targetHost;
-                      in
+                        in
                         {
                           targets = [
                             "${targetHost}:${toString v.port}"
                           ];
                         }
-                  ) conf.nodes;
-              } else {}
+                    )
+                    conf.nodes;
+              } else { }
             )
         )
         targetSets

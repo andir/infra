@@ -7,12 +7,12 @@ let
     let
       path = ../../../secrets/mail.nix;
       default = {
-        domains = [];
-        loginAccounts = {};
+        domains = [ ];
+        loginAccounts = { };
       };
       exists = builtins.pathExists path;
     in
-      if exists then import path else default;
+    if exists then import path else default;
 in
 {
 
@@ -99,24 +99,28 @@ in
   # zone interpretation when more specific records in the same file exist
   h4ck.monitoring.dns = (
     lib.listToAttrs (
-      map (
-        domain:
+      map
+        (
+          domain:
           lib.nameValuePair domain {
             queryType = "MX";
           }
-      ) config.mailserver.domains
+        )
+        config.mailserver.domains
     )
   )
   # also ensure that all the domains have valid domainkeys set otherwise DKIM
   # validation fails
   // (
     lib.listToAttrs (
-      map (
-        domain:
+      map
+        (
+          domain:
           lib.nameValuePair "mail._domainkey.${domain}" {
             queryType = "TXT";
           }
-      ) config.mailserver.domains
+        )
+        config.mailserver.domains
     )
   );
 
