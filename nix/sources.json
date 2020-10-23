@@ -5,10 +5,10 @@
         "homepage": null,
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5265d49a36bb5a18c85e6817b338b456acc3b8cc",
-        "sha256": "0cab38mj3f5ip0hld6wqwxsg4lj6d285kw71d2c8mnk2nk5bk4q6",
+        "rev": "007126eef72271480cb7670e19e501a1ad2c1ff2",
+        "sha256": "1rfvw560vp2wn3dxdhqn1rk1fgk0ak9lnqm2dqpnsrkl4b8ay9mq",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/5265d49a36bb5a18c85e6817b338b456acc3b8cc.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/007126eef72271480cb7670e19e501a1ad2c1ff2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "3f97c340c4bd4dcc2af5b7ff44beffbf793ef97a",
+        "rev": "03bdaf83d670576f6cf0e75c552b612ac9584ad6",
         "type": "git"
     },
     "dn42-regparse": {
@@ -122,10 +122,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5265d49a36bb5a18c85e6817b338b456acc3b8cc",
-        "sha256": "0cab38mj3f5ip0hld6wqwxsg4lj6d285kw71d2c8mnk2nk5bk4q6",
+        "rev": "007126eef72271480cb7670e19e501a1ad2c1ff2",
+        "sha256": "1rfvw560vp2wn3dxdhqn1rk1fgk0ak9lnqm2dqpnsrkl4b8ay9mq",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/5265d49a36bb5a18c85e6817b338b456acc3b8cc.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/007126eef72271480cb7670e19e501a1ad2c1ff2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "photoprism": {
