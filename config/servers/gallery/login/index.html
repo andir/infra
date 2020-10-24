@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+		<title>Login</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+	</head>
+	<body>
+
+		<form>
+			<p id="warnings"></p>
+			<label for="code">Code</label>
+			<input type="text" id="code" placeholder="Ihr code"/>
+			<button id="redirect">Los!</button>
+		</form>
+		<script type="application/javascript">
+			window.onload = function() {
+				var targetPrefix = "https://gallery.rammhold.de/s/"
+				var button = document.getElementById("redirect");
+				var input = document.getElementById("code");
+				var warnings = document.getElementById("warnings");
+
+				// Check if the URL is valid (HTTP status 200)
+				// If the user made a typo accessing the URL will return a redirect
+				function checkUrl(url, ok, failure) {
+					const req = new XMLHttpRequest();
+					req.open("GET", url, true)
+					req.onreadystatechange = function(e) {
+						if (this.readyState == 4) {
+							console.log(this.status);
+							console.log(this.responseURL);
+							if (this.status == 200 && this.responseURL == url) {
+								if (!ok) return;
+								ok();
+							} else {
+								if (!failure) return;
+								failure();
+							}
+						}
+					};
+					req.onerror = function(e) {
+						console.log(e);
+						if (!failure) return;
+						failure();
+					};
+					req.send(null);
+				}
+
+				function onButtonClick() {
+					warnings.innerText = "";
+					var val = input.value.trim();
+					if (input.value === "") {
+						return;
+					}
+					const url = targetPrefix + val;
+
+					checkUrl(url, function() {
+						window.location = url;
+					}, function() {
+						warnings.innerText = "Falscher Code";
+					});
+
+				}
+
+				button.onclick = function(e) {
+					e.preventDefault();
+					button.disabled = true;
+					onButtonClick()
+					button.disabled = false;
+				};
+			};
+		</script>
+	</body>
+</html>

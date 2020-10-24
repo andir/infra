@@ -4,6 +4,7 @@
   imports = [
     ../../profiles/hetzner-vm.nix
     ./ftp.nix
+    ./login.nix
   ];
 
   deployment = {
