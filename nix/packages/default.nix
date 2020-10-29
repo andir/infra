@@ -63,15 +63,6 @@ self: super: {
   photoprism = self.callPackage ./photoprism {
     src = sources.photoprism;
     ranz2nix = sources.ranz2nix;
-    libtensorflow-bin =
-      let
-        unbroken = self.libtensorflow-bin.overrideAttrs ({ meta, ... }: {
-          meta = meta // {
-            broken = false;
-          };
-        });
-      in
-      assert self.libtensorflow-bin.meta.broken; unbroken;
   };
 
   fping_exporter = self.callPackage ./fping-exporter.nix { };
