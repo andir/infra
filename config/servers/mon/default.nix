@@ -35,12 +35,18 @@
       "2a01:4f9:c010:c50::/128"
     ];
     vm.persistentDisks."/data".id = 6865535;
+    vm.persistentDisks."/influx".id = 7753050;
   };
   fileSystems = {
     "/var/lib/prometheus2" = {
       fsType = "none";
       options = [ "bind" ];
       device = "/data/prometheus2";
+    };
+    "/var/db/influxdb" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/influx/data";
     };
   };
 
@@ -102,8 +108,33 @@
     };
   };
 
+  services.influxdb = {
+    enable = true;
+  };
+  systemd.services."influxdb-init-database" = {
+    wantedBy = [ "multi-user.target" ];
+    after = [ "influxdb.service" ];
+    path = [
+      config.services.influxdb.package
+    ];
+    script = ''
+      influx -execute 'CREATE DATABASE prometheus WITH DURATION 104w'
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      User = config.services.influxdb.user;
+      Group = config.services.influxdb.group;
+    };
+  };
+
+  systemd.services.influxdb = {
+    serviceConfig.RequiresMountsFor = "/var/db/influxdb";
+  };
+
   # use my custom `grafanaPlugins` attribute to enable plugins on the installed grafana
-  systemd.tmpfiles.rules = lib.mapAttrsToList
+  systemd.tmpfiles.rules = [
+    "d /influx/data 0755 influxdb influxdb"
+  ] ++ lib.mapAttrsToList
     (
       pluginName: plugin:
         "L ${config.services.grafana.dataDir}/plugins/${pluginName} - - - - ${plugin}"
