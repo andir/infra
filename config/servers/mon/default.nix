@@ -35,7 +35,9 @@
       "2a01:4f9:c010:c50::/128"
     ];
     vm.persistentDisks."/data".id = 6865535;
+    vm.persistentDisks."/postgresql".id = 7750822;
   };
+
   fileSystems = {
     "/var/lib/prometheus2" = {
       fsType = "none";
@@ -103,7 +105,10 @@
   };
 
   # use my custom `grafanaPlugins` attribute to enable plugins on the installed grafana
-  systemd.tmpfiles.rules = lib.mapAttrsToList
+  systemd.tmpfiles.rules = [
+    "d /postgresql/data 0755 postgres -"
+  ] ++
+  lib.mapAttrsToList
     (
       pluginName: plugin:
         "L ${config.services.grafana.dataDir}/plugins/${pluginName} - - - - ${plugin}"
@@ -136,6 +141,64 @@
       enableACME = true;
       forceSSL = true;
       locations."/".proxyPass = "http://localhost:3000/";
+    };
+  };
+
+  services.postgresql = {
+    enable = true;
+    extraPlugins = [
+      (config.services.postgresql.package.pkgs.timescaledb.overrideAttrs ({ postInstall ? "", ... }: {
+        postInstall = postInstall + ''
+
+        # ensure that non-superusers are allowed to load this extension
+        echo "superuser = false" >> $out/share/postgresql/extension/timescaledb.control
+        # pg >= 13 requires the following:
+        # echo "trusted = true" >> $out/share/postgresql/extension/timescaledb.control
+      '';
+      }))
+    ];
+    settings.shared_preload_libraries = "timescaledb";
+    dataDir = "/postgresql/data/${config.services.postgresql.package.psqlSchema}";
+    ensureDatabases = [ "promscale" ];
+    ensureUsers = [
+      {
+        name = "postgres";
+        ensurePermissions = {
+          "DATABASE promscale" = "ALL PRIVILEGES";
+        };
+      }
+    ];
+  };
+
+  users.users.promscale = { };
+  systemd.services.promscale = {
+    wantedBy = [ "multi-user.target" ];
+    after = [ "postgresql.service" ];
+    bindsTo = [ "postgresql.service" ];
+    environment = {
+      TS_PROM_LOG_LEVEL = "debug";
+      TS_PROM_DB_CONNECT_RETRIES = "10";
+      TS_PROM_DB_HOST = "/run/postgresql";
+      TS_PROM_DB_NAME = "promscale";
+      TS_PROM_DB_USER = "promscale";
+      TS_PROM_DB_SSL_MODE = "prefer";
+      TS_PROM_WEB_TELEMETRY_PATH = "/metrics";
+      TS_PROM_WEB_LISTEN_ADDRESS = ":9201";
+    };
+    serviceConfig = {
+      User = "promscale";
+      ExecStart = "${pkgs.promscale}/bin/promscale";
+      PrivateTmp = true;
+      PrivateDevices = true;
+      ProtectHostname = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      LocalPersonality = true;
+      RestrictRealtime = true;
+      PrivateMounts = true;
+      ProtectSystem = "full";
+      NoNewPrivileges = true;
     };
   };
 }

@@ -75,4 +75,6 @@ self: super: {
   };
 
   fping_exporter = self.callPackage ./fping-exporter.nix { };
+
+  promscale = unstable.promscale;
 }
