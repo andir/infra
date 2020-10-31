@@ -27,6 +27,14 @@
     domain = "it";
   };
 
+  h4ck.wireguardBackbone = {
+    addresses = [
+      "fe80::4/64"
+      "172.20.25.3/32"
+      "fd21:a07e:735e:ffff::4/128"
+    ];
+  };
+
   fileSystems."/".fsType = "btrfs";
   boot.initrd.luks.devices."rootfs".device = "/dev/disk/by-uuid/07586358-3815-4873-99dd-832319e71a53";
 
