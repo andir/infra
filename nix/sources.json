@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "1fd29937b4f3ac85727333cb3017f6bdd048e002",
+        "rev": "85465a98486b91d56f78edfacae6513d414102d5",
         "type": "git"
     },
     "dn42-regparse": {
@@ -101,7 +101,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
-        "rev": "eba19686fba5ff7120f0a2671f6b09fae6be2a94",
+        "rev": "c04260cf5e685fc99ccb669654e147f94e3de8a4",
         "type": "git"
     },
     "nixpkgs": {
