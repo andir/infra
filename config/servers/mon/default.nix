@@ -46,7 +46,7 @@
 
   services.prometheus = {
     enable = true;
-    extraFlags = [ "--storage.tsdb.retention.time 720d" ];
+    extraFlags = [ "--storage.tsdb.retention.time 120d" ];
     globalConfig.scrape_interval = "15s";
     alertmanagers = [
       {
