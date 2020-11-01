@@ -1,6 +1,7 @@
 {
   imports = [
     ../../modules/base.nix
+    ../../modules/no-slipstream.nix
     ../../modules/authorative-dns.nix
     ../../modules/backup.nix
     ../../modules/blackbox_exporter.nix
