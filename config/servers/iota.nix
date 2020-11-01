@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   imports = [
     ../profiles/hetzner-vm.nix
@@ -150,4 +151,32 @@
     };
   };
 
+  systemd.services.tmate = {
+    # FIXME: This is currently complaining about not running as root while
+    #        trying to init the "jail" and likely otherwise would just work.
+    # Usage:
+    # $ ssh-keygen -l -f ~/.ssh/known_hosts  | grep tmate.h4ck.space
+    # SHA256:5U7MF7nnBrIETnZGlGanooGmqdNw4HuD5ztMwROGOh0 [tmate.h4ck.space]:2222,[95.216.155.219]:2222 (ED25519)
+    # $ cat - > ~/.tmate.conf <<EOF
+    # set -g tmate-server-host "tmate.h4ck.space"
+    # set -g tmate-server-port 2222
+    # set -g tmate-server-ed25519-fingerprint "SHA256:5U7MF7nnBrIETnZGlGanooGmqdNw4HuD5ztMwROGOh0"
+    # EOF
+    # nix-shell -p tmate --run "tmate -F"
+    enable = false;
+    wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    preStart = ''
+      cd $STATE_DIRECTORY
+      test -e $STATE_DIRECTORY/ssh_host_ed25519_key || ${pkgs.openssh}/bin/ssh-keygen -t ed25519 -N "" -f $STATE_DIRECTORY/ssh_host_ed25519_key
+    '';
+    script = ''
+      ${pkgs.tmate-ssh-server}/bin/tmate-ssh-server -p 2222 -h tmate.h4ck.space -k $STATE_DIRECTORY/
+    '';
+    serviceConfig = {
+      DynamicUser = true;
+      RuntimeDirectory = "tmate";
+      StateDirectory = "tmate";
+    };
+  };
 }
