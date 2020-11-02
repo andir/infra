@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "85465a98486b91d56f78edfacae6513d414102d5",
+        "rev": "4aa6ec8c1629b7db5eb0da18d366cccf8d462477",
         "type": "git"
     },
     "dn42-regparse": {
@@ -79,10 +79,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "9d35b9e4837ab88517210b1701127612c260eccf",
-        "sha256": "0q50xhnm8g2yfyakrh0nly4swyygxpi0a8cb9gp65wcakcgvzvdh",
+        "rev": "20c899271f288d33114760bc298838575fc6c7f9",
+        "sha256": "07zswk6dhlydihl9g6skmy52grjvqpra8r98f2dmbgwzc1yhjhxq",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/9d35b9e4837ab88517210b1701127612c260eccf.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/20c899271f288d33114760bc298838575fc6c7f9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixos-1909": {
@@ -134,10 +134,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "a7098a2d414be30a7718590cc81b6eb52a7ae19a",
-        "sha256": "1q1j5dqi2jhlw1d5pirhz68nlkskn02m38184i9nad3ckidq2pb3",
+        "rev": "b540e4ec0352b62a96ccc357ee405af8e3d289d6",
+        "sha256": "19s6xg21h1f1z1na858p5s31v7c2y98xf3pgi986cyii3xr7pbj5",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/a7098a2d414be30a7718590cc81b6eb52a7ae19a.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/b540e4ec0352b62a96ccc357ee405af8e3d289d6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
@@ -146,10 +146,10 @@
         "homepage": "",
         "owner": "cachix",
         "repo": "pre-commit-hooks.nix",
-        "rev": "efdbd6d28f7f44db3d9f8cf0e0b4cb9db0d259e1",
-        "sha256": "1qngfbp1bqn52ipf992vrj4vp1cvvcv2yvzp0fs9yawqjxzk4j5m",
+        "rev": "117579f3cfe4c0abeff70631fa31261d5ea99cfd",
+        "sha256": "1bjvadx76rlf54b43agfx1w35wqpagzihdv2yy0jsrk1glxc15ax",
         "type": "tarball",
-        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/efdbd6d28f7f44db3d9f8cf0e0b4cb9db0d259e1.tar.gz",
+        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/117579f3cfe4c0abeff70631fa31261d5ea99cfd.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "publictransport": {
