@@ -1,14 +1,14 @@
 {
     "bertha-nixpkgs": {
-        "branch": "nixos-unstable",
+        "branch": "unbound-systemd",
         "description": "Nix Packages collection",
         "homepage": null,
-        "owner": "NixOS",
+        "owner": "andir",
         "repo": "nixpkgs",
-        "rev": "1dc37370c489b610f8b91d7fdd40633163ffbafd",
-        "sha256": "1qvfxf83rya7shffvmy364p79isxmzcq4dxa0lkm5b3ybicnd8f4",
+        "rev": "5903ea539513c8ec2a1412d88465559b957b6483",
+        "sha256": "1554xw66br7x6s0dd28jgx08rnvf8m4f5jl7hpdw5ssh9scvy303",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/1dc37370c489b610f8b91d7fdd40633163ffbafd.tar.gz",
+        "url": "https://github.com/andir/nixpkgs/archive/5903ea539513c8ec2a1412d88465559b957b6483.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "4aa6ec8c1629b7db5eb0da18d366cccf8d462477",
+        "rev": "3d478f7c965c10901c44f913ba728102e80c0e8c",
         "type": "git"
     },
     "dn42-regparse": {
@@ -110,10 +110,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "edb26126d98bc696f4f3e206583faa65d3d6e818",
-        "sha256": "1cl4ka4kk7kh3bl78g06dhiidazf65q8miyzaxi9930d6gwyzkci",
+        "rev": "d105075a1fd870b1d1617a6008cb38b443e65433",
+        "sha256": "1jcs44wn0s6mlf2jps25bvcai1rij9b2dil6zcj8zqwf2i8xmqjh",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/edb26126d98bc696f4f3e206583faa65d3d6e818.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/d105075a1fd870b1d1617a6008cb38b443e65433.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
@@ -122,10 +122,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "1dc37370c489b610f8b91d7fdd40633163ffbafd",
-        "sha256": "1qvfxf83rya7shffvmy364p79isxmzcq4dxa0lkm5b3ybicnd8f4",
+        "rev": "34ad166a830d3ac1541dcce571c52231f2f0865a",
+        "sha256": "1jvi1562x3kq65w642vfimpszv65zbc7c2nv8gakhzcx4n3f47xq",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/1dc37370c489b610f8b91d7fdd40633163ffbafd.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/34ad166a830d3ac1541dcce571c52231f2f0865a.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "photoprism": {

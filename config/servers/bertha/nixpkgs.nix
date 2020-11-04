@@ -6,6 +6,13 @@ in
   nixpkgs.pkgs = import bertha-nixpkgs {
     overlays = [
       (import ../../../nix/packages/default.nix { inherit sources; })
+      (self: super: {
+        lego = super.lego.overrideAttrs (_: {
+          patches = [
+            ../../../retry.diff
+          ];
+        });
+      })
     ];
     config = {
       # allow the mongodb that comes with unifi
