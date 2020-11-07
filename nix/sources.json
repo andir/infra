@@ -27,7 +27,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "3d478f7c965c10901c44f913ba728102e80c0e8c",
+        "rev": "7f494d9b33474ea85392b5c7a910cbd111579fd2",
         "type": "git"
     },
     "dn42-regparse": {
@@ -79,10 +79,10 @@
         "homepage": "https://github.com/nmattia/niv",
         "owner": "nmattia",
         "repo": "niv",
-        "rev": "20c899271f288d33114760bc298838575fc6c7f9",
-        "sha256": "07zswk6dhlydihl9g6skmy52grjvqpra8r98f2dmbgwzc1yhjhxq",
+        "rev": "ba57d5a29b4e0f2085917010380ef3ddc3cf380f",
+        "sha256": "1kpsvc53x821cmjg1khvp1nz7906gczq8mp83664cr15h94sh8i4",
         "type": "tarball",
-        "url": "https://github.com/nmattia/niv/archive/20c899271f288d33114760bc298838575fc6c7f9.tar.gz",
+        "url": "https://github.com/nmattia/niv/archive/ba57d5a29b4e0f2085917010380ef3ddc3cf380f.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixos-1909": {
@@ -146,10 +146,10 @@
         "homepage": "",
         "owner": "cachix",
         "repo": "pre-commit-hooks.nix",
-        "rev": "117579f3cfe4c0abeff70631fa31261d5ea99cfd",
-        "sha256": "1bjvadx76rlf54b43agfx1w35wqpagzihdv2yy0jsrk1glxc15ax",
+        "rev": "ff137b7c39681b2eeeaa9bbbf86a03891099ae46",
+        "sha256": "0a8ivc1xgxlf3w9m740z9z3cgdb0hfh0yx4nd3nli8dmaxr55cms",
         "type": "tarball",
-        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/117579f3cfe4c0abeff70631fa31261d5ea99cfd.tar.gz",
+        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/ff137b7c39681b2eeeaa9bbbf86a03891099ae46.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "publictransport": {
