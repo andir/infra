@@ -44,7 +44,10 @@ let
 in
 {
   options.router = {
-    enable = mkEnableOption "enable the router module";
+    enable = mkEnableOption "route";
+
+    enableAvahiReflector = mkEnableOption "route avahi reflector on downstream interfaces";
+
     upstreamInterfaces = mkOption {
       description = "upstream interfaces";
       type = types.listOf types.str;
@@ -253,5 +256,14 @@ in
           }
         ];
       };
+
+    services.avahi = lib.mkIf cfg.enableAvahiReflector {
+      enable = true;
+      reflector = true;
+      publish.enable = true; # FIXME: required?
+      ipv4 = true;
+      ipv6 = true;
+      interfaces = map (iface: iface.interface) cfg.downstreamInterfaces;
+    };
   };
 }

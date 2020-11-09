@@ -5,7 +5,7 @@ in
 {
   nixpkgs.pkgs = import bertha-nixpkgs {
     overlays = [
-      (import ../../../nix/packages/default.nix { inherit sources; })
+      (import ../../../nix/packages/default.nix { inherit sources; system = "x86_64-linux"; })
       (self: super: {
         lego = super.lego.overrideAttrs (_: {
           patches = [

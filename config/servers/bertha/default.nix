@@ -16,6 +16,7 @@ let
 
           # test the configuration
           nft --file $file
+          set +x
         ''
       );
     in
@@ -162,6 +163,7 @@ in
   # configures the upstream interfaces, requests PD, …
   router = {
     enable = true;
+    enableAvahiReflector = true;
     upstreamInterfaces = [ "uplink" ];
     downstreamInterfaces = [
       {
@@ -258,6 +260,10 @@ in
         udp sport bootpc udp dport bootps accept comment "DHCP clients"
         udp dport { domain, domain-s } accept
         tcp dport { domain, domain-s } accept
+        ${lib.optionalString (config.router.enableAvahiReflector) ''
+          udp dport { mdns } accept
+          tcp dport { mdns } accept
+        ''}
       }
 
       chain agx_input {
