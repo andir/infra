@@ -3,7 +3,7 @@ let
   unstable = import sources.nixpkgs-unstable { inherit system; };
 in
 self: super: {
-  inherit sources;
+  inherit sources unstable;
   knot_exporter = self.callPackage ./knot_exporter.nix {
     src = sources.knot_exporter;
   };
