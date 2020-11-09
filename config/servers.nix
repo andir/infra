@@ -1,18 +1,22 @@
 let
   inherit (import ./lib.nix) mkMachine;
-  pkgs = import ../nix;
+  pkgs = import ../nix { };
   sources = import ../nix/sources.nix;
 in
 {
 
   network = {
     description = "foo";
-    inherit pkgs;
+    #inherit pkgs;
     #nixConfig.post-build-hook = "${pkgs.writeScript "post-build-hook" ''
     #  #!${pkgs.stdenv.shell}
     #  set -ex
     #  echo "$@" > .buildpaths
     #''}";
+
+    inherit (pkgs) runCommand;
+
+    lib = import (pkgs.path + "/lib");
 
     evalConfig = machineName:
       let
@@ -21,15 +25,20 @@ in
       import (prefix + "/nixos/lib/eval-config.nix");
   };
 
-  "jh4all.de" = mkMachine ./servers/jh4all.nix;
-  iota = mkMachine ./servers/iota.nix;
-  "kack.it" = mkMachine ./servers/kack-it;
+  "jh4all.de" = mkMachine { config = ./servers/jh4all.nix; };
+  iota = mkMachine { config = ./servers/iota.nix; };
+  "kack.it" = mkMachine { config = ./servers/kack-it; };
 
-  mail = mkMachine ./servers/mail;
+  mail = mkMachine { config = ./servers/mail; };
 
-  mon = mkMachine ./servers/mon;
+  mon = mkMachine { config = ./servers/mon; };
 
-  bertha = mkMachine ./servers/bertha;
+  bertha = mkMachine { config = ./servers/bertha; };
 
-  gallery = mkMachine ./servers/gallery;
+  gallery = mkMachine { config = ./servers/gallery; };
+
+  crappy = mkMachine {
+    config = ./servers/crappy;
+    system = "aarch64-linux";
+  };
 }

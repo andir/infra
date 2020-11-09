@@ -1,6 +1,6 @@
-{ sources }:
+{ sources, system }:
 let
-  unstable = import sources.nixpkgs-unstable { };
+  unstable = import sources.nixpkgs-unstable { inherit system; };
 in
 self: super: {
   inherit sources;
