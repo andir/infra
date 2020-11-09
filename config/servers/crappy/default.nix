@@ -23,4 +23,6 @@
     };
   };
 
+  services.spotifyd.enable = true;
+
 }
