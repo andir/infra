@@ -22,11 +22,12 @@
   boot.loader.raspberryPi.uboot.enable = false;
 
   boot.loader.raspberryPi.firmwareConfig = ''
-    dtparam=audio=off
-    dtoverlay=vc4-kms-v3d
+    dtparam=audio=on
+    #dtoverlay=vc4-kms-v3d
     # disable_overscan=1
     # gpu_mem=64
     # hdmi_drive=2
+    # hdmi_group=1
     # hdmi_force_hotplug=1
     # hdmi_force_edid_audio=1
     # gpu_freq=250
@@ -35,7 +36,7 @@
 
   #  !!! If your board is a Raspberry Pi 3, select not latest (5.8 at the time)
   #  !!! as it is currently broken (see https://github.com/NixOS/nixpkgs/issues/97064)
-  boot.kernelPackages = pkgs.linuxPackages;
+  boot.kernelPackages = pkgs.linuxPackages_rpi3;
 
   # !!! Needed for the virtual console to work on the RPi 3, as the default of 16M doesn't seem to be enough.
   # If X.org behaves weirdly (I only saw the cursor) then try increasing this to 256M.
@@ -85,7 +86,14 @@
       isExecutable = true;
       inherit (pkgs.buildPackages) bash;
       path = with pkgs.buildPackages; [ coreutils gnused gnugrep ];
-      firmware = pkgs.unstable.raspberrypifw;
+      firmware = pkgs.unstable.raspberrypifw.overrideAttrs (_: {
+        src = pkgs.fetchFromGitHub {
+          owner = "raspberrypi";
+          repo = "firmware";
+          rev = "0c3ecac52e4ef4dde82e6261b917fd77a884be37";
+          sha256 = "01fhdcfnxh60m8ak666n1sjj88ryxqifba7grqxq2djnx8qrpdqq";
+        };
+      });
       targetDir = "/firmware";
       configTxt = pkgs.writeText "config.txt" ''
         kernel=u-boot-rpi3.bin

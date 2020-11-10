@@ -25,19 +25,41 @@ in
       import (prefix + "/nixos/lib/eval-config.nix");
   };
 
-  "jh4all.de" = mkMachine { config = ./servers/jh4all.nix; };
-  iota = mkMachine { config = ./servers/iota.nix; };
-  "kack.it" = mkMachine { config = ./servers/kack-it; };
+  "jh4all.de" = mkMachine {
+    name = "jh4all.de";
+    config = ./servers/jh4all.nix;
+  };
+  iota = mkMachine {
+    name = "iota";
+    config = ./servers/iota.nix;
+  };
+  "kack.it" = mkMachine {
+    name = "kack.it";
+    config = ./servers/kack-it;
+  };
 
-  mail = mkMachine { config = ./servers/mail; };
+  mail = mkMachine {
+    name = "mail";
+    config = ./servers/mail;
+  };
 
-  mon = mkMachine { config = ./servers/mon; };
+  mon = mkMachine {
+    name = "mon";
+    config = ./servers/mon;
+  };
 
-  bertha = mkMachine { config = ./servers/bertha; };
+  bertha = mkMachine {
+    name = "bertha";
+    config = ./servers/bertha;
+  };
 
-  gallery = mkMachine { config = ./servers/gallery; };
+  gallery = mkMachine {
+    name = "gallery";
+    config = ./servers/gallery;
+  };
 
   crappy = mkMachine {
+    name = "crappy";
     config = ./servers/crappy;
     system = "aarch64-linux";
   };
