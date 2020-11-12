@@ -6,8 +6,8 @@
   ];
 
   deployment = {
-    targetHost = "fd21:a07e:735e:ff01:ba27:ebff:fecb:b5da";
-    targetUser = "root";
+    targetHost = "10.250.11.121";
+    targetUser = "morph";
     substituteOnDestination = false; # TODO: is this faster?
   };
   h4ck.monitoring.targetHost = config.deployment.targetHost;

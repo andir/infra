@@ -66,4 +66,6 @@ self: super: {
   };
 
   fping_exporter = self.callPackage ./fping-exporter.nix { };
+
+  rockpi4 = self.callPackage ./rockpi4 { };
 }

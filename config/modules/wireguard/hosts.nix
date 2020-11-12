@@ -62,6 +62,7 @@ in
 
   options.h4ck.wireguard.hosts = lib.mkOption {
     type = lib.types.attrs;
+    default = { };
   };
   config.h4ck.wireguardBackbone = mkConfig currentNodeName;
 }
