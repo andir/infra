@@ -54,8 +54,12 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    mpv
+    rockpi4.mpv
     youtube-dl
     raspberrypi-tools
+    rockpi4.mpp
+    rockpi4.ffmpeg
   ];
+
+  hardware.opengl.enable = true;
 }
