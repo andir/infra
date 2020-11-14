@@ -11,6 +11,7 @@
   boot.loader.generic-extlinux-compatible.enable = true;
 
   hardware.enableRedistributableFirmware = true;
+  hardware.enableAllFirmware = true;
 
   boot.kernelParams = [
     "console=ttyS0,1500000n8"
