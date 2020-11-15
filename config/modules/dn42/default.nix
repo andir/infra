@@ -70,7 +70,7 @@ in
                   type = types.submodule {
                     options = {
                       localPort = mkOption { type = types.ints.unsigned; };
-                      remoteEndpoint = mkOption { type = types.str; };
+                      remoteEndpoint = mkOption { type = types.nullOr types.str; };
                       remotePort = mkOption { type = types.port; };
                       remotePublicKey = mkOption { type = wireguardKeyType; };
                     };
