@@ -281,7 +281,6 @@ in
         ip6 nexthdr icmpv6 icmpv6 type { nd-router-advert } accept
         ip6 nexthdr udp udp sport dhcpv6-server udp dport dhcpv6-client accept
         ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
-
       }
 
       chain output {
@@ -465,11 +464,12 @@ in
         };
       };
 
-      flokli-ws = {
+      flokli_ws = {
         tunnelType = "wireguard";
         mtu = 1500;
         wireguardConfig = {
           localPort = 42018;
+          remoteEndpoint = null;
           remotePublicKey = "Fq5x85Drr0f/3EIXMyANPmu3dZMlTAWebjJ1cI91R3A=";
         };
         bgp = {
