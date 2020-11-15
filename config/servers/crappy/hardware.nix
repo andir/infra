@@ -40,6 +40,8 @@
     RuntimeMaxUse=64M
   '';
 
+  networking.useNetworkd = true;
+  networking.useDHCP = false;
   systemd.network = {
     networks = {
       "0-default" = {

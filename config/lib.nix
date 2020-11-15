@@ -16,6 +16,7 @@ in
                 inherit system name;
               });
               inherit system;
+              config = import ../nix/config.nix;
             };
           }
         )

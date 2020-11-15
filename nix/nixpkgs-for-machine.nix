@@ -1,4 +1,4 @@
-{ name, system, config ? import ./config.nix }:
+{ name, system, config ? null }:
 let
   sources = import ./sources.nix;
   overlays = import ./overlays.nix { inherit system; };
@@ -9,4 +9,4 @@ if sources ? "${name}-nixpkgs" then
     inherit system;
     inherit overlays;
   }
-else import ./default.nix { inherit system config; }
+else import ./default.nix ({ inherit system; } // (if config != null then config else { }))
