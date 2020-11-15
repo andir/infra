@@ -464,6 +464,26 @@ in
           };
         };
       };
+
+      flokli-ws = {
+        tunnelType = "wireguard";
+        mtu = 1500;
+        wireguardConfig = {
+          localPort = 42018;
+          remotePublicKey = "Fq5x85Drr0f/3EIXMyANPmu3dZMlTAWebjJ1cI91R3A=";
+        };
+        bgp = {
+          asn = 4242422100;
+          local_pref = 100;
+        };
+        addresses = {
+          ipv6 = {
+            local_address = "fe80::1";
+            remote_address = "fe80::2";
+            prefix_length = 64;
+          };
+        };
+      };
     };
   };
 
