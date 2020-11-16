@@ -1,6 +1,6 @@
-{ sources, system }:
+{ sources, system, config }:
 let
-  unstable = import sources.nixpkgs-unstable { inherit system; };
+  unstable = import sources.nixpkgs-unstable { inherit system config; };
 in
 self: super: {
   inherit sources unstable;
@@ -68,4 +68,11 @@ self: super: {
   fping_exporter = self.callPackage ./fping-exporter.nix { };
 
   rockpi4 = self.callPackage ./rockpi4 { };
+
+  lego = super.lego.overrideAttrs (_: {
+    patches = [
+      ./lego-retry.diff
+    ];
+  });
+
 }

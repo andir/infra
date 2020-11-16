@@ -1,11 +1,11 @@
-{ system }:
+{ system, config }:
 let
   sources = import ./sources.nix;
 in
 [
   (_: pkgs: { inherit (import sources.niv { }) niv; })
   (_: _: { c3schedule = import sources.c3schedule { }; })
-  (import ./packages { inherit sources system; })
+  (import ./packages { inherit sources system config; })
   (_: _: { nix-pre-commit-hooks = import (sources."pre-commit-hooks.nix"); })
   (
     _: pkgs: {
