@@ -424,7 +424,6 @@ in
 
                   template bgp dn42_${peer.name}_tpl {
                     local as ${toString cfg.bgp.asn};
-                    #import keep filtered;
                     graceful restart on;
                     graceful restart time 120;
                     interpret communities on;
@@ -443,6 +442,10 @@ in
                       add paths on;
                       import filter dn42_${peer.name}_import;
                       export filter dn42_${peer.name}_export;
+                      import keep filtered on;
+                      ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn) ''
+                        next hop self on;
+                      ''}
                       ${optionalString (peer.bgp.import_limit != null) "import limit ${toString peer.bgp.import_limit} action block;"}
                     };
                     ipv6 {
@@ -453,6 +456,10 @@ in
                       add paths on;
                       import filter dn42_${peer.name}_import;
                       export filter dn42_${peer.name}_export;
+                      import keep filtered on;
+                      ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn) ''
+                        next hop self on;
+                      ''}
                       ${optionalString (peer.bgp.import_limit != null) "import limit ${toString peer.bgp.import_limit} action block;"}
                     };
                   }
