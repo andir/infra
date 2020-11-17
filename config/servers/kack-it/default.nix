@@ -117,5 +117,16 @@
     forceSSL = true;
   };
 
+  services.grocy = {
+    enable = true;
+    nginx.enableSSL = true;
+    hostName = "grocy.rammhold.de";
+    settings = {
+      currency = "EUR";
+      culture = "de";
+      calendar.firstDayOfWeek = 1;
+    };
+  };
+
   system.stateVersion = "19.03";
 }
