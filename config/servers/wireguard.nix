@@ -19,7 +19,7 @@
     bertha = {
       addresses = [
         "fe80::1/64"
-        "172.20.24.1/32"
+        "172.20.25.4/32"
         "fd21:a07e:735e:ffff::1/128"
       ];
       publicKey = "6A8qvwQnxOqo8EPntT7VmoR6PVUI7fHhE6zs8P7rVGk=";
