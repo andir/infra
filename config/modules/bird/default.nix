@@ -17,6 +17,7 @@ in
     };
   };
   config = mkIf cfg.enable {
+    users.groups.bird2.members = mkIf (config.users.users ? andi) [ "andi" ];
     services.bird2 = {
       enable = true;
       config = mkMerge [
