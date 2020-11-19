@@ -91,8 +91,8 @@ in
     };
 
     addresses = lib.mkOption {
-      default = [ ];
-      type = lib.types.listOf (lib.types.str);
+      default = null;
+      type = lib.types.nullOr (lib.types.listOf (lib.types.str));
     };
 
     peers = lib.mkOption {
@@ -104,10 +104,8 @@ in
   config =
     let
       cfg = config.h4ck.wireguardBackbone;
-      firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) cfg.addresses);
-      firstV4Address = lib.head (builtins.split "/" firstV4Net);
     in
-    lib.mkIf (cfg.peers != { } && cfg.addresses != [ ]) {
+    lib.mkIf (cfg.peers != { }) {
       environment.systemPackages = [ pkgs.wireguard ];
       systemd.tmpfiles.rules = [
         "d ${config.h4ck.wireguardBackbone.dataDir} 700 systemd-network systemd-network - -"
@@ -137,7 +135,6 @@ in
       boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
       h4ck.bird = {
         enable = true;
-        routerId = firstV4Address;
       };
       services.bird2 = {
         enable = lib.mkDefault true;
