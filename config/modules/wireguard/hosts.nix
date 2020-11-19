@@ -20,9 +20,11 @@ let
           b = selfName;
         }
       );
+
         wireLib.genPort 15000 16000 a b;
 
       peerConfig = cfg.hosts.${peerName};
+      selfConfig = cfg.hosts.${selfName};
     in
     {
       babel = lib.mkDefault true;
@@ -34,6 +36,7 @@ let
         );
       remotePort = lib.mkDefault port;
       localPort = lib.mkDefault port;
+      localAddresses = lib.mkDefault selfConfig.addresses;
       remoteAddresses = lib.mkDefault peerConfig.addresses;
       remotePublicKey = lib.mkDefault peerConfig.publicKey;
     };
@@ -56,6 +59,14 @@ let
           }
         )
     else { };
+  loopbackAddresses = lib.attrByPath [ "hosts" currentNodeName "loopbackAddresses" ] null cfg;
+
+  firstV4Net = lib.head (lib.filter (addr: ! (builtins.elem ":" (builtins.split "" addr))) loopbackAddresses);
+  firstV4Address = lib.head (builtins.split "/" firstV4Net);
+
+  firstV6Net = lib.head (lib.filter (addr: (builtins.elem ":" (builtins.split "" addr))) loopbackAddresses);
+  firstV6Address = lib.head (builtins.split "/" firstV6Net);
+
 in
 {
   # executed in the context of a single node
@@ -65,4 +76,35 @@ in
     default = { };
   };
   config.h4ck.wireguardBackbone = mkConfig currentNodeName;
+  config.systemd.network = lib.mkIf (loopbackAddresses != null && loopbackAddresses != [ ]) {
+    netdevs = {
+      "40-wireguard-loopback" = {
+        netdevConfig = {
+          Name = "wg-loopback";
+          Kind = "dummy";
+        };
+      };
+    };
+    networks = {
+      "40-wireguard-loopback" = {
+        matchConfig = {
+          Name = "wg-loopback";
+        };
+        addresses = map (a: { addressConfig.Address = a; }) loopbackAddresses;
+      };
+    };
+  };
+  config.h4ck.bird =
+    let
+    in
+    lib.mkIf (loopbackAddresses != null && loopbackAddresses != [ ]) {
+      routerId = lib.mkDefault firstV4Address;
+    };
+
+  config.h4ck.dn42 = lib.mkIf (loopbackAddresses != null && loopbackAddresses != [ ]) {
+    srcpref = {
+      v4Address = firstV4Address;
+      v6Address = firstV6Address;
+    };
+  };
 }
