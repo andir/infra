@@ -32,6 +32,14 @@ in
     enable = mkEnableOption "enable dn42 configuration";
     enableDebugLogging = mkEnableOption "dn42 bgp logging";
 
+    srcpref = mkOption {
+      type = types.submodule {
+        options = {
+          v4Address = mkOption { type = types.nullOr types.str; default = null; };
+          v6Address = mkOption { type = types.nullOr types.str; default = null; };
+        };
+      };
+    };
     bgp = mkOption {
       type = types.submodule {
         options = {
@@ -327,14 +335,24 @@ in
                 protocol pipe dn42_v4_pipe {
                   peer table master4;
                   table dn42_v4;
-                  export all;
+                  export filter {
+                    ${lib.optionalString cfg.srcpref.v4Address != null ''
+                      krt_prefsrc = ${cfg.srcpref.v4Address}
+                    ''}
+                    accept;
+                  };
                   import none;
                 }
 
                 protocol pipe dn42_v6_pipe {
                   peer table master6;
                   table dn42_v6;
-                  export all;
+                  export filter {
+                    ${lib.optionalString cfg.srcpref.v6Address != null ''
+                      krt_prefsrc = ${cfg.srcpref.v6Address}
+                    ''}
+                    accept;
+                  };
                   import none;
                 }
 
