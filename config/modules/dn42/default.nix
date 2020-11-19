@@ -267,11 +267,13 @@ in
 
                 protocol static dn42_static_v4 {
                   ipv4 { table dn42_v4; };
+                  route 172.20.0.0/14 blackhole; # summary route so we only route traffic where we have more specifics
                   ${concatMapStringsSep "\n" (net: "route ${net} blackhole;") cfg.bgp.staticRoutes.ipv4}
                 };
 
                 protocol static dn42_static_v6 {
                   ipv6 { table dn42_v6; };
+                  route fd00::/8 blackhole; # summary route so we only route traffic where we have more specifics
                   ${concatMapStringsSep "\n" (net: "route ${net} blackhole;") cfg.bgp.staticRoutes.ipv6}
                 };
 
