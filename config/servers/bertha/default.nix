@@ -354,8 +354,8 @@ in
           tcp dport { 6882 } accept;
 
           ip6 nexthdr tcp tcp dport { 22, 80, 443, 4001, 9100, 22000, 16686 } accept
-         # allow mosh
-          ip6 nexthdr udp udp dport 60000-61000 accept
+          # allow mosh
+          udp dport 60000-61000 accept
 
           # forward to monitoring ports, final access control happens on each device
           ${lib.concatMapStringsSep "\n" (port: "tcp dport ${toString port} accept") monitoringPorts}
