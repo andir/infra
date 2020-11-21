@@ -1,4 +1,16 @@
 {
+    "ate": {
+        "branch": "master",
+        "description": "awesome terminal emulator",
+        "homepage": null,
+        "owner": "andir",
+        "repo": "ate",
+        "rev": "fdad821b908276ac67167497dafca9c715148a61",
+        "sha256": "0krvcl09m66vwpnbh6w4ig571q1axiqvvzxlmwf7imk9yflkn6h8",
+        "type": "tarball",
+        "url": "https://github.com/andir/ate/archive/fdad821b908276ac67167497dafca9c715148a61.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "bertha-nixpkgs": {
         "branch": "unbound-systemd",
         "description": "Nix Packages collection",

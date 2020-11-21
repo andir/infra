@@ -3,6 +3,7 @@
   imports = [
     ../../profiles/server.nix
     ./hardware.nix
+    ./graphical.nix
   ];
 
   deployment = {
