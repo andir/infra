@@ -35,9 +35,22 @@ let
       };
     });
 
-    mpv-unwrapped = mpv-unwrapped.override {
+    mpv-unwrapped = (mpv-unwrapped.override {
       inherit (self) ffmpeg;
-    };
+      sndioSupport = false;
+      sambaSupport = false;
+    }).overrideAttrs (_: {
+      src = fetchFromGitHub {
+        owner = "mpv-player";
+        repo = "mpv";
+        rev = "9b5672ebedf22e1c0d3ba81791c64087e369ee02";
+        sha256 = "0x4rh187jyw2a4l5zbnhs470wrsjx4mcsxd40axpw4rrl6wf1nj3";
+      };
+
+      preConfigure = ''
+        wafConfigureFlags=$(echo "$wafConfigureFlags" | sed -e 's/--disable-libsmbclient//g' -e 's/--disable-sndio//g')
+      '';
+    });
 
     mpv = wrapMpv self.mpv-unwrapped { };
   };
