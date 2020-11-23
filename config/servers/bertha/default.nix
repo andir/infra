@@ -1,9 +1,25 @@
 { pkgs, lib, config, ... }:
 let
-  verifiedNetfilter = text:
+  verifiedNetfilter = { text, modules ? [ ] }:
     let
       file = pkgs.writeText "netfilter" text;
-      check = pkgs.vmTools.runInLinuxVM (
+      vmTools = pkgs.vmTools.override {
+        rootModules =
+          [
+            "virtio_pci"
+            "virtio_mmio"
+            "virtio_blk"
+            "virtio_balloon"
+            "virtio_rng"
+            "ext4"
+            "unix"
+            "9p"
+            "9pnet_virtio"
+            "crc32c_generic"
+          ] ++ modules;
+      };
+
+      check = vmTools.runInLinuxVM (
         pkgs.runCommand "nft-check"
           {
             buildInputs = [ pkgs.nftables ];
@@ -211,146 +227,163 @@ in
 
   networking.firewall.enable = false;
   networking.nftables.enable = true;
-  networking.nftables.ruleset = verifiedNetfilter ''
-    table inet filter {
+  networking.nftables.ruleset = verifiedNetfilter {
+    modules = [
+      #      "nft_nat"
+    ];
+    text = ''
+      table inet filter {
 
-      chain input {
-        type filter hook input priority filter;
+        chain input {
+          type filter hook input priority filter;
 
-        iifname lo accept
+          iifname lo accept
 
-        ct state {established, related} accept
+          ct state {established, related} accept
 
-        ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
-        ip protocol icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
+          ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+          ip protocol icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
 
-        ip6 nexthdr icmpv6 icmpv6 type echo-request accept
-        ip protocol icmp icmp type echo-request accept
+          ip6 nexthdr icmpv6 icmpv6 type echo-request accept
+          ip protocol icmp icmp type echo-request accept
 
-        tcp dport { 22, 80, 443 } accept
+          tcp dport { 22, 80, 443 } accept
 
-        iifname lan jump lan_input
-        iifname oldlan jump lan_input
-        iifname mgmt accept;
-        iifname sc-agx jump agx_input
+          iifname lan jump lan_input
+          iifname oldlan jump lan_input
+          iifname mgmt accept;
+          iifname sc-agx jump agx_input
 
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
 
-        # iifname mgmt jump lan_input # FIXME: mgmt input should be handled differently
-        iifname uplink jump upstream_input
+          # iifname mgmt jump lan_input # FIXME: mgmt input should be handled differently
+          iifname uplink jump upstream_input
 
 
-        counter log prefix "blocked incoming: " drop
+          counter log prefix "blocked incoming: " drop
+        }
+
+        chain wg_peer_input {
+          ip protocol icmp accept
+          ip6 nexthdr icmpv6 accept
+          ip6 nexthdr udp udp dport 6696 accept # babel
+          ip6 nexthdr tcp tcp dport 9100 accept # node-exporter
+          ip6 nexthdr tcp tcp dport 9113 accept # nginx-exporter
+          ip6 nexthdr tcp tcp dport 9604 accept # fping4
+          ip6 nexthdr tcp tcp dport 9606 accept # fping6
+          ip6 nexthdr tcp tcp dport 179 accept # bgp
+        }
+
+        chain lan_input {
+          ip protocol icmp accept
+          ip6 nexthdr icmpv6 accept
+          udp sport bootpc udp dport bootps accept comment "DHCP clients"
+          udp dport { domain, domain-s } accept
+          tcp dport { domain, domain-s } accept
+          ${lib.optionalString (config.router.enableAvahiReflector) ''
+            udp dport { mdns } accept
+            tcp dport { mdns } accept
+          ''}
+        }
+
+        chain agx_input {
+          ip protocol icmp accept
+          ip6 nexthdr icmpv6 accept
+          udp sport bootpc udp dport bootps accept comment "DHCP clients"
+          udp dport { domain, domain-s } accept
+          tcp dport { domain, domain-s } accept
+        }
+
+        chain upstream_input {
+          # make dhcp client and ipv6 ra work on the uplink interface
+          udp sport bootps udp dport bootpc accept
+          udp sport bootps udp dport bootpc accept
+          ip6 nexthdr icmpv6 icmpv6 type { nd-router-advert } accept
+          ip6 nexthdr udp udp sport dhcpv6-server udp dport dhcpv6-client accept
+          ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
+        }
+
+        chain output {
+          type filter hook output priority filter; policy accept;
+          accept
+        }
+
+        chain forward {
+          type filter hook forward priority filter;
+
+          iif lo accept
+
+          ct state {established, related} accept
+
+          ip protocol icmp accept
+          ip6 nexthdr icmpv6 accept
+
+          # everything can go out
+          oifname uplink accept
+
+          oifname lan iifname oldlan accept
+          oifname oldlan iifname lan accept
+
+
+          oifname lan jump forward_to_lan
+          oifname oldlan jump forward_to_lan
+          oifname mgmt jump forward_to_mgmt
+
+          oifname sc-agx iifname lan accept
+          oifname sc-agx iifname oldlan accept
+          oifname sc-agx ip6 nexthdr tcp tcp dport 22 accept
+
+          oifname "wg-*" jump forward_to_wg
+
+          log prefix "not forwarding: " reject
+        }
+
+        chain forward_to_wg {
+          iifname lan accept;
+          iifname oldlan accept;
+          iifname "wg-*" accept;
+        }
+
+        chain forward_to_lan {
+          tcp dport { 22 } accept
+          tcp dport { 6882 } accept;
+
+          ip6 nexthdr tcp tcp dport { 22, 80, 443, 4001, 9100, 22000, 16686 } accept
+         # allow mosh
+          ip6 nexthdr udp udp dport 60000-61000 accept
+
+          reject
+        }
+
+        chain forward_to_mgmt {
+          reject
+        }
       }
+      table ip nat {
+        # map somemap {
+        #   type inet_service: ipv4_addr;
+        #   flags constant,interval;
+        #   elements = {
+        #     20000-20004: 192.168.0.1,
+        #     20005-20009: 192.168.0.2
+        #     }
+        # }
 
-      chain wg_peer_input {
-        ip protocol icmp accept
-        ip6 nexthdr icmpv6 accept
-        ip6 nexthdr udp udp dport 6696 accept # babel
-        ip6 nexthdr tcp tcp dport 9100 accept # node-exporter
-        ip6 nexthdr tcp tcp dport 9113 accept # nginx-exporter
-        ip6 nexthdr tcp tcp dport 9604 accept # fping4
-        ip6 nexthdr tcp tcp dport 9606 accept # fping6
-        ip6 nexthdr tcp tcp dport 179 accept # bgp
+        chain prerouting {
+           type nat hook prerouting priority dstnat;
+           # tcp dport { 4001 } dnat to $somewhere
+           iifname uplink tcp dport { 6882 } dnat to 10.250.11.249
+
+           # dnat udp dport map @somemap;
+        }
+        chain postrouting {
+           type nat hook postrouting priority srcnat;
+           oifname uplink masquerade
+           iifname oldlan oifname wg-dn42_cccda snat 172.20.24.1
+        }
       }
-
-      chain lan_input {
-        ip protocol icmp accept
-        ip6 nexthdr icmpv6 accept
-        udp sport bootpc udp dport bootps accept comment "DHCP clients"
-        udp dport { domain, domain-s } accept
-        tcp dport { domain, domain-s } accept
-        ${lib.optionalString (config.router.enableAvahiReflector) ''
-          udp dport { mdns } accept
-          tcp dport { mdns } accept
-        ''}
-      }
-
-      chain agx_input {
-        ip protocol icmp accept
-        ip6 nexthdr icmpv6 accept
-        udp sport bootpc udp dport bootps accept comment "DHCP clients"
-        udp dport { domain, domain-s } accept
-        tcp dport { domain, domain-s } accept
-      }
-
-      chain upstream_input {
-        # make dhcp client and ipv6 ra work on the uplink interface
-        udp sport bootps udp dport bootpc accept
-        udp sport bootps udp dport bootpc accept
-        ip6 nexthdr icmpv6 icmpv6 type { nd-router-advert } accept
-        ip6 nexthdr udp udp sport dhcpv6-server udp dport dhcpv6-client accept
-        ${lib.concatStringsSep "\n" (lib.mapAttrsToList (_: peer: "udp dport ${toString peer.localPort} accept") config.h4ck.wireguardBackbone.peers)}
-      }
-
-      chain output {
-        type filter hook output priority filter; policy accept;
-        accept
-      }
-
-      chain forward {
-        type filter hook forward priority filter;
-
-        iif lo accept
-
-        ct state {established, related} accept
-
-        ip protocol icmp accept
-        ip6 nexthdr icmpv6 accept
-
-        # everything can go out
-        oifname uplink accept
-
-        oifname lan iifname oldlan accept
-        oifname oldlan iifname lan accept
-
-
-        oifname lan jump forward_to_lan
-        oifname oldlan jump forward_to_lan
-        oifname mgmt jump forward_to_mgmt
-
-        oifname sc-agx iifname lan accept
-        oifname sc-agx iifname oldlan accept
-        oifname sc-agx ip6 nexthdr tcp tcp dport 22 accept
-
-
-        oifname "wg-*" jump forward_to_wg
-
-        log prefix "not forwarding: " reject
-      }
-
-      chain forward_to_wg {
-        iifname lan accept;
-       iifname "wg-*" accept;
-      }
-
-      chain forward_to_lan {
-        tcp dport { 22 } accept
-        tcp dport { 6882 } accept;
-
-        ip6 nexthdr tcp tcp dport { 22, 80, 443, 4001, 9100, 22000, 16686 } accept
-       # allow mosh
-        ip6 nexthdr udp udp dport 60000-61000 accept
-
-        reject
-      }
-
-      chain forward_to_mgmt {
-        reject
-      }
-    }
-    table ip nat {
-      chain prerouting {
-         type nat hook prerouting priority dstnat;
-         # tcp dport { 4001 } dnat to $somewhere
-         iifname uplink tcp dport { 6882 } dnat to 10.250.11.114
-      }
-      chain postrouting {
-         type nat hook postrouting priority srcnat;
-         oifname uplink masquerade
-      }
-    }
-  '';
+    '';
+  };
 
 
   # allow local unbound-control invocations
