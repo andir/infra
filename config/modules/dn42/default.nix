@@ -30,6 +30,7 @@ in
 {
   options.h4ck.dn42 = {
     enable = mkEnableOption "enable dn42 configuration";
+    enableDebugLogging = mkEnableOption "dn42 bgp logging";
 
     bgp = mkOption {
       type = types.submodule {
@@ -346,8 +347,10 @@ in
                   filter dn42_${peer.name}_import {
                      ${optionalString peer.bgp.import_reject "reject \"rejecting all import prefixes\";"}
                      if !dn42_is_valid_prefix(net) then {
-                       print "Not a valid DN42 prefix from asn ${toString peer.bgp.asn} net:" , net, " bgp_path: ", bgp_path;
-                       reject "Not a valid dn42 prefix";
+                       ${lib.optionalString cfg.enableDebugLogging ''
+                         print "Not a valid DN42 prefix from asn ${toString peer.bgp.asn} net:" , net, " bgp_path: ", bgp_path;
+                       ''}
+                       reject${lib.optionalString cfg.enableDebugLogging '' "Not a valid dn42 prefix"''};
                       }
                      ${optionalString (peer.bgp.asn != cfg.bgp.asn)
                   # eBGP isn't allowed to annouce me my own prefixes
@@ -357,16 +360,20 @@ in
 
                     ${optionalString (peer.bgp.accept == "own") ''
                     if delete(bgp_path, [${toString peer.bgp.asn}]).len > 0 then {
-                      print "rejecting prefix that isn't from the peer asn ${toString peer.bgp.asn}", " net: ", net, " bgp_path: ", bgp_path;
-                      reject "Not from peer ASN";
+                      ${lib.optionalString cfg.enableDebugLogging ''
+                        print "rejecting prefix that isn't from the peer asn ${toString peer.bgp.asn}", " net: ", net, " bgp_path: ", bgp_path;
+                      ''}
+                      reject${lib.optionalString cfg.enableDebugLogging '' "Not from peer ASN";''};
                     }
                     #if bgp_path.len > 1 && bgp_path.last != bgp_path.first then reject "Only accepting paths originating at the peer as";
                   ''}
 
                     if dn42_is_own_prefix(net) then reject "Not accepting own prefix from eBGP peer.";
                     if filter(bgp_path, [${toString cfg.bgp.asn}]).len > 0 then {
-                         print "Not accepting paths from my own ASN via eBGP from asn: ${toString peer.bgp.asn} net: ", net, " bgp_path: ", bgp_path;
-                         reject "Not accepting my own path via eBGP";
+                        ${lib.optionalString cfg.enableDebugLogging ''
+                          print "Not accepting paths from my own ASN via eBGP from asn: ${toString peer.bgp.asn} net: ", net, " bgp_path: ", bgp_path;
+                        ''}
+                         reject${lib.optionalString cfg.enableDebugLogging '' "Not accepting my own path via eBGP"''};
                     }
                     if !dn42_roa_check(net, bgp_path) then {
                       printn "DN42 ROA check failed for ", net;
@@ -385,12 +392,14 @@ in
                     ${optionalString peer.bgp.export_reject "reject \"rejecting all export prefixes\";"}
 
                     # only propagate static and BGP routes.
-                    if source != RTS_STATIC && source != RTS_BGP then reject "invalid route source";
+                    if source != RTS_STATIC && source != RTS_BGP then reject${lib.optionalString cfg.enableDebugLogging '' "invalid route source"''};
 
                     ${optionalString (peer.bgp.asn != cfg.bgp.asn && peer.bgp.announce == "own") ''
-                  if source != RTS_STATIC && delete(bgp_path, [${toString cfg.bgp.asn}]).len > 0 then {
-                    printn "Only propagating own routes. net: ", net, " source: ", source, " path: ", bgp_path, " deleted path: ", delete(bgp_path, [${toString cfg.bgp.asn}]);
-                    reject "Not own of my routes";
+                    if source != RTS_STATIC && delete(bgp_path, [${toString cfg.bgp.asn}]).len > 0 then {
+                    ${lib.optionalString cfg.enableDebugLogging ''
+                      printn "Only propagating own routes. net: ", net, " source: ", source, " path: ", bgp_path, " deleted path: ", delete(bgp_path, [${toString cfg.bgp.asn}]);
+                    ''}
+                    reject${lib.optionalString cfg.enableDebugLogging '' "Not one of my routes"''};
                   }
                 ''}
 
@@ -399,11 +408,15 @@ in
                     ${optionalString (peer.bgp.export_prepend != 0)
                   (concatStrings (map (x: "bgp_path.prepend(${toString cfg.bgp.asn});\n") (range 0 peer.bgp.export_prepend)))}
                     if source = RTS_BGP && !dn42_roa_check(net, bgp_path) && bgp_path.len > 0 then {
-                      printn "DN42 ROA check failed for ", net;
-                      reject "DN42 ROA check failed";
-                    } else if source = RTS_BGP && bgp_path.len = 0 && !dn42_roa_check(net, prepend(bgp_path, ${toString cfg.bgp.asn})) then {
-                      printn "DN42 ROA check failed for our net ", net;
-                      reject "Refusing to announce (our) prefix that isn't covered by a valid ROA";
+                      ${lib.optionalString cfg.enableDebugLogging ''
+                        printn "DN42 ROA check failed for ", net;
+                      ''}
+                      reject${lib.optionalString cfg.enableDebugLogging '' "DN42 ROA check failed";''};
+                        } else if source = RTS_BGP && bgp_path.len = 0 && !dn42_roa_check(net, prepend(bgp_path, ${toString cfg.bgp.asn})) then {
+                      ${lib.optionalString cfg.enableDebugLogging ''
+                        printn "DN42 ROA check failed for our net ", net;
+                      ''}
+                      reject${lib.optionalString cfg.enableDebugLogging '' "Refusing to announce (our) prefix that isn't covered by a valid ROA"''};
                     }
 
                     accept;
