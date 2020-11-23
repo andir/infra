@@ -26,18 +26,18 @@ self: super: {
     }
   );
 
-  bird2 = super.bird2.overrideAttrs (
-    { patches ? [ ], ... }: {
-      patches = patches ++ [
-        (
-          super.fetchpatch {
-            url = "https://github.com/openwrt-routing/packages/raw/37f8c509e03de355a3d0f9b6d62837c43750f98b/bird2/patches/0001-babel-Set-onlink-flag-for-IPv4-routes-with-unreachab.patch";
-            sha256 = "08x5awza514r6745l5cg0mwlh7pcbxsws9y8hmjmk831wdqgjlln";
-          }
-        )
-      ];
+  bird2 = super.enableDebugging (super.bird2.overrideAttrs (
+    { patches ? [ ], configureFlags ? [ ], nativeBuildInputs ? [ ], ... }: {
+
+      #configureFlags = configureFlags ++ [ "--enable-debug" ];
+      nativeBuildInputs = nativeBuildInputs ++ [ super.autoreconfHook ];
+      src = super.fetchgit {
+        url = "https://git.sr.ht/~andir/bird";
+        rev = "5ef51319f26bae02af38376402d5552a37feb8d4";
+        sha256 = "1grm15cpbkh9xq27zm42f8b1s35w0ih277ihy7dd4xrd7iy812q9";
+      };
     }
-  );
+  ));
 
   dn42-regparse = self.callPackage sources.dn42-regparse { };
   dn42-roa =
@@ -77,5 +77,4 @@ self: super: {
       ./lego-retry.diff
     ];
   });
-
 }
