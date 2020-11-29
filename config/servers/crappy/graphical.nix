@@ -2,7 +2,7 @@
 {
   environment.systemPackages = with pkgs; [
     ate
-    # firefox
+    firefox
   ];
 
   programs.sway = {

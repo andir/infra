@@ -77,4 +77,15 @@ self: super: {
       ./lego-retry.diff
     ];
   });
+
+  firefox-unwrapped = super.firefox-unwrapped.overrideAttrs ({ patches ? [ ], ... }: {
+    patches = patches ++ [
+      (super.fetchpatch {
+        # source: https://bugzilla.redhat.com/show_bug.cgi?id=1897675
+        name = "rh-bgz-1897675.patch";
+        url = "https://github.com/mozilla/gecko-dev/commit/71597faac0fde4f608a60dd610d0cefac4972cc3.patch";
+        sha256 = "1f61nsgbv2c2ylgjs7wdahxrrlgc19gjy5nzs870zr1g832ybwin";
+      })
+    ];
+  });
 }
