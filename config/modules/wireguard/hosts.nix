@@ -99,12 +99,9 @@ in
     in
     lib.mkIf (loopbackAddresses != null && loopbackAddresses != [ ]) {
       routerId = lib.mkDefault firstV4Address;
+      srcpref = {
+        v4Address = firstV4Address;
+        v6Address = firstV6Address;
+      };
     };
-
-  config.h4ck.dn42 = lib.mkIf (loopbackAddresses != null && loopbackAddresses != [ ]) {
-    srcpref = {
-      v4Address = firstV4Address;
-      v6Address = firstV6Address;
-    };
-  };
 }
