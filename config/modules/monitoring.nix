@@ -1,8 +1,8 @@
 { lib, config, ... }:
 with lib;
 let
-  v4Srcs = [ "148.251.9.69/32" "95.216.144.32/32" ];
-  v6Srcs = [ "2a01:4f8:201:6344::/64" "2a01:4f9:c010:c50::/64" ];
+  v4Srcs = [ "148.251.9.69/32" "95.216.144.32/32" "172.20.25.1" ];
+  v6Srcs = [ "2a01:4f8:201:6344::/64" "2a01:4f9:c010:c50::/64" "fd21:a07e:735e:ffff::2" ];
 
   mkFirewallRules = name: port: {
     networking.firewall.extraCommands = lib.concatStringsSep "\n" (
