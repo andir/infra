@@ -31,6 +31,7 @@
           "notmuch.email"
           "wifi-darmstadt.de"
           "wlanladadi.net"
+          "nixos.cloud"
         ]
       );
     slaveZones = lib.listToAttrs (
