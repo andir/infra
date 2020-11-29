@@ -7,7 +7,7 @@
   ];
 
   deployment = {
-    targetHost = "10.250.11.67";
+    targetHost = "172.20.24.67";
     targetUser = "morph";
     substituteOnDestination = false; # TODO: is this faster?
   };
