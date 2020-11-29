@@ -17,12 +17,12 @@
     targetUser = "morph";
     substituteOnDestination = true;
 
-    secrets."gitlab-runner.env" = {
-      source = "../secrets/gitlab-runner.env";
-      destination = "/var/secrets/gitlab-runner.env";
-      owner.user = "gitlab-runner";
-      action = [ "sudo" "systemctl" "restart" "gitlab-runner2" ];
-    };
+    # secrets."gitlab-runner.env" = {
+    #   source = "../secrets/gitlab-runner.env";
+    #   destination = "/var/secrets/gitlab-runner.env";
+    #   owner.user = "gitlab-runner";
+    #   action = [ "sudo" "systemctl" "restart" "gitlab-runner2" ];
+    # };
   };
 
   mods.hetzner = {
@@ -38,7 +38,7 @@
   };
 
   services.gitlab-runner2 = {
-    enable = true;
+    enable = false; # has been restarting in loops forever and I do not really use it anymore
     registrationConfigFile = "/var/secrets/gitlab-runner.env";
   };
 
