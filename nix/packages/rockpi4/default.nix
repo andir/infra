@@ -37,8 +37,6 @@ let
 
     mpv-unwrapped = (mpv-unwrapped.override {
       inherit (self) ffmpeg;
-      sndioSupport = false;
-      sambaSupport = false;
     }).overrideAttrs (_: {
       src = fetchFromGitHub {
         owner = "mpv-player";
