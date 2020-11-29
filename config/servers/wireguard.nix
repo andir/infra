@@ -1,8 +1,4 @@
 {
-  # FIXME: I shouldn't have the loopback addresses on the wireguard links.
-  #        If a single wireguard link goes down that loopback address is not
-  #        reachable anymore while we would be able to find a path thtorugh the
-  #        network to the address via another peer.
   # FIXME: Currently I have to specify the loopback addresses both here and on
   #        the individual server config. This file should be sufficient to construct
   #        the fullmesh.
