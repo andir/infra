@@ -21,7 +21,7 @@
     "d /var/lib/nixos.cloud/pub 750 nixos.cloud nixos.cloud"
   ];
 
-  services.nginx.virtualHosts."nixos-cloud.kack.it" = {
+  services.nginx.virtualHosts."nixos.cloud" = {
     enableACME = true;
     forceSSL = true;
     root = "/var/lib/nixos.cloud/pub/dist";
