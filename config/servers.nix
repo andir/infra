@@ -63,4 +63,10 @@ in
     config = ./servers/crappy;
     system = "aarch64-linux";
   };
+
+  kappa = mkMachine {
+    name = "kappa";
+    config = ./servers/kappa;
+    system = "x86_64-linux";
+  };
 }
