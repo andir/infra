@@ -12,15 +12,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "bertha-nixpkgs": {
-        "branch": "unbound-systemd",
+        "branch": "nixos-unstable",
         "description": "Nix Packages collection",
         "homepage": null,
-        "owner": "andir",
+        "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "5903ea539513c8ec2a1412d88465559b957b6483",
-        "sha256": "1554xw66br7x6s0dd28jgx08rnvf8m4f5jl7hpdw5ssh9scvy303",
+        "rev": "8ee7c2505f9e7019aa69c8a6313e5f2d32a69f27",
+        "sha256": "048b00wz86pxifzm708nwl0g3nchb1yi6lwlsw4yg8jnlrqv48xh",
         "type": "tarball",
-        "url": "https://github.com/andir/nixpkgs/archive/5903ea539513c8ec2a1412d88465559b957b6483.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/8ee7c2505f9e7019aa69c8a6313e5f2d32a69f27.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
