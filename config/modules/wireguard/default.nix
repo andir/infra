@@ -104,9 +104,16 @@ in
   config =
     let
       cfg = config.h4ck.wireguardBackbone;
+
+      check-kernel-config = pkgs.runCommand "check-ipv6-kernel-support"
+        {
+          inherit (config.boot.kernelPackages.kernel) configfile;
+        } ''
+        grep -q CONFIG_IPV6=y $configfile && mkdir $out
+      '';
     in
     lib.mkIf (cfg.peers != { }) {
-      environment.systemPackages = [ pkgs.wireguard ];
+      environment.systemPackages = [ pkgs.wireguard check-kernel-config ];
       systemd.tmpfiles.rules = [
         "d ${config.h4ck.wireguardBackbone.dataDir} 700 systemd-network systemd-network - -"
       ];
