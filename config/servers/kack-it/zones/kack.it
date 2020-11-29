@@ -1,7 +1,7 @@
 $TTL 120
 $ORIGIN kack.it.
-@    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
-                2020092301 ; Serial - date by convention
+@    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
+                2020112901 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire

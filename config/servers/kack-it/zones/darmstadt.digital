@@ -1,6 +1,6 @@
 $TTL 3600
 $ORIGIN darmstadt.digital.
-@    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
+@    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
                 2019081302 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry

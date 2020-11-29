@@ -1,6 +1,6 @@
 $TTL 3600
 $ORIGIN notmuch.email.
-@    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
+@    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
                 2020100401 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry

@@ -1,6 +1,6 @@
 $TTL 120
 $ORIGIN nopejs.io.
-@    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
+@    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
                 2017032201 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry

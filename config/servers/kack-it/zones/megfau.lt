@@ -1,6 +1,6 @@
 $TTL 600
 $ORIGIN megfau.lt.
-@    IN    SOA    dns1.h4ck.space. foo.h4ck.space. (
+@    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
                 2019081301 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
