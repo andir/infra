@@ -15,10 +15,10 @@
               zoneFile = ./zones + "/${name}";
               slaves = {
                 "ns2.h4ck.space-v4" = {
-                  address = "151.236.17.139";
+                  address = "72.60.37.85";
                 };
                 "ns2.h4ck.space-v6" = {
-                  address = "2a03:f80:49:151:236:17:139:1";
+                  address = "2a03:4000:33:792::";
                 };
               };
             }
