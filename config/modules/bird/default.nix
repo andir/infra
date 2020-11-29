@@ -9,6 +9,14 @@ in
     routerId = mkOption {
       type = types.str;
     };
+    srcpref = mkOption {
+      type = types.submodule {
+        options = {
+          v4Address = mkOption { type = types.nullOr types.str; default = null; };
+          v6Address = mkOption { type = types.nullOr types.str; default = null; };
+        };
+      };
+    };
 
     rfc6890Blackhole = mkOption {
       description = "Blackhole all RFC6890 networks";
@@ -47,7 +55,13 @@ in
             persist;
             ipv4 {
               import all;
-              export all;
+              export filter {
+                ${lib.optionalString (cfg.srcpref.v4Address != null) ''
+                  krt_prefsrc = ${cfg.srcpref.v4Address};
+                ''}
+                accept;
+              };
+
             };
           }
           protocol kernel kv6 {
@@ -55,7 +69,12 @@ in
             persist;
             ipv6 {
               import all;
-              export all;
+              export filter{
+                ${lib.optionalString (cfg.srcpref.v6Address != null) ''
+                  krt_prefsrc = ${cfg.srcpref.v6Address};
+                ''}
+                accept;
+              };
             };
           }
         ''
