@@ -88,4 +88,10 @@ self: super: {
       })
     ];
   });
+
+  linuxPackages = super.linuxPackagesFor (super.linux_5_4.override {
+    extraConfig = ''
+      IPV6 y
+    '';
+  });
 }
