@@ -7,6 +7,7 @@
     ./dns.nix
     ./blog.nix
     ./static.nix
+    ./nixos-cloud.nix
   ];
 
   deployment = {
