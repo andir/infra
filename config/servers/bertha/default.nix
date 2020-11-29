@@ -1,4 +1,4 @@
-{ pkgs, lib, config, ... }:
+{ pkgs, lib, config, nodes, ... }:
 let
   verifiedNetfilter = { text, modules ? [ ] }:
     let
@@ -37,6 +37,11 @@ let
       );
     in
     "#checked with ${check}\n" + text;
+
+
+  monitoringHosts = [ "crappy" ];
+  monitoringPorts = lib.unique (lib.flatten (map (host: nodes.${host}.config.h4ck.monitoring.ports) monitoringHosts));
+
 in
 {
   imports = [
@@ -352,6 +357,8 @@ in
          # allow mosh
           ip6 nexthdr udp udp dport 60000-61000 accept
 
+          # forward to monitoring ports, final access control happens on each device
+          ${lib.concatMapStringsSep "\n" (port: "tcp dport ${toString port} accept") monitoringPorts}
           reject
         }
 

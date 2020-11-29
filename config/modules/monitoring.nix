@@ -29,6 +29,7 @@ let
       h4ck.monitoring.targets.${name} = {
         inherit port;
       };
+      h4ck.monitoring.ports = [ port ];
     }
     (mkFirewallRules name port)
   ];
@@ -180,6 +181,13 @@ in
       };
     };
 
+    ports = mkOption {
+      type = types.listOf types.port;
+      description = ''
+        All of the TCP ports this server has exporters running on.
+      '';
+    };
+
   };
   config = mkIf config.h4ck.monitoring.enable (
     mkMerge [
@@ -222,6 +230,7 @@ in
                 h4ck.monitoring.targets.prometheus = {
                   port = 9166;
                 };
+                h4ck.monitoring.ports = [ 9166 ];
                 services.dovecot2.extraConfig = ''
                   service stats {
                     inet_listener http {
@@ -269,6 +278,7 @@ in
               h4ck.monitoring.targets.knot = {
                 port = 9053;
               };
+              h4ck.monitoring.ports = [ 9053 ];
               h4ck.authorative-dns.enableStats = true;
             }
             (mkFirewallRules "knot" 9053)
@@ -287,6 +297,10 @@ in
               h4ck.monitoring.targets.fping_exporter6 = {
                 port = config.h4ck.prometheus.exporters.fping_exporter.port6;
               };
+              h4ck.monitoring.ports = [
+                config.h4ck.prometheus.exporters.fping_exporter.port6
+                config.h4ck.prometheus.exporters.fping_exporter.port4
+              ];
             }
             (mkFirewallRules "fping4" config.h4ck.prometheus.exporters.fping_exporter.port4)
             (mkFirewallRules "fping6" config.h4ck.prometheus.exporters.fping_exporter.port6)
@@ -375,6 +389,7 @@ in
               h4ck.monitoring.targets.blackbox = {
                 port = 9115;
               };
+              h4ck.monitoring.ports = [ 9115 ];
             }
             {
               h4ck.blackbox_exporter.config = {
