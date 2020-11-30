@@ -25,5 +25,8 @@
     enableACME = true;
     forceSSL = true;
     root = "/var/lib/nixos.cloud/pub/dist";
+    extraConfig = ''
+      default_type application/octet-stream;
+    '';
   };
 }
