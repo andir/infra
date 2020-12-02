@@ -10,14 +10,6 @@
     ./xmpp-alerts.nix
   ];
 
-  h4ck.wireguardBackbone = {
-    # addresses = [
-    #   #"fe80::2/64"
-    #   # "172.20.25.1/32"
-    #   # "fd21:a07e:735e:ffff::2/128"
-    # ];
-  };
-
   deployment = {
     targetHost = "mon.h4ck.space";
     targetUser = "morph";

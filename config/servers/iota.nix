@@ -2,12 +2,14 @@
 {
   imports = [
     ../profiles/hetzner-vm.nix
+    /home/andi/dev/private/nixos-security-tracker/module.nix
   ];
+
   h4ck.wireguardBackbone = {
     addresses = [
       "fe80::3/64"
-      "172.20.25.2/32"
-      "fd21:a07e:735e:ffff::3/128"
+      #  "172.20.25.2/32"
+      #  "fd21:a07e:735e:ffff::3/128"
     ];
   };
   networking.firewall.allowedUDPPorts = [ 11001 11002 ];

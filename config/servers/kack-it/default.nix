@@ -31,8 +31,8 @@
   h4ck.wireguardBackbone = {
     addresses = [
       "fe80::4/64"
-      "172.20.25.3/32"
-      "fd21:a07e:735e:ffff::4/128"
+      #  "172.20.25.3/32"
+      #  "fd21:a07e:735e:ffff::4/128"
     ];
   };
 
