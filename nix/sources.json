@@ -158,10 +158,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "34bbafcc541fe3962ba58c4492565e2fbc425230",
-        "sha256": "1kp784s7q5937zwgw2kjk8np5yvvfav9kli15ckaakwwzc3zdxp1",
+        "rev": "8ea5a882b48731e792c809d0a67f8dc8b7bff087",
+        "sha256": "1ymzyn1l8p7jsi4fnrf459crx1zd8cngzxrxjnlk7x2mbrhafwwb",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/34bbafcc541fe3962ba58c4492565e2fbc425230.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/8ea5a882b48731e792c809d0a67f8dc8b7bff087.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
@@ -170,10 +170,10 @@
         "homepage": "",
         "owner": "cachix",
         "repo": "pre-commit-hooks.nix",
-        "rev": "431227b41d0aaa83fabdee6611e145b7d9bd150b",
-        "sha256": "0ff24n8i3mfw0jw5r5lsgvbahmh88zhi3qsk9yxrb8x82jprgzsy",
+        "rev": "1b11ce0f8c65dd3d8e9520e23c100b76d09a858b",
+        "sha256": "0l2v8hsxrvj8w335xxxln49rpd9z5ncv6bl2wnk65zzzd4wa5rkm",
         "type": "tarball",
-        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/431227b41d0aaa83fabdee6611e145b7d9bd150b.tar.gz",
+        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/1b11ce0f8c65dd3d8e9520e23c100b76d09a858b.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "publictransport": {
