@@ -238,30 +238,14 @@ in
                     }
                   }
 
-                  metric imap_command {
+                  metric dovecot_imap_command {
                     event_name = imap_command_finished
-                    filter {
-                      tagged_reply_state = OK
-                    }
-                    fields = bytes_in bytes_out
-                    group_by = cmd_name
+                    group_by = cmd_name tagged_reply_state
                   }
 
-                  metric imap_select_no {
-                    event_name = imap_command_finished
-                    filter {
-                      name = SELECT
-                      tagged_reply_state = NO
-                    }
-                    fields = bytes_in bytes_out
-                  }
-                  metric imap_select_no_notfound {
-                    event_name = imap_command_finished
-                    filter {
-                      name = SELECT
-                      tagged_reply = NO*Mailbox doesn't exist:*
-                    }
-                    fields = bytes_in bytes_out
+                  metric dovecot_imap_command {
+                    event_name = smtp_server_command_finished
+                    group_by = cmd_name tagged_reply_state
                   }
                 '';
               }
