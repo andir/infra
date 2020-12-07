@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
-                2020100401 ; Serial - date by convention
+                2020120701 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -177,3 +177,7 @@ mail._domainkey.remotecommunication.l IN      TXT     ( "v=DKIM1; k=rsa; "
 mail._domainkey.openssf.l	IN	TXT	( "v=DKIM1; k=rsa; "
 	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDevC9ggyrOYUeuSEYF2Nk1oEmx5LHX845uazadajbYw9lfYx4x0WLqewGhrhx3DxnpLgWQwG7qEmUrXicPUu3AfYtXgZOidUq1KjBk8C+WcpWwM2S3Kexk6pK1clM7w6fDDPpezHo1sBcypwPtR4AX9izAb8UL49HQ6BJbL/Eg+QIDAQAB" )  ; ----- DKIM key mail for openssf.l.notmuch.email
 remotecommunication.l     IN      MX      20 mx.h4ck.space.
+mail._domainkey.qute.l.notmuch.email.mail.key	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDAcAIUDJIS2oxKOnqXZLv1qJpuqO8QFZhqHPjb3UpCWKiOlUBYS67C89arh+UZnui7X8Sqy5D9h4muXc56aolr7edCwp3+q5DWzanWKzB8RZz+esqKLAHHn3RTtx4Vsv03bPnA8PLD1K9y3oy74G6/vYskWEYgLgGeix0b7y+1QIDAQAB" )  ; ----- DKIM key mail for qute.l.notmuch.email
+mail._domainkey.qute.l	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDAcAIUDJIS2oxKOnqXZLv1qJpuqO8QFZhqHPjb3UpCWKiOlUBYS67C89arh+UZnui7X8Sqy5D9h4muXc56aolr7edCwp3+q5DWzanWKzB8RZz+esqKLAHHn3RTtx4Vsv03bPnA8PLD1K9y3oy74G6/vYskWEYgLgGeix0b7y+1QIDAQAB" )  ; ----- DKIM key mail for qute.l.notmuch.email

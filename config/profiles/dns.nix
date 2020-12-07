@@ -20,4 +20,5 @@
       "127.0.0.0/8"
     ];
   };
+  systemd.services.unbound.serviceConfig.RestrictAddressFamilies = [ "AF_NETLINK" ]; # required since some nixpkgs bump…
 }

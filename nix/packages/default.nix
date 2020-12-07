@@ -78,4 +78,9 @@ self: super: {
     ];
   });
 
+  python3 = super.python3.override {
+    packageOverrides = _: psuper: {
+      psautohint = psuper.psautohint.overridePythonAttrs (_: { doCheck = false; });
+    };
+  };
 }
