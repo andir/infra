@@ -60,6 +60,7 @@
     raspberrypi-tools
     rockpi4.mpp
     rockpi4.ffmpeg
+    syncplay
   ];
 
   hardware.opengl.enable = true;
