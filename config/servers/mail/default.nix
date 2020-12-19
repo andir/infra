@@ -159,6 +159,7 @@ in
     # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
     virusScanning = true;
   };
+  services.dovecot2.mailPlugins.globally.enable = [ "zlib" ];
   services.dovecot2.extraConfig = ''
     service imap {
       vsz_limit = 512MB
@@ -173,6 +174,11 @@ in
     # protocol imap {
     #   mail_plugins = $mail_plugins imap_zlib
     # }
+
+    plugin {
+      zlib_save_level = 6
+      zlib_save = gz
+    }
   '';
   services.postfix.config = {
     lmtp_destination_concurrency_limit = "10";
