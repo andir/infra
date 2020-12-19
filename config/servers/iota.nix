@@ -2,7 +2,6 @@
 {
   imports = [
     ../profiles/hetzner-vm.nix
-    /home/andi/dev/private/nixos-security-tracker/module.nix
   ];
 
   h4ck.wireguardBackbone = {
