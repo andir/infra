@@ -24,14 +24,15 @@ let
         libv4l
         udev
       ];
+      NIX_LDFLAGS = "-L${udev}/lib -ludev";
       preConfigure = ''
         configureFlags="$configureFlags --enable-v4l2-request --enable-libudev"
       '';
       src = fetchFromGitHub {
         owner = "Kwiboo";
         repo = "FFmpeg";
-        rev = "43570a6663361d81840d990587e9cce42c6d3d93";
-        sha256 = "1gf2zc450nak0h22p0la463ncqi38r7jiqp7j16k92y2k18gdc90";
+        rev = "88ed0434a2030b9b3332c5134dc7e6d979054b45";
+        sha256 = "1liyfmpyf02bdrpcz1511dliqwy9n7m2vd0d6h42lhmpz8kgcc88";
       };
     });
 
