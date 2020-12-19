@@ -167,9 +167,12 @@ in
       vsz_limit = 368MB
       process_limit = 10
     }
-    protocol imap {
-      mail_plugins = $mail_plugins imap_zlib
-    }
+    # Zlib compression might have been an issue with isync where it would
+    # timeout because dovecot is still waiting for data while mbsync thought it
+    # is done.
+    # protocol imap {
+    #   mail_plugins = $mail_plugins imap_zlib
+    # }
   '';
   services.postfix.config = {
     lmtp_destination_concurrency_limit = "10";
