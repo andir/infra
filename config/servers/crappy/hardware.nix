@@ -18,6 +18,10 @@
     "console=tty0"
   ];
 
+  boot.kernelModules = [
+    "spi-nor"
+  ];
+
   # File systems configuration for using the installer's partition layout
   fileSystems = {
     "/" = {

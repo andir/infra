@@ -1,0 +1,19 @@
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts
+index f0055ce2fda0..8c50d436ba73 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4b.dts
+@@ -40,3 +40,14 @@ bluetooth {
+                pinctrl-0 = <&bt_host_wake_l &bt_wake_l &bt_enable_h>;
+        };
+ };
++
++&spi1 {
++//     max-freq = <10000000>;
++       status = "okay";
++       flash: spiflash@1 {
++               compatible = "jedec,spi-nor";
++               reg = <0>;
++               // m25p,fast-read;
++               spi-max-frequency = <10000000>;
++       };
++};
