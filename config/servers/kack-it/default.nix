@@ -15,12 +15,12 @@
     targetUser = "morph";
     substituteOnDestination = true;
 
-    #    secrets."c3shedule.env" = {
-    #      source = "../secrets/c3schedule.env";
-    #      destination = "/var/lib/secrets/c3schedule.env";
-    #      owner.user = "c3schedule";
-    #      action = [ "sudo" "systemctl" "restart" "c3schedule" ];
-    #    };
+    secrets."c3shedule.env" = {
+      source = "../secrets/c3schedule.env";
+      destination = "/var/lib/secrets/c3schedule.env";
+      owner.user = "c3schedule";
+      action = [ "sudo" "systemctl" "restart" "c3schedule" ];
+    };
   };
 
   networking = {
@@ -76,7 +76,7 @@
 
   c3schedule = {
     # only enabled during events
-    enable = false;
+    enable = true;
     config = {
       core = {
         host = "guybrush.hackint.org";
