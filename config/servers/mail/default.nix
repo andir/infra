@@ -161,6 +161,7 @@ in
   };
   services.dovecot2.mailPlugins.globally.enable = [ "zlib" ];
   services.dovecot2.extraConfig = ''
+    mail_cache_max_size = 10M # tame the stupid index rewriting code on large inboxes
     service imap {
       vsz_limit = 512MB
     }
