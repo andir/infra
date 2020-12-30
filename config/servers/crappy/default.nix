@@ -57,7 +57,6 @@
   environment.systemPackages = with pkgs; [
     rockpi4.mpv
     youtube-dl
-    raspberrypi-tools
     rockpi4.mpp
     rockpi4.ffmpeg
     syncplay
