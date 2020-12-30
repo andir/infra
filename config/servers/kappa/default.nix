@@ -33,6 +33,34 @@
     ];
   };
 
+  boot.kernel.sysctl."net.ipv6.default.forwarding" = 1;
+  boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
+
+  h4ck.wireguardBackbone = {
+    addresses = [
+      "fe80::12/64"
+    ];
+
+    peers = {
+      kif = {
+        localAddresses = [ "fe80::1/64" ];
+        remoteAddresses = [ "fdde:953a:0e14::/48" ];
+        mtu = 1420;
+        babel = false;
+
+        remotePublicKey = "2iF9WFNJBlEHLdjcnMUJzGOHq0kHytrpfOUTeJPD5QU=";
+        remotePort = 22094;
+        localPort = 22094;
+        remoteEndpoint = "kif.gsc.io";
+        pskFile = "/var/lib/secrets/kif-psk";
+      };
+    };
+  };
+
+  systemd.tmpfiles.rules = [
+    "d /var/lib/secrets 700 'systemd-network' root - -"
+  ];
+
   h4ck.authorative-dns = {
     enable = true;
     verbose = true;
