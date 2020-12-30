@@ -66,6 +66,11 @@ let
             values
         );
       };
+
+      pskFile = lib.mkOption {
+        type = lib.types.nullOr lib.types.str;
+        default = null;
+      };
     };
     config = {
       inherit name;
@@ -113,7 +118,7 @@ in
       '';
     in
     lib.mkIf (cfg.peers != { }) {
-      environment.systemPackages = [ pkgs.wireguard check-kernel-config ];
+      environment.systemPackages = [ pkgs.wireguard check-kernel-config pkgs.tcpdump ];
       systemd.tmpfiles.rules = [
         "d ${config.h4ck.wireguardBackbone.dataDir} 700 systemd-network systemd-network - -"
       ];
@@ -182,7 +187,8 @@ in
               ipv6 {
                 table master6;
                 export filter {
-                  if (source = RTS_BABEL || source = RTS_STATIC || source = RTS_DEVICE) && (net ~ fd00::/8) then {
+                  # FIXME: I had to add RTS_INHERIT TO add routes for subnets on wireguard interfaces
+                  if (source = RTS_BABEL || source = RTS_STATIC || source = RTS_DEVICE || source = RTS_INHERIT) && (net ~ fd00::/8) then {
                     accept;
                   }
                   reject;
@@ -218,6 +224,7 @@ in
                       PublicKey = ${peer.remotePublicKey}
                       AllowedIPs=::/0, 0.0.0.0/0
                       ${lib.optionalString (peer.remoteEndpoint != null) "Endpoint=${peer.remoteEndpoint}:${toString peer.remotePort}"}
+                      ${lib.optionalString (peer.pskFile != null) "PresharedKeyFile = ${peer.pskFile}"}
                     '';
                   };
                 };
