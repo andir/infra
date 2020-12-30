@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   imports = [
     ../../profiles/hetzner-vm.nix
@@ -93,7 +93,26 @@
         owner_account = "andi-";
         pid_dir = "/var/lib/c3schedule";
         homedir = "/var/lib/c3schedule";
-        channels = "#36c3-schedule,#36c3-hall-a,#36c3-hall-b,#36c3-hall-c,#36c3-hall-d,#36c3-hall-a,#signalangel,#36c3-hall-e,#chaoswest-stage,#oio-stage";
+        channels = lib.concatStringsSep "," [
+          "#signalangel"
+          "#rc3-cbase"
+          "#rc3-schedule"
+          "#rc3-one"
+          "#rc3-two"
+          "#rc3-oio"
+          "#rc3-restrealitaet"
+          "#rc3-r3s"
+          "#rc3-wikipaka"
+          "#rc3-xhain"
+          "#rc3-franconiannet"
+          "#rc3-csh"
+          "#rc3-chaoszone"
+          "#rc3-chaostrawler"
+          "#rc3-bitwaescherei"
+          "#rc3-cwtv"
+          "#rc3-hacc"
+          "#rc3-sendezentrum"
+        ];
         prefix = ".?";
         reply_errors = "False";
         flood_empty_wait = "0";
@@ -101,9 +120,11 @@
         flood_refill_rate = "30";
       };
       c3schedule = {
-        channel = "#36c3-schedule";
+        channel = "#rc3-schedule";
         angel_channel = "#signalangel";
-        url = "https://raw.githubusercontent.com/voc/36C3_schedule/master/everything.schedule.json";
+        url = "https://data.c3voc.de/rC3/everything.schedule.json";
+        stream_url_template = "https://streaming.media.ccc.de/rc3/{{ stream_hall }}";
+        session_url = "https://rc3.world/rc3/public_fahrplan#{{ guid }}";
       };
     };
   };
