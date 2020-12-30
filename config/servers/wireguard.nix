@@ -52,17 +52,18 @@
       hostName = "kack.it";
     };
 
-    # "ranzbook" = {
-    #   addresses = [
-    #     "fe80::5/64"
-    #  ];
+    "kappa" = {
+      addresses = [
+        "fe80::12/64"
+      ];
 
-    #  loopbackAddresses = [
-    #     "172.20.25.5"
-    #     "fd21:a07e:735e:ffff::5/128"
-    #   ];
-    #   publicKey = "QaoyTI0idKhPE4KhHvmWjqR79sbPf9bnMW9tGCRW3H0=";
-    #   hostName = null;
-    # };
+      loopbackAddresses = [
+        "172.20.25.12/32"
+        "fd21:a07e:735e:ffff::12/128"
+      ];
+
+      publicKey = "Jf/uH/pP0Bc1ktZoWVKdX/MwgsdT9M8X2t+XZgOROGQ=";
+      hostName = "kappa.h4ck.space";
+    };
   };
 }
