@@ -4,7 +4,6 @@
   imports = [
     ../../profiles/server.nix
     ./hardware.nix
-    ./pvpgn.nix
   ];
 
   deployment = {
