@@ -15,6 +15,7 @@ let
 in
 rec {
   uboot = pkgs.rockpi4.uboot;
+  u-boot-spi = pkgs.rockpi4.u-boot-spi;
   system = pkgs.nixos {
 
     # some options to mock so it remains compatible

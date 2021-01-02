@@ -1,4 +1,4 @@
-{ lib, buildUBoot, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev }:
+{ lib, buildUBoot, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch }:
 let
   self = {
     uboot =
@@ -52,6 +52,20 @@ let
     });
 
     mpv = wrapMpv self.mpv-unwrapped { };
+
+
+    u-boot-spi = self.uboot.overrideAttrs ({ patches, ... }: {
+      patches = patches ++ [
+        (fetchpatch {
+          url = "https://raw.githubusercontent.com/armbian/build/ef96d0862b82582cef2cb4ad711a169106d18eab/patch/u-boot/u-boot-rockchip64-mainline/board-rock-pi-4-enable-spi-flash.patch";
+          sha256 = "1zlzcz3l6x0rvab8dlf2l9g2b62xjwd7jr5qrkrx09bxdnlxpvh1";
+        })
+      ];
+      postInstall = ''
+        tools/mkimage -n rk3399 -T rkspi -d tpl/u-boot-tpl-dtb.bin:spl/u-boot-spl-dtb.bin spl.bin
+        cat <(dd if=spl.bin bs=512K conv=sync) u-boot.itb > $out/u-boot.spiflash.bin
+      '';
+    });
   };
 in
 self
