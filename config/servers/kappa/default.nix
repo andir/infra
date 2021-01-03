@@ -4,6 +4,7 @@
   imports = [
     ../../profiles/server.nix
     ./hardware.nix
+    ./wan-party.nix
   ];
 
   deployment = {
