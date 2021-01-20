@@ -5,17 +5,17 @@
   networking.firewall.extraCommands = ''
     ip6tables -t nat -I PREROUTING 1 -p tcp --dport 5863 -j DNAT --to fdd::2
     ip6tables -t nat -I PREROUTING 1 -p udp --dport 5863 -j DNAT --to fdd::2
-    ip6tables -t nat -I PREROUTING 1 -p tcp --dport 655 -j DNAT --to fdd::2
-    ip6tables -t nat -I PREROUTING 1 -p udp --dport 655 -j DNAT --to fdd::2
+    ip6tables -t nat -I PREROUTING 1 -p tcp --dport 655 -j DNAT --to-destination '[fdd::2]:5863'
+    ip6tables -t nat -I PREROUTING 1 -p udp --dport 655 -j DNAT --to-destination '[fdd::2]:5863'
 
   '';
   networking.firewall.extraStopCommands = ''
     ip6tables -t nat -D PREROUTING -p tcp --dport 5863 -j DNAT --to fdd::2 || :
     ip6tables -t nat -D PREROUTING -p udp --dport 5863 -j DNAT --to fdd::2 || :
-
-
     ip6tables -t nat -D PREROUTING -p tcp --dport 655 -j DNAT --to fdd::2 || :
     ip6tables -t nat -D PREROUTING -p udp --dport 655 -j DNAT --to fdd::2 || :
+    ip6tables -t nat -D PREROUTING -p tcp --dport 655 -j DNAT --to-destination '[fdd::2]:5863' || :
+    ip6tables -t nat -D PREROUTING -p udp --dport 655 -j DNAT --to-destination '[fdd::2]:5863' || :
   '';
 
   containers.wan-party = {
