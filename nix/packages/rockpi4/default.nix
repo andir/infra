@@ -1,18 +1,9 @@
-{ lib, buildUBoot, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch }:
+{ lib, ubootRockPi4, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch }:
 let
   self = {
     uboot =
       let
-        drv = buildUBoot {
-          defconfig = "rock-pi-4-rk3399_defconfig";
-          extraMeta.platforms = [ "aarch64-linux" ];
-          BL31 = "${armTrustedFirmwareRK3399}/bl31.elf";
-          filesToInstall = [ "u-boot.itb" "idbloader.img" ];
-          postBuild = ''
-            ./tools/mkimage -n rk3399 -T rksd -d tpl/u-boot-tpl.bin idbloader.img
-            cat spl/u-boot-spl.bin >> idbloader.img
-          '';
-        };
+        drv = ubootRockPi4;
         # assert that u-boot is at least version 2020.10
       in
       assert (lib.versionAtLeast drv.version "2020.10"); drv;
@@ -54,12 +45,16 @@ let
     mpv = wrapMpv self.mpv-unwrapped { };
 
 
+    # conversation on the curren findings on how to properly build these:
+    # https://logs.nix.samueldr.com/nixos-aarch64/2021-01-06#4441416
+    # https://github.com/sigmaris/u-boot/blob/v2020.01-ci/azure-pipelines.yml#L94-L100
     u-boot-spi = self.uboot.overrideAttrs ({ patches, ... }: {
       patches = patches ++ [
-        (fetchpatch {
-          url = "https://raw.githubusercontent.com/armbian/build/ef96d0862b82582cef2cb4ad711a169106d18eab/patch/u-boot/u-boot-rockchip64-mainline/board-rock-pi-4-enable-spi-flash.patch";
-          sha256 = "1zlzcz3l6x0rvab8dlf2l9g2b62xjwd7jr5qrkrx09bxdnlxpvh1";
-        })
+        ./board-rock-pi-4-enable-spi-flash.patch
+        #(fetchpatch {
+        #  url = "https://raw.githubusercontent.com/armbian/build/ef96d0862b82582cef2cb4ad711a169106d18eab/patch/u-boot/u-boot-rockchip64-mainline/board-rock-pi-4-enable-spi-flash.patch";
+        #  sha256 = "1zlzcz3l6x0rvab8dlf2l9g2b62xjwd7jr5qrkrx09bxdnlxpvh1";
+        #})
       ];
       postInstall = ''
         tools/mkimage -n rk3399 -T rkspi -d tpl/u-boot-tpl-dtb.bin:spl/u-boot-spl-dtb.bin spl.bin
