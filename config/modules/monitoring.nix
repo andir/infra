@@ -161,6 +161,7 @@ in
         "eqixfr5-bb2.nynex.de" = { };
         "ixfr3-bb1.nynex.de" = { };
         "usi-corea.nynex.de" = { };
+        "ws.flokli.de" = { };
       };
     };
 
@@ -178,6 +179,7 @@ in
         "eqixfr5-bb1.nynex.de" = { };
         "eqixfr5-bb2.nynex.de" = { };
         "ixfr3-bb1.nynex.de" = { };
+        "ws.flokli.de" = { };
       };
     };
 
