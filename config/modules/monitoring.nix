@@ -240,15 +240,15 @@ in
                     }
                   }
 
-                  metric dovecot_imap_command {
-                    event_name = imap_command_finished
-                    group_by = cmd_name tagged_reply_state
-                  }
+                  # metric dovecot_imap_command {
+                  #   event_name = imap_command_finished
+                  #   group_by = cmd_name tagged_reply_state
+                  # }
 
-                  metric dovecot_imap_command {
-                    event_name = smtp_server_command_finished
-                    group_by = cmd_name tagged_reply_state
-                  }
+                  # metric dovecot_imap_command {
+                  #   event_name = smtp_server_command_finished
+                  #   group_by = cmd_name tagged_reply_state
+                  # }
                 '';
               }
             )
