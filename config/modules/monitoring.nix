@@ -162,6 +162,7 @@ in
         "ixfr3-bb1.nynex.de" = { };
         "usi-corea.nynex.de" = { };
         "ws.flokli.de" = { };
+        "magrathea.litschi.xyz" = { };
       };
     };
 
@@ -180,6 +181,7 @@ in
         "eqixfr5-bb2.nynex.de" = { };
         "ixfr3-bb1.nynex.de" = { };
         "ws.flokli.de" = { };
+        "magrathea.litschi.xyz" = { };
       };
     };
 
