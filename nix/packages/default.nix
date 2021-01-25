@@ -83,14 +83,4 @@ self: super: {
       psautohint = psuper.psautohint.overridePythonAttrs (_: { doCheck = false; });
     };
   };
-
-  firefox =
-    if super.system != "aarch64-linux" then super.firefox else
-    super.wrapFirefox
-      (super.firefox-unwrapped.overrideAttrs ({ configureFlags, ... }:
-        assert ! (builtins.elem "--disable-elf-hack" configureFlags) -> throw "Remove the override for Firefox on aarch64 as the nixpkgs channel has been bumped.";
-        {
-          configureFlags = builtins.filter (f: f != "--disable-elf-hack") configureFlags;
-        }))
-      { };
 }
