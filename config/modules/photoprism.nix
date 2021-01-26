@@ -56,6 +56,7 @@ in
           TEMP_PATH = "/tmp";
           HTTP_PORT = cfg.port;
           SETTINGS_PATH = "${settings}";
+          PHOTOPRISM_SPONSOR = "true";
         }
       ) // {
         HOME = "/var/cache/photoprism/home"; # darktable because it hardcoded $HOME/.config/darktable
