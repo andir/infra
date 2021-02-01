@@ -221,38 +221,56 @@ in
           </XRD>
         '';
 
-        signal = pkgs.fetchurl {
-          url = "https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
-          sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
-        };
-
-        js = pkgs.fetchurl {
-          url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.js";
-          sha256 = "05d8dyhqh3pq69ifjhr65c937d3ll08iaxdxqjrjv08yki9micxk";
-        };
-
-        css = pkgs.fetchurl {
-          url = "https://cdn.conversejs.org/6.0.0/dist/converse.min.css";
-          sha256 = "1w4g6y9ji9jx84ic5fl452dyv116h5x96vj572y4f62xw7dlrfi7";
-        };
+        bundle = pkgs.runCommand "conversejs"
+          {
+            buildInputs = [ pkgs.gnutar ];
+            src = pkgs.fetchurl {
+              url = "https://github.com/conversejs/converse.js/releases/download/v7.0.4/converse.js-7.0.4.tgz";
+              sha256 = "0gpdjqr8mj1p9s0pab7jsia50y9mjfdh7604j0vzj36n24pxxb5a";
+            };
+            signal = pkgs.fetchurl {
+              url = "https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
+              sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
+            };
+          }
+          ''
+            tar xf $src
+            mv package/dist $out
+            cp $signal $out/signal.js
+          '';
 
         index = pkgs.writeText "index.html" ''
-          <!doctype html>
+          <!DOCTYPE html>
           <html lang="en">
           <head>
             <meta chartset="utf-8"/>
-            <link rel="stylesheet" type="text/css" media="screen" href="converse.css">
-            <script src="signal.js" charset="utf-8"></script>
-            <script src="converse.js" charset="utf-8"></script>
+            <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.css">
+            <script src="/dist/signal.js" charset="utf-8"></script>
+            <script src="/dist/converse.min.js" charset="utf-8"></script>
           </head>
           <body class="converse-fullscreen">
           <div id="conversejs-bg"></div>
 
           <script>
+            converse.plugins.add('converse-fix-connection-discovery', {
+                "initialize": function () {
+                    converse.env.Strophe.Connection.prototype.setProtocol = function() {
+                        const proto = this.options.protocol || "";
+                        if (this.options.worker) {
+                            this._proto = new Strophe.WorkerWebsocket(this);
+                        } else if (this.service.indexOf("ws:") === 0 || this.service.indexOf("wss:") === 0 || proto.indexOf("ws") === 0) {
+                            this._proto = new Strophe.Websocket(this);
+                        } else {
+                            this._proto = new Strophe.Bosh(this);
+                        }
+                    };
+                }
+            });
             converse.initialize({
                 authentication: 'login',
                 bosh_service_url: 'https://${cfg.serverName}/.xmpp/http-bind/',
-                view_mode: 'fullscreen'
+                view_mode: 'fullscreen',
+                whitelisted_plugins: [ 'converse-fix-connection-discovery' ],
             });
           </script>
           </body>
@@ -302,23 +320,9 @@ in
                 alias ${index};
               '';
             };
-            locations."=/converse.js" = {
+            locations."/dist/" = {
               extraConfig = ''
-                default_type 'application/javascript';
-                alias ${js};
-              '';
-            };
-            locations."=/signal.js" = {
-              extraConfig = ''
-                default_type 'application/javascript';
-                alias ${signal};
-              '';
-            };
-
-            locations."=/converse.css" = {
-              extraConfig = ''
-                default_type 'text/css';
-                alias ${css};
+                alias ${toString bundle}//;
               '';
             };
             locations."=/.well-known/host-meta" = {
