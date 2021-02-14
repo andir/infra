@@ -15,7 +15,6 @@ in
     kernelPatches = with pkgs.kernelPatches; [
       bridge_stp_helper
       request_key_helper
-      export_kernel_fpu_functions."5.3"
       {
         name = "enable-rockpi4-spi";
         patch = ./enable-spi.patch;

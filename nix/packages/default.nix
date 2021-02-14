@@ -83,4 +83,12 @@ self: super: {
       psautohint = psuper.psautohint.overridePythonAttrs (_: { doCheck = false; });
     };
   };
+
+  dendrite = super.buildGoModule {
+    name = "dendrite";
+
+    src = sources.dendrite;
+
+    vendorSha256 = "1wwcrqvab9l17fa1a6nl8ln14zdyfwqic8g7hjyh5j1883246kqn";
+  };
 }

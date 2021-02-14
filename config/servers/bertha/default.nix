@@ -79,7 +79,7 @@ in
   deployment = {
     #   targetHost = "2a00:e67:1a6:0:20d:b9ff:fe41:6546";
     #targetHost = "10.250.11.254";
-    targetHost = "fe80::3c29:d9ff:fe39:1adf%enp4s0";
+    targetHost = "fe80::3c29:d9ff:fe39:1adf%enp6s0";
     targetUser = "root";
     substituteOnDestination = false;
   };

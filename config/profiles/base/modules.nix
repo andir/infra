@@ -18,5 +18,6 @@
     ../../modules/photoprism.nix
     ../../modules/fping-exporter.nix
     ../../modules/publictransport.nix
+    ../../modules/dendrite.nix
   ];
 }
