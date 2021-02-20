@@ -4,6 +4,7 @@
     ../../profiles/server.nix
     ./hardware.nix
     ./graphical.nix
+    ./hass.nix
   ];
 
   deployment = {
