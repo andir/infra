@@ -8,4 +8,9 @@
     targetHost = "mail.radgo.at";
     port = 9100;
   };
+
+  h4ck.monitoring.targets."matrix.hackint.org" = {
+    targetHost = "matrix.hackint.org";
+    port = 9100;
+  };
 }

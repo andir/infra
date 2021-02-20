@@ -89,6 +89,11 @@ self: super: {
 
     src = sources.dendrite;
 
-    vendorSha256 = "1wwcrqvab9l17fa1a6nl8ln14zdyfwqic8g7hjyh5j1883246kqn";
+    prePatch = ''
+      sed -e 's%//db.Exec("PRAGMA journal_mode=WAL;")%db.Exec("PRAGMA journal_mode=WAL;")%g' -i roomserver/storage/sqlite3/storage.go
+      grep PRAGMA roomserver/storage/sqlite3/storage.go
+    '';
+
+    vendorSha256 = "1l1wydvi0yalas79cvhrqg563cvs57hg9rv6qnkw879r6smb2x1n";
   };
 }

@@ -261,6 +261,11 @@ in
       path = [
         pkgs.dendrite
       ];
+      # on Go >1.14 && <1.16 the way memory is released was changed
+      # This has been reverted in Go 1.16 see:
+      # - https://github.com/matrix-org/dendrite/issues/1580
+      # - https://github.com/golang/go/issues/42330
+      environment.GODEBUG = "madvdontneed=1";
       script = ''
         cd $STATE_DIRECTORY
         test -e matrix_key.pem || generate-keys --private-key matrix_key.pem

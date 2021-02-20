@@ -36,8 +36,8 @@
     config = ''
       [global]
       zeroconf_port = 5354
-      device_name = crappy
-      backend = pulseaudio
+      device_name = "crappy"
+      backend = "pulseaudio"
       bitrate = 320
     '';
   };
