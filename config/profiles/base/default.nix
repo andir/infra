@@ -6,6 +6,7 @@
     ./nix-path.nix
     ./nix.nix
     ./acme.nix
+    ./systemd.nix
   ];
 
   users.users.andi = {

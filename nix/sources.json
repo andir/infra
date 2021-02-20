@@ -63,7 +63,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "e15b3c1b110d76153f0180a3bc9cb2fdb60d0edf",
+        "rev": "e9a08b7828c8fb1d12039fdea7d782f6b8e8eec6",
         "type": "git"
     },
     "dn42-regparse": {
@@ -146,10 +146,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "5c53c720ff690ef82a9fe4849e7b70c104e1c82f",
-        "sha256": "0gjxfxbfc6maqg48k9ai476s6zkc94p0y3v9yjgwbiy7b38pqfys",
+        "rev": "6bebc91e2882e0b4917567d0c025bbfafb01be69",
+        "sha256": "16jzhnjvjca44fszv16sql79z8q56k439v5g3q5nzvghkyd5dvkh",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/5c53c720ff690ef82a9fe4849e7b70c104e1c82f.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/6bebc91e2882e0b4917567d0c025bbfafb01be69.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {

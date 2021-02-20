@@ -7,6 +7,30 @@ self: super: {
 
   ate = self.callPackage sources.ate { };
 
+  # systemd variant that fixes my weird netlink message issue on bootup
+  # on machines that have more than just one or two wireguard interfaces.
+  # See https://github.com/systemd/systemd/issues/17232 for details.
+  systemd-boot =
+    let
+      applyPatch = super.lib.versionOlder super.systemd.version "248";
+      updateSource = super.lib.versionOlder super.systemd.version "247";
+    in
+    super.systemd.overrideAttrs ({ patches, ... }:
+      (if updateSource then {
+        src = super.fetchFromGitHub {
+          owner = "systemd";
+          repo = "systemd-stable";
+          rev = "v246.10";
+          sha256 = "0llm288g18zsidd7rasan3cah46432xdj74caqm6ia8lpvrxbvh8";
+        };
+      } else { })
+      // (if applyPatch then {
+        patches = patches ++ [
+          ./18545.patch
+        ];
+      } else { })
+    );
+
   knot_exporter = self.callPackage ./knot_exporter.nix {
     src = sources.knot_exporter;
   };
