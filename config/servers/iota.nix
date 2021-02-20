@@ -1,7 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   imports = [
     ../profiles/hetzner-vm.nix
+    /home/andi/dev/private/nixos-security-tracker/module.nix
   ];
 
   h4ck.wireguardBackbone = {
@@ -10,6 +11,19 @@
       #  "172.20.25.2/32"
       #  "fd21:a07e:735e:ffff::3/128"
     ];
+    peers = {
+      ranzbook = {
+        localAddresses = [ "fe80::1/64" ];
+        remoteAddresses = [ "fe80::2/64" ];
+
+        mtu = 1420;
+        babel = true;
+
+        localPort = 42421;
+        remotePort = 42421;
+        remotePublicKey = "92y41GtkPs1Ul1lSBV1yaBHmZmaMMbf9JthN/wlS2V8=";
+      };
+    };
   };
   networking.firewall.allowedUDPPorts = [ 11001 11002 ];
 
@@ -82,6 +96,7 @@
         };
       };
 
+
       cloudfiles_at = {
         tunnelType = "wireguard";
         mtu = 1420;
@@ -151,6 +166,39 @@
       };
     };
   };
+
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  services.nginx = {
+    enable = true;
+    virtualHosts."iota.h4ck.space" = {
+      enableACME = true;
+      forceSSL = true;
+    };
+  };
+  services.nixos-security-tracker = {
+    enable = true;
+    virtualHost = "iota.h4ck.space";
+    database = "postgresql";
+    #githubEventsSharedSecretFile = "/var/lib/nixos-security-tracker/github-events-secret";
+    # useMemcached = true;
+  };
+  # services.borgbackup.jobs = {
+  #   "nixos-security-tracker" = {
+  #     paths = [ "/var/backup/nixos-security-tracker" ];
+  #     startAt = "daily";
+  #     compression=  "lz4";
+  #     repo = "borg@zeta.rammhold.de:/tank/enc/borg/nixos-security-tracker";
+  #     encryption.mode = "none";
+  #     preHook = ''
+  #       /run/wrappers/bin/su -c '${config.services.postgresql.package}/bin/pg_dump nixos-security-tracker' nixos-security-tracker | ${pkgs.gzip}/bin/gzip -C > /var/backup/nixos-security-tracker/postgresql-all.sql.gz
+  #     '';
+  #     postHook = ''
+  #       ${pkgs.coreutils}/bin/rm /var/backup/nixos-security-tracker/postgresql-all.sql.gz
+  #     '';
+  #   };
+  # };
+
+  systemd.tmpfiles.rules = [ "d /var/backups/nixos-security-tracker 0700 postgres - - -" ];
 
   systemd.services.tmate = {
     # FIXME: This is currently complaining about not running as root while

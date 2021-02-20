@@ -61,6 +61,7 @@
     rockpi4.mpp
     rockpi4.ffmpeg
     syncplay
+    streamlink
   ];
 
   hardware.opengl.enable = true;
