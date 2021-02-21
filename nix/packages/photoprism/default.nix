@@ -7,7 +7,7 @@
 , runCommand
 , buildGoModule
 , libtensorflow-bin
-, nodejs-12_x
+, nodejs-14_x
 , callPackage
 }:
 buildGoModule {
@@ -31,7 +31,7 @@ buildGoModule {
     frontend =
       let
         noderanz = callPackage ranz2nix {
-          nodejs = nodejs-12_x;
+          nodejs = nodejs-14_x;
           sourcePath = src + "/frontend";
           packageOverride = name: spec:
             if name == "minimist" && spec ? resolved && spec.resolved == "" && spec.version == "1.2.0" then {
@@ -49,7 +49,7 @@ buildGoModule {
       in
       stdenv.mkDerivation {
         name = "photoprism-frontend";
-        nativeBuildInputs = [ nodejs-12_x ];
+        nativeBuildInputs = [ nodejs-14_x ];
 
         inherit src;
 
