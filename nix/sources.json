@@ -170,10 +170,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "64e032fdeb2c6a4f31e32a75190ebe8bffc181e9",
-        "sha256": "0r5bd8i3cwcq2mxxs6g90icy77dymsd84hix202wzy5nzl9fv04l",
+        "rev": "1d108199ef887ddabfa29a091a49cf530c6762df",
+        "sha256": "1akg7s3620nrj4lml81jjf7r486pm86fzllaxhhbal4knd9ni1bb",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/64e032fdeb2c6a4f31e32a75190ebe8bffc181e9.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/1d108199ef887ddabfa29a091a49cf530c6762df.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
