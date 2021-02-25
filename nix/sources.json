@@ -140,6 +140,18 @@
         "rev": "0c4b9a898527dcaf9a3491ad1cb37a6c3a7b1b63",
         "type": "git"
     },
+    "nixos-security-tracker": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "andir",
+        "repo": "nixos-security-tracker",
+        "rev": "ea722f023678c3fc9a31f3be23ad9a8f735d193d",
+        "sha256": "1jmg7fidbk9r90hh566gj70n73cxz5lj3dwanqb4pggfbibqipq7",
+        "type": "tarball",
+        "url": "https://github.com/andir/nixos-security-tracker/archive/ea722f023678c3fc9a31f3be23ad9a8f735d193d.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nixpkgs": {
         "branch": "nixos-20.09",
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",

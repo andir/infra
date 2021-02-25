@@ -1,8 +1,11 @@
 { pkgs, config, ... }:
+let
+  sources = import ../../nix/sources.nix;
+in
 {
   imports = [
     ../profiles/hetzner-vm.nix
-    /home/andi/dev/private/nixos-security-tracker/module.nix
+    (sources.nixos-security-tracker + "/module.nix")
   ];
 
   h4ck.wireguardBackbone = {
