@@ -44,6 +44,8 @@ self: super: {
     };
   };
 
+  conversejs = super.callPackage ./conversejs { };
+
   morph = (unstable.callPackage (sources.morph + "/nix-packaging") { }).overrideAttrs (
     _: {
       patches = [ ./morph-evalConfig-machinename.patch ];

@@ -224,18 +224,15 @@ in
         bundle = pkgs.runCommand "conversejs"
           {
             buildInputs = [ pkgs.gnutar ];
-            src = pkgs.fetchurl {
-              url = "https://github.com/conversejs/converse.js/releases/download/v7.0.4/converse.js-7.0.4.tgz";
-              sha256 = "0gpdjqr8mj1p9s0pab7jsia50y9mjfdh7604j0vzj36n24pxxb5a";
-            };
+            inherit (pkgs) conversejs;
             signal = pkgs.fetchurl {
               url = "https://cdn.conversejs.org/3rdparty/libsignal-protocol.min.js";
               sha256 = "08wbd4nqcjcfrpp5i4g4qnc0975v59l35vjirc58rcwyc2cr9qpy";
             };
           }
           ''
-            tar xf $src
-            mv package/dist $out
+            cp -rv $conversejs $out
+            chmod +rw -R $out
             cp $signal $out/signal.js
           '';
 
@@ -246,31 +243,16 @@ in
             <meta chartset="utf-8"/>
             <link rel="stylesheet" type="text/css" media="screen" href="/dist/converse.css">
             <script src="/dist/signal.js" charset="utf-8"></script>
-            <script src="/dist/converse.min.js" charset="utf-8"></script>
+            <script src="/dist/converse.js" charset="utf-8"></script>
           </head>
           <body class="converse-fullscreen">
           <div id="conversejs-bg"></div>
 
           <script>
-            converse.plugins.add('converse-fix-connection-discovery', {
-                "initialize": function () {
-                    converse.env.Strophe.Connection.prototype.setProtocol = function() {
-                        const proto = this.options.protocol || "";
-                        if (this.options.worker) {
-                            this._proto = new Strophe.WorkerWebsocket(this);
-                        } else if (this.service.indexOf("ws:") === 0 || this.service.indexOf("wss:") === 0 || proto.indexOf("ws") === 0) {
-                            this._proto = new Strophe.Websocket(this);
-                        } else {
-                            this._proto = new Strophe.Bosh(this);
-                        }
-                    };
-                }
-            });
             converse.initialize({
                 authentication: 'login',
                 bosh_service_url: 'https://${cfg.serverName}/.xmpp/http-bind/',
                 view_mode: 'fullscreen',
-                whitelisted_plugins: [ 'converse-fix-connection-discovery' ],
             });
           </script>
           </body>
