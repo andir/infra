@@ -181,7 +181,8 @@ in
 
               networkConfig = {
                 DHCPServer = mkDefault true;
-                IPv6PrefixDelegation = "yes";
+                DHCPv6PrefixDelegation = "yes";
+                IPv6SendRA = true;
               };
 
               dhcpServerConfig = {
