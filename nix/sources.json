@@ -53,17 +53,17 @@
         "homepage": "",
         "owner": "matrix-org",
         "repo": "dendrite",
-        "rev": "81312b8a787c9a25ce897f361ba7720cdc763e9e",
-        "sha256": "1x82qfllv23h51lwgfi1vyaz72dr6z941pkip6f9myvicajyss8a",
+        "rev": "9557ccada4efe50d0f370019ad0b9f017fc7ebcf",
+        "sha256": "15cakpwwjhj3hcsza8cwnfiqxkyigvl31ffcm0j57qsz6589y31z",
         "type": "tarball",
-        "url": "https://github.com/matrix-org/dendrite/archive/81312b8a787c9a25ce897f361ba7720cdc763e9e.tar.gz",
+        "url": "https://github.com/matrix-org/dendrite/archive/9557ccada4efe50d0f370019ad0b9f017fc7ebcf.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dn42-registry": {
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "4ce4579509b7f7b5d948e7f7958b2a63945bc1d9",
+        "rev": "c8e80016a82070aaaf8629fac6ec8870fecc27ff",
         "type": "git"
     },
     "dn42-regparse": {
@@ -137,7 +137,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
-        "rev": "0c4b9a898527dcaf9a3491ad1cb37a6c3a7b1b63",
+        "rev": "326766126cea11ed94b772bdc79d8b5ccb228957",
         "type": "git"
     },
     "nixos-security-tracker": {
@@ -158,10 +158,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "df8e3bd110921621d175fad88c9e67909b7cb3d3",
-        "sha256": "1z20y0lblb452h2gghgds34g7lrj7v8gfhz66w687ws8jqdm3bzz",
+        "rev": "8d82c865b416354a43cb30bd1945c3bbda27850d",
+        "sha256": "1wwrvzlhm47zc61icc2kb9z6prpm0phs97cyyv48i43xf68nkvw4",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/df8e3bd110921621d175fad88c9e67909b7cb3d3.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/8d82c865b416354a43cb30bd1945c3bbda27850d.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {
@@ -182,10 +182,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "59512b0e503ac661903de23d4475ea07a36af2ab",
-        "sha256": "117wfmgrwx7kpr6py2z2p541hn83x22fl1q9vp1bgpp3w175r5hk",
+        "rev": "ce9651df108421e6629ae15176ce84044b83b4ec",
+        "sha256": "0svmj3bz58nyqbzpk1wyabmy47ppdzycjzf2hdmqfyjr15r7v8ac",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/59512b0e503ac661903de23d4475ea07a36af2ab.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/ce9651df108421e6629ae15176ce84044b83b4ec.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {

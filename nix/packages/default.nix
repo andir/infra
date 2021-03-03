@@ -120,6 +120,6 @@ self: super: {
       grep PRAGMA roomserver/storage/sqlite3/storage.go
     '';
 
-    vendorSha256 = "1l1wydvi0yalas79cvhrqg563cvs57hg9rv6qnkw879r6smb2x1n";
+    vendorSha256 = "0a19mj3fckacjxdc3rnv0fymisz66xhwxkq4vjycz93pmyks0c08";
   };
 }
