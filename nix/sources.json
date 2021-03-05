@@ -63,7 +63,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "cc0c0e03ce9c8c00e3be9f00be093b84b1a622aa",
+        "rev": "d025a36635bdc464626e8a7de4c8974452d452db",
         "type": "git"
     },
     "dn42-regparse": {
