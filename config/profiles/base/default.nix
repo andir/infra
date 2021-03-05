@@ -9,6 +9,14 @@
     ./systemd.nix
   ];
 
+  # remove the usage of RSA host keys, who knows how secure those are anyway...
+  services.openssh.hostKeys = [
+    {
+      path = "/etc/ssh/ssh_host_ed25519_key";
+      type = "ed25519";
+    }
+  ];
+
   users.users.andi = {
     isNormalUser = true;
     extraGroups = [ "wheel" ];
