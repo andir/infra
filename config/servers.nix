@@ -31,7 +31,7 @@ in
   };
   iota = mkMachine {
     name = "iota";
-    config = ./servers/iota.nix;
+    config = ./servers/iota;
   };
   "kack.it" = mkMachine {
     name = "kack.it";
