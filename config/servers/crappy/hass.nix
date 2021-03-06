@@ -136,11 +136,10 @@
               type = "entities";
               title = "Powerplug";
               entities = [
-                "sensor.lumi_lumi_plug_maeu01_ce40823c_eletrical_measurement"
-                "sensor.lumi_lumi_plug_maeu01_ce40823c_on_off"
+                "sensor.lumi_lumi_plug_maeu01_ce40823c_electrical_measurement"
+                "switch.lumi_lumi_plug_maeu01_ce40823c_on_off"
                 "sensor.lumi_lumi_plug_maeu01_ce40823c_smartenergy_metering"
               ];
-
             }
           ];
         }
