@@ -11,7 +11,7 @@
     # For >= 20.09
     paths = lib.mkIf config.services.nginx.enable {
       nginx = {
-        path = "/var/log/nginx";
+        path = "/var/log/nginx/*.log";
         user = config.services.nginx.user;
         group = config.services.nginx.group;
         keep = 30;
