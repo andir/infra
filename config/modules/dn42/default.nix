@@ -94,6 +94,7 @@ in
                         default = { };
                         type = types.submodule {
                           options = {
+                            next_hop_self = mkOption { type = types.bool; default = true; };
                             gateway_recursive = mkOption { type = types.bool; default = true; };
                             extended_next_hop = mkOption { type = types.bool; default = false; };
                           };
@@ -453,7 +454,7 @@ in
                       import filter dn42_${peer.name}_import;
                       export filter dn42_${peer.name}_export;
                       import keep filtered on;
-                      ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn) ''
+                      ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn && peer.bgp.ipv4.next_hop_self) ''
                         next hop self on;
                       ''}
                       ${optionalString peer.bgp.ipv4.extended_next_hop "extended next hop;"}

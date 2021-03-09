@@ -92,6 +92,7 @@ in
         tunnelType = null;
         bgp = {
           asn = 4242423991;
+          ipv4.next_hop_self = false;
         };
         addresses = {
           ipv6.remote_address = "fe80::1";
@@ -138,6 +139,28 @@ in
         addresses = {
           ipv6.local_address = "fe80::1";
           ipv6.remote_address = "fe80::1826";
+        };
+      };
+
+      jlu5 = {
+        tunnelType = "wireguard";
+        mtu = 1420;
+        wireguardConfig = {
+          localPort = 42029;
+          remotePort = 53991;
+          remoteEndpoint = "dn42-uk-lon01.jlu5.com";
+          remotePublicKey = "pEQZQOD67QeWXqrHLrMoCXug/cOXJFMXH5vwQ1cW70s=";
+        };
+        bgp = {
+          asn = 4242421080;
+          local_pref = 100;
+          ipv4.gateway_recursive = false;
+          ipv4.extended_next_hop = true;
+        };
+
+        addresses = {
+          ipv6.local_address = "fe80::1";
+          ipv6.remote_address = "fe80::116";
         };
       };
 
