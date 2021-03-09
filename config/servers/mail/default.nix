@@ -64,6 +64,11 @@ in
       options = [ "bind" ];
       device = "/data/dkim";
     };
+    "/var/lib/dovecot/fts_xapian" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/data/xapian-fts";
+    };
     "/var/sieve" = {
       fsType = "none";
       options = [ "bind" ];
@@ -90,6 +95,7 @@ in
   h4ck.backup.paths = [
     config.mailserver.mailDirectory
     config.mailserver.dkimKeyDirectory
+    "/var/lib/dovecot/fts_xapian" # FIXME: should be config.mailserver.fullTextSearch.indexDir once upstream is fixed
     "/var/sieve" # managesieve files
     "/var/lib/radicale" # radicale files (contacts, calendar, …)
   ];
@@ -158,6 +164,23 @@ in
     # whether to scan inbound emails for viruses (note that this requires at least
     # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
     virusScanning = true;
+
+    # Index my mails so searching for them via IMAP works \o/
+    fullTextSearch = {
+      enable = true;
+      indexDir = "/var/lib/dovecot/fts_xapian";
+      memoryLimit = 750;
+      autoIndex = true; # index new and modified messages
+      minSize = 3; # min n-gram size
+      maxSize = 20; # max n-gram size
+      enforced = "no"; # Do not enforce using the search index yet, only do that once indexing is done
+
+      maintenance = {
+        enable = false; # FIXME: flip this once the initial indexing is done
+        onCalendar = "daily";
+        randomizedDelaySec = 7200;
+      };
+    };
   };
   services.dovecot2.mailPlugins.globally.enable = [ "zlib" ];
   services.dovecot2.extraConfig = ''
