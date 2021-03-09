@@ -90,6 +90,15 @@ in
                       import_reject = mkOption { type = types.bool; default = false; };
                       export_reject = mkOption { type = types.bool; default = false; };
                       multi_protocol = mkOption { type = types.bool; default = true; };
+                      ipv4 = mkOption {
+                        default = { };
+                        type = types.submodule {
+                          options = {
+                            gateway_recursive = mkOption { type = types.bool; default = true; };
+                            extended_next_hop = mkOption { type = types.bool; default = false; };
+                          };
+                        };
+                      };
                     };
                   };
                 };
@@ -437,7 +446,7 @@ in
                     ipv4 {
                       import table on;
                       export table on;
-                      gateway recursive;
+                      ${optionalString peer.bgp.ipv4.gateway_recursive "gateway recursive;"}
                       table dn42_v4;
                       igp table master4;
                       add paths on;
@@ -447,6 +456,7 @@ in
                       ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn) ''
                         next hop self on;
                       ''}
+                      ${optionalString peer.bgp.ipv4.extended_next_hop "extended next hop;"}
                       ${optionalString (peer.bgp.import_limit != null) "import limit ${toString peer.bgp.import_limit} action block;"}
                     };
                     ipv6 {
