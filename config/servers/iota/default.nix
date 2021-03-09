@@ -141,6 +141,28 @@ in
         };
       };
 
+      yura = {
+        tunnelType = "wireguard";
+        mtu = 1420;
+        wireguardConfig = {
+          localPort = 42030;
+          remotePort = 23991;
+          remoteEndpoint = "llix.dneo.moeternet.com";
+          remotePublicKey = "3egMh/fpa/+YTAfIXihtNYTReh27AaS53WJyp7UT/Qg=";
+        };
+        bgp = {
+          asn = 4242422464;
+          local_pref = 100;
+          ipv4.gateway_recursive = false;
+          ipv4.extended_next_hop = true;
+        };
+
+        addresses = {
+          ipv6.local_address = "fe80::1";
+          ipv6.remote_address = "fe80::2464";
+        };
+      };
+
       kn = {
         tunnelType = "wireguard";
         mtu = 1408;
