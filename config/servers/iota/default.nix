@@ -122,6 +122,25 @@ in
         };
       };
 
+      lss233 = {
+        tunnelType = "wireguard";
+        mtu = 1420;
+        wireguardConfig = {
+          localPort = 42028;
+          remotePort = 53991;
+          remoteEndpoint = "lux.n.lss233.com";
+          remotePublicKey = "2hVHLTlQtH90qtLOHD9Yx35OpR08o46fcwa7PgeF+Wk=";
+        };
+        bgp = {
+          asn = 4242421826;
+          local_pref = 100;
+        };
+        addresses = {
+          ipv6.local_address = "fe80::1";
+          ipv6.remote_address = "fe80::1826";
+        };
+      };
+
       kn = {
         tunnelType = "wireguard";
         mtu = 1408;
