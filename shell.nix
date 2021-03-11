@@ -29,6 +29,7 @@ pkgs.mkShell {
     nix
     nixpkgs-fmt
     openssh
+    gitAndTools.git-bug
   ];
 
   inherit (pre-commit-hooks) shellHook;
