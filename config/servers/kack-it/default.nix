@@ -8,6 +8,7 @@
     ./blog.nix
     ./static.nix
     ./nixos-cloud.nix
+    ./dendrite.nix
   ];
 
   deployment = {
@@ -147,18 +148,6 @@
       culture = "de";
       calendar.firstDayOfWeek = 1;
     };
-  };
-
-  h4ck.dendrite = {
-    enable = true;
-    serverName = "kack.it";
-    nginxVhost = "matrix.kack.it";
-    disableFederation = false;
-  };
-
-  services.nginx.virtualHosts."matrix.kack.it" = {
-    enableACME = true;
-    forceSSL = true;
   };
 
 
