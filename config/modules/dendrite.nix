@@ -231,6 +231,11 @@ in
     serverName = lib.mkOption {
       type = lib.types.str;
     };
+
+    monitoringHosts = lib.mkOption {
+      type = lib.types.listOf lib.types.str;
+      default = [ "::1" "127.0.0.1" ];
+    };
   };
   config = lib.mkIf cfg.enable {
     services.nginx.virtualHosts.${cfg.nginxVhost} = {
@@ -242,6 +247,16 @@ in
           return 200 '{ "m.homeserver": { "base_url": "https://${cfg.nginxVhost}" } }';
         '';
         "/_matrix".proxyPass = "http://localhost:8008";
+
+        "/metrics" = {
+          proxyPass = "http://localhost:8008";
+          extraConfig = ''
+            proxy_set_header Authorization "Basic bWV0cmljczptZXRyaWNz";
+            access_log off;
+            ${lib.concatMapStringsSep "\n" (host: "allow ${host};") cfg.monitoringHosts}
+            deny all;
+          '';
+        };
       };
     };
     services.nginx.virtualHosts.${cfg.serverName} = {

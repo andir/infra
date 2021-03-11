@@ -222,6 +222,24 @@ in
         )
       )
 
+      # enable scraping of the dendrite module
+      (
+        mkIf config.h4ck.dendrite.enable (
+          mkMerge [
+            {
+              h4ck.dendrite.monitoringHosts = [ "127.0.0.1" "::1" ] ++ v4Srcs ++ v6Srcs;
+              h4ck.monitoring.targets.dendrite = {
+                port = 443;
+                targetHost = config.h4ck.dendrite.nginxVhost;
+                job_config = {
+                  scheme = "https";
+                };
+              };
+            }
+          ]
+        )
+      )
+
       # enable dovecot monitoring
       # currently deactivated since the old exporter isn't really great
       # and the new configuration syntax doesn't seem to work :(
