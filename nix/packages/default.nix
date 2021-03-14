@@ -59,8 +59,8 @@ self: super: {
       nativeBuildInputs = nativeBuildInputs ++ [ super.autoreconfHook ];
       src = super.fetchgit {
         url = "https://git.sr.ht/~andir/bird";
-        rev = "455363d64a11fc5f233991da5c6761816afde0e5";
-        sha256 = "169294zig4qkjm4fwxg8662kvs4k87k0zn7al99brbcqzcp4p0fc";
+        rev = "01dba342cdb52bed4b244eb304269609dae3a423";
+        sha256 = "0hhx7zhri67sw83vwvq0zkhvl56h9m7spjw69lfgg087p3acy7xd";
       };
     }
   ));
