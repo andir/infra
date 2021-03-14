@@ -90,11 +90,21 @@ in
                       import_reject = mkOption { type = types.bool; default = false; };
                       export_reject = mkOption { type = types.bool; default = false; };
                       multi_protocol = mkOption { type = types.bool; default = true; };
+                      ipv6 = mkOption {
+                        default = { };
+                        type = types.submodule {
+                          options = {
+                            extended_next_hop = mkOption { type = types.bool; default = false; };
+                          };
+                        };
+                      };
+
                       ipv4 = mkOption {
                         default = { };
                         type = types.submodule {
                           options = {
                             next_hop_self = mkOption { type = types.bool; default = true; };
+                            next_hop_address = mkOption { type = types.nullOr types.str; default = null; };
                             gateway_recursive = mkOption { type = types.bool; default = true; };
                             extended_next_hop = mkOption { type = types.bool; default = false; };
                           };
@@ -457,6 +467,9 @@ in
                       ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn && peer.bgp.ipv4.next_hop_self) ''
                         next hop self on;
                       ''}
+                      ${lib.optionalString (peer.bgp.ipv4.next_hop_address != null) ''
+                        next hop address ${peer.bgp.ipv4.next_hop_address};
+                      ''}
                       ${optionalString peer.bgp.ipv4.extended_next_hop "extended next hop;"}
                       ${optionalString (peer.bgp.import_limit != null) "import limit ${toString peer.bgp.import_limit} action block;"}
                     };
@@ -469,6 +482,7 @@ in
                       import filter dn42_${peer.name}_import;
                       export filter dn42_${peer.name}_export;
                       import keep filtered on;
+                      ${optionalString peer.bgp.ipv6.extended_next_hop "extended next hop;"}
                       ${lib.optionalString (peer.bgp.asn != cfg.bgp.asn) ''
                         next hop self on;
                       ''}
