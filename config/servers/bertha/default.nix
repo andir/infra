@@ -447,6 +447,8 @@ in
         interfaceName = "wg-iota";
         bgp = {
           asn = 4242423991;
+          ipv4.next_hop_self = false;
+          ipv4.gateway_recursive = true;
         };
         addresses = {
           ipv6.local_address = "fe80::1";
