@@ -62,6 +62,7 @@ self: super: {
         rev = "01dba342cdb52bed4b244eb304269609dae3a423";
         sha256 = "0hhx7zhri67sw83vwvq0zkhvl56h9m7spjw69lfgg087p3acy7xd";
       };
+      patches = patches ++ [ ./bird-next-hop-logging.patch ];
     }
   ));
 

@@ -1,0 +1,60 @@
+diff --git a/proto/bgp/packets.c b/proto/bgp/packets.c
+index b16ee242..4c9a1728 100644
+--- a/proto/bgp/packets.c
++++ b/proto/bgp/packets.c
+@@ -955,7 +955,7 @@ bgp_apply_next_hop(struct bgp_parse_state *s, rta *a, ip_addr gw, ip_addr ll)
+       nbr = neigh_find(&p->p, ll, p->neigh->iface, 0);
+ 
+     if (!nbr || (nbr->scope == SCOPE_HOST))
+-      WITHDRAW(BAD_NEXT_HOP);
++      WITHDRAW(BAD_NEXT_HOP " next_hop=%I", gw);
+ 
+     a->dest = RTD_UNICAST;
+     a->nh.gw = nbr->addr;
+@@ -965,7 +965,7 @@ bgp_apply_next_hop(struct bgp_parse_state *s, rta *a, ip_addr gw, ip_addr ll)
+   else /* GW_RECURSIVE */
+   {
+     if (ipa_zero(gw))
+-      WITHDRAW(BAD_NEXT_HOP);
++      WITHDRAW(BAD_NEXT_HOP " next_hop=%I", gw);
+ 
+     rtable *tab = ipa_is_ip4(gw) ? c->igp_table_ip4 : c->igp_table_ip6;
+     s->hostentry = rt_get_hostentry(tab, gw, ll, c->c.table);
+@@ -1127,16 +1127,16 @@ bgp_update_next_hop_ip(struct bgp_export_state *s, eattr *a, ea_list **to)
+ 
+   /* Forbid zero next hop */
+   if (ipa_zero(nh[0]) && ((len != 32) || ipa_zero(nh[1])))
+-    WITHDRAW(BAD_NEXT_HOP);
++    WITHDRAW(BAD_NEXT_HOP " next hop is zero for nh0=%I nh1=%I (len=%i)", nh[0], nh[1], len);
+ 
+   /* Forbid next hop equal to neighbor IP */
+   if (ipa_equal(peer, nh[0]) || ((len == 32) && ipa_equal(peer, nh[1])))
+-    WITHDRAW(BAD_NEXT_HOP);
++    WITHDRAW(BAD_NEXT_HOP " next hop is the neighbor IP");
+ 
+   /* Forbid next hop with non-matching AF */
+   if ((ipa_is_ip4(nh[0]) != bgp_channel_is_ipv4(s->channel)) &&
+       !s->channel->ext_next_hop)
+-    WITHDRAW(BAD_NEXT_HOP);
++    WITHDRAW(BAD_NEXT_HOP " next hop AF doesn't match or extended next hop is not enabled");
+ 
+   /* Just check if MPLS stack */
+   if (s->mpls && !bgp_find_attr(*to, BA_MPLS_LABEL_STACK))
+@@ -1211,7 +1211,7 @@ bgp_decode_next_hop_ip(struct bgp_parse_state *s, byte *data, uint len, rta *a)
+     ad->length = 16;
+ 
+   if ((bgp_channel_is_ipv4(c) != ipa_is_ip4(nh[0])) && !c->ext_next_hop)
+-    WITHDRAW(BAD_NEXT_HOP);
++    WITHDRAW(BAD_NEXT_HOP " next hop AF doesn't match or extended next hop is not enabled");
+ 
+   // XXXX validate next hop
+ 
+@@ -1292,7 +1292,7 @@ bgp_decode_next_hop_vpn(struct bgp_parse_state *s, byte *data, uint len, rta *a)
+     bgp_parse_error(s, 9);
+ 
+   if ((bgp_channel_is_ipv4(c) != ipa_is_ip4(nh[0])) && !c->ext_next_hop)
+-    WITHDRAW(BAD_NEXT_HOP);
++    WITHDRAW(BAD_NEXT_HOP " next hop AF doesn't match or extended next hop is not enabled");
+ 
+   // XXXX validate next hop
+ 
