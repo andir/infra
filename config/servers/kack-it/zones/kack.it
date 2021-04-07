@@ -1,7 +1,7 @@
 $TTL 120
 $ORIGIN kack.it.
 @    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
-                2020112901 ; Serial - date by convention
+                2021040702 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -13,4 +13,31 @@ $ORIGIN kack.it.
         IN      MX      10 mx.h4ck.space.
         IN      AAAA    2a01:4f8:1c1c:4b9f::
         IN      A       159.69.147.18
+        IN      TXT     "v=spf1 mx -all"
 ams     IN      AAAA    2a03:6000:9e02:10a::1
+
+mail._domainkey 10800 IN TXT "v=DKIM1; k=rsa; " "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDOhJUI86WiNsJbM14V5WVAwCRXJna+6tvlO3yTeOx1hmlGdQzgrTxjJIfKewnB1qabjIFUPR5d8vje/p4FYIWl7XEuSRoFsYhuKmuHlnjoffenQLDiknjA9leEBQ8yIk6Ek/LHjw48n5g/jQ34saoGBAjadNxytN3bK/HglTSJeQIDAQAB"
+
+aws-sandbox IN    NS    ns-561.awsdns-06.net.
+aws-sandbox IN    NS    ns-207.awsdns-25.com.
+aws-sandbox IN    NS    ns-1487.awsdns-57.org.
+aws-sandbox IN    NS    ns-1700.awsdns-20.co.uk.
+
+
+
+_matrix._tcp 300 IN SRV 5 10 443 matrix.kack.it.
+_xmpp-client._tcp 86400 IN SRV 5 0 5222 kack.it.
+_xmpp-server._tcp 86400 IN SRV 0 5 5269 kack.it.
+_xmpp-server._tcp.conference 86400 IN SRV 5 0 5269 kack.it.
+_xmpps-client._tcp 86400 IN SRV 5 0 5223 kack.it.
+
+conference 86400 IN CNAME kack.it.
+davical 1800 IN CNAME test-mx.kack.it.
+jetzt 600 IN CNAME iota.h4ck.space.
+matrix 600 IN CNAME kack.it.
+proxy 86400 IN CNAME kack.it.
+proxy 86400 IN CNAME kack.it.
+streaming 600 IN CNAME iota.h4ck.space.
+stun 10800 IN CNAME kack.it.
+unlock 1080 IN AAAA 2a01:4f8:1c1c:4b9f::2
+upload 1800 IN CNAME kack.it.
