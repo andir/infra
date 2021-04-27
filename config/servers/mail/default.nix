@@ -95,7 +95,7 @@ in
   h4ck.backup.paths = [
     config.mailserver.mailDirectory
     config.mailserver.dkimKeyDirectory
-    "/var/lib/dovecot/fts_xapian" # FIXME: should be config.mailserver.fullTextSearch.indexDir once upstream is fixed
+    #"/var/lib/dovecot/fts_xapian" # FIXME: should be config.mailserver.fullTextSearch.indexDir once upstream is fixed
     "/var/sieve" # managesieve files
     "/var/lib/radicale" # radicale files (contacts, calendar, …)
   ];
@@ -165,10 +165,11 @@ in
     # 1 Gb RAM for the server. Without virus scanning 256 MB RAM should be plenty)
     virusScanning = true;
 
+    indexDir = "/var/lib/dovecot/fts_xapian/";
+
     # Index my mails so searching for them via IMAP works \o/
     fullTextSearch = {
       enable = true;
-      indexDir = "/var/lib/dovecot/fts_xapian";
       memoryLimit = 750;
       autoIndex = true; # index new and modified messages
       minSize = 3; # min n-gram size
@@ -176,7 +177,7 @@ in
       enforced = "no"; # Do not enforce using the search index yet, only do that once indexing is done
 
       maintenance = {
-        enable = false; # FIXME: flip this once the initial indexing is done
+        enable = true;
         onCalendar = "daily";
         randomizedDelaySec = 7200;
       };

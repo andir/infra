@@ -8,7 +8,7 @@
     enable = true;
     autoExtraComponents = false;
 
-    package = pkgs.home-assistant.override {
+    package = (pkgs.home-assistant.override {
       extraComponents = [
         "frontend"
         "http"
@@ -17,7 +17,9 @@
         "system_health"
         "lovelace"
       ];
-    };
+    }).overridePythonAttrs (_: {
+      doCheck = false;
+    });
 
     config = {
       logger = {

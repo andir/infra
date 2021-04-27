@@ -12,7 +12,7 @@ self: super: {
   # See https://github.com/systemd/systemd/issues/17232 for details.
   systemd-boot =
     let
-      applyPatch = super.lib.versionOlder super.systemd.version "248";
+      applyPatch = super.lib.versionOlder super.systemd.version "247.6";
       updateSource = super.lib.versionOlder super.systemd.version "247";
     in
     super.systemd.overrideAttrs ({ patches, ... }:
@@ -121,6 +121,6 @@ self: super: {
       grep PRAGMA roomserver/storage/sqlite3/storage.go
     '';
 
-    vendorSha256 = "0a19mj3fckacjxdc3rnv0fymisz66xhwxkq4vjycz93pmyks0c08";
+    vendorSha256 = "1bhx6dxpldly9ka6kzk0b5sqk4iv6byk6smbjvdl1wl063ll7fbl";
   };
 }

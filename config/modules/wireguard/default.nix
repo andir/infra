@@ -144,7 +144,7 @@ in
           RemainAfterExit = true;
         };
       };
-      boot.extraModulePackages = [ config.boot.kernelPackages.wireguard ];
+      boot.extraModulePackages = if config.boot.kernelPackages.wireguard != null then [ config.boot.kernelPackages.wireguard ] else [ ];
       h4ck.bird = {
         enable = true;
       };

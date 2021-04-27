@@ -86,7 +86,7 @@
               <script src="/dash.all.min.js"></script>
               <script>
                 (function(){
-                  var url = "/dash/nixos.mpd";
+                  var url = "/dash/andi.mpd";
                   var player = dashjs.MediaPlayer().create();
                   player.initialize(document.querySelector("#player"), url, true);
                 })();
@@ -103,7 +103,7 @@
     appendConfig = ''
       rtmp {
         server {
-          listen 1935;
+          listen [::]:1935;
           ping 30s;
           notify_method get;
 
@@ -112,11 +112,11 @@
 
             hls on;
             hls_path /var/lib/rtmp/tmp/hls;
-            hls_fragment 2;
+            hls_fragment 15;
 
             dash on;
-            dash_fragment 1;
-            dash_playlist_length 6s;
+            dash_fragment 15;
+            dash_playlist_length 90s;
             dash_path /var/lib/rtmp/tmp/dash;
           }
         }

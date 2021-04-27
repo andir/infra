@@ -33,16 +33,18 @@ in
       max-port = 20100;
       extraConfig = ''
         userdb=/var/lib/turnserver/database.sqlite
+        verbose
       '';
     };
 
     services.prosody.extraConfig = ''
       turncredentials_host = "stun.${pcfg.serverName}"
       turncredentials_secret = ENV_TURN_SECRET
+      turncredentials_port = 3479
     '';
 
-    networking.firewall.allowedTCPPorts = [ 3478 ] ++ lib.range 20000 20100;
-    networking.firewall.allowedUDPPorts = [ 3478 ] ++ lib.range 20000 20100;
+    networking.firewall.allowedTCPPorts = [ 3479 ] ++ lib.range 20000 20100;
+    networking.firewall.allowedUDPPorts = [ 3479 ] ++ lib.range 20000 20100;
 
     users.groups."coturn-secret-users".members = [ "prosody" "turnserver" ];
 

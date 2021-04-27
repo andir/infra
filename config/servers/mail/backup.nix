@@ -2,7 +2,11 @@
 {
   services.borgbackup.jobs = {
     "mail" = {
-      paths = map (path: if path == config.mailserver.mailDirectory then "/data/snapshots/mails" else path) config.h4ck.backup.paths;
+      paths = map
+        (path:
+          if path == config.mailserver.mailDirectory then "/data/snapshots/mails" else
+          if path == "/var/lib/dovecot/fts_xapian" then "/data/snapshots/xapian-fts" else path)
+        config.h4ck.backup.paths;
       startAt = "hourly";
       compression = "lz4";
       repo = "borg@zeta.rammhold.de:/tank/enc/borg/mail.h4ck.space";
@@ -14,10 +18,13 @@
       preHook = ''
         set -e
         ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r /data/mails /data/snapshots/mails
+        ${pkgs.btrfs-progs}/bin/btrfs subvolume snapshot -r /data/xapian-fts /data/snapshots/xapian-fts
+
       '';
       postHook = ''
         set -e
         ${pkgs.btrfs-progs}/bin/btrfs subvolume delete /data/snapshots/mails
+        ${pkgs.btrfs-progs}/bin/btrfs subvolume delete /data/snapshots/xapian-fts
       '';
     };
   };
