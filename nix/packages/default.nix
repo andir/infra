@@ -46,7 +46,7 @@ self: super: {
 
   conversejs = super.callPackage ./conversejs { };
 
-  morph = (unstable.callPackage (sources.morph + "/nix-packaging") { }).overrideAttrs (
+  morph = (unstable.callPackage (sources.morph + "/default.nix") { }).overrideAttrs (
     _: {
       patches = [ ./morph-evalConfig-machinename.patch ];
     }
@@ -111,16 +111,15 @@ self: super: {
     };
   };
 
-  dendrite = super.buildGoModule {
+  dendrite = unstable.buildGoModule {
     name = "dendrite";
 
     src = sources.dendrite;
 
     prePatch = ''
       sed -e 's%//db.Exec("PRAGMA journal_mode=WAL;")%db.Exec("PRAGMA journal_mode=WAL;")%g' -i roomserver/storage/sqlite3/storage.go
-      grep PRAGMA roomserver/storage/sqlite3/storage.go
     '';
 
-    vendorSha256 = "1bhx6dxpldly9ka6kzk0b5sqk4iv6byk6smbjvdl1wl063ll7fbl";
+    vendorSha256 = "03qg1rx3ww2l4gbrms2y6chxv8qwzbjh7vmb3kqsrisvra2r1y89";
   };
 }

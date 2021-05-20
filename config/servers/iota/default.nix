@@ -188,6 +188,15 @@ in
         };
       };
 
+      #moecast = {
+      #  tunnelType = "wireguard";
+      #  mtu = 1408;
+      #  wireguarConfig = {
+      #    localPort = 42031;
+      #    remotePort = 53991; # FIXME: change to agreed on port
+      #  };
+      #};
+
       kn = {
         tunnelType = "wireguard";
         mtu = 1408;

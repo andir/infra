@@ -9,6 +9,20 @@
     enable = true;
   };
 
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "sway";
+        user = "andi";
+      };
+      initial_session = {
+        user = "andi";
+        command = "sway";
+      };
+    };
+  };
+
   environment.etc."sway/config".text = ''
     # Logo key. Use Mod1 for Alt.
     set $mod Mod4

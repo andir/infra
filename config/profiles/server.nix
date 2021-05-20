@@ -4,6 +4,7 @@
     ./base
     ./ssh
     ./dns.nix
+    ./webserver.nix
   ];
 
   programs.mosh.enable = true;

@@ -1,32 +1,46 @@
-commit 530b7507b00fedac745e08bb50b24a773c4f03d3 (HEAD -> master)
-Author: Andreas Rammhold <andreas@rammhold.de>
-Date:   Sat May 23 20:53:36 2020 +0200
+From 5e1798eeb7f2815f1996899c5ac69876011b90e5 Mon Sep 17 00:00:00 2001
+From: Andreas Rammhold <andreas@rammhold.de>
+Date: Sat, 23 May 2020 20:53:36 +0200
+Subject: [PATCH] evalConfig: pass machine name as argument and return function
 
-    evalConfig: pass machine name as argument and return function
-    
-    This allows passing a custom evalConfig function based ont he machines
-    name. Which in turn allows using a complelty different NixOS version for
-    a specific version.
+This allows passing a custom evalConfig function based ont he machines
+name. Which in turn allows using a complelty different NixOS version for
+a specific version.
+---
+ data/eval-machines.nix | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/data/eval-machines.nix b/data/eval-machines.nix
-index 2ff6fbb..074a3af 100644
+index a4bcda6..6630dc3 100644
 --- a/data/eval-machines.nix
 +++ b/data/eval-machines.nix
 @@ -5,7 +5,7 @@ let
    network      = import networkExpr;
    nwPkgs       = network.network.pkgs or {};
    lib          = network.network.lib or nwPkgs.lib or (import <nixpkgs/lib>);
--  evalConfig   = network.network.evalConfig or "${nwPkgs.path or <nixpkgs>}/nixos/lib/eval-config.nix";
+-  evalConfig   = network.network.evalConfig or ((nwPkgs.path or <nixpkgs>) + "/nixos/lib/eval-config.nix");
 +  evalConfig   = network.network.evalConfig or (_machineName: import "${nwPkgs.path or <nixpkgs>}/nixos/lib/eval-config.nix");
    runCommand   = network.network.runCommand or nwPkgs.runCommand or ((import <nixpkgs> {}).runCommand);
  in
    with lib;
-@@ -21,7 +21,7 @@ rec {
-         modules = [ { imports = [ network.${machineName} ]; } { inherit (network) _file; } ];
-       in
+@@ -42,7 +42,7 @@ in rec {
+   uncheckedNodes =
+     listToAttrs (map (machineName:
        { name = machineName;
 -        value = import evalConfig {
 +        value = evalConfig machineName {
-           modules =
-             modules ++
-             [ ({ config, lib, options, ... }: {
+           modules = modules machineName;
+           extraArgs = { nodes = uncheckedNodes; name = machineName; };
+           check = false;
+@@ -54,7 +54,7 @@ in rec {
+   nodes =
+     listToAttrs (map (machineName:
+       { name = machineName;
+-        value = import evalConfig {
++        value = evalConfig machineName {
+           modules = modules machineName;
+           extraArgs = { nodes = uncheckedNodes ; name = machineName; };
+         };
+-- 
+2.31.1
+

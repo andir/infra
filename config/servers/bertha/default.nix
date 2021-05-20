@@ -406,20 +406,21 @@ in
   systemd.services.unbound = {
     wantedBy = [ "network-online.target" ];
   };
-  services.unbound.extraConfig =
+  services.unbound.settings =
     let
       privateKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/key.pem";
       publicKey = config.security.acme.certs."epsilon.rammhold.de".directory + "/cert.pem";
     in
-    ''
-
-      server:
-        tls-service-key: ${privateKey}
-        tls-service-pem: ${publicKey}
-      remote-control:
-        control-enable: yes
-        control-interface: /run/unbound/unbound.ctl
-    '';
+    {
+      server = {
+        tls-service-key = privateKey;
+        tls-service-pem = publicKey;
+      };
+      remote-control = {
+        control-enable = true;
+        control-interface = "/run/unbound/unbound.ctl";
+      };
+    };
   users.users.root.initialPassword = "password";
 
   environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
