@@ -9,6 +9,7 @@
     ./static.nix
     ./nixos-cloud.nix
     ./dendrite.nix
+    ./synapse.nix
   ];
 
   deployment = {
@@ -149,7 +150,6 @@
       calendar.firstDayOfWeek = 1;
     };
   };
-
 
   system.stateVersion = "19.03";
 }

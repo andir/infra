@@ -1,10 +1,11 @@
 {
   h4ck.dendrite = {
-    enable = true;
+    enable = false;
     serverName = "kack.it";
     nginxVhost = "matrix.kack.it";
     disableFederation = false;
   };
+  systemd.services.dendrite.serviceConfig.MemoryMax = "2000M";
 
   services.nginx.virtualHosts."matrix.kack.it" = {
     enableACME = true;
