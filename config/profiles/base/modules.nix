@@ -19,5 +19,7 @@
     ../../modules/fping-exporter.nix
     ../../modules/publictransport.nix
     ../../modules/dendrite.nix
+    ../../modules/dex.nix
+    ../../modules/matrix-static.nix
   ];
 }

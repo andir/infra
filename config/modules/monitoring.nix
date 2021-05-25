@@ -123,6 +123,11 @@ in
       type = types.bool;
       default = true;
     };
+
+    defaultMonitoringHosts = mkOption {
+      type = types.listOf types.str;
+      default = v4Srcs ++ v6Srcs;
+    };
     targetHost = mkOption {
       type = types.str;
       default = config.networking.hostName + (lib.optionalString (config.networking.domain != null) ".${config.networking.domain}");

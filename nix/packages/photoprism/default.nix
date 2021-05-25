@@ -11,7 +11,7 @@
 , callPackage
 }:
 buildGoModule {
-  name = "test";
+  name = "photoprism-go";
   inherit src;
 
   goPackagePath = "github.com/photoprism/photoprism";
@@ -24,7 +24,7 @@ buildGoModule {
     sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
   '';
 
-  vendorSha256 = "17sqpqp451y6fwrdw9rqnyyj3nrbddwf10lcbw850gbn6i7xz3m1";
+  vendorSha256 = "18vknfmyqddd2213rm2n097l1y3p62w1z76mlgkcqfi2d3dyrarr";
 
   passthru = rec {
 

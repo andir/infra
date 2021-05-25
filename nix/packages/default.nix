@@ -122,4 +122,30 @@ self: super: {
 
     vendorSha256 = "03qg1rx3ww2l4gbrms2y6chxv8qwzbjh7vmb3kqsrisvra2r1y89";
   };
+
+
+  dex = unstable.buildGoModule {
+    name = "dex";
+    src = sources.dex;
+
+    subPackages = [ "cmd/dex" ];
+
+    vendorSha256 = "07szipczdac64v65xz8jjz5kvmw8zm7k4vry1hy04d0k1zbyqamm";
+  };
+
+  matrix-static = unstable.buildGoModule {
+    name = "matrix-static";
+    src = sources.matrix-static;
+    nativeBuildInputs = [ unstable.quicktemplate ];
+
+    preBuild = ''
+      qtc
+    '';
+
+    subPackages = [ "cmd/..." ];
+
+    vendorSha256 = "14s70q7zabdk4njkqmg04gac2kpf54afxrqhglxdc3pwy7l7jhy4";
+
+    passthru.assets = sources.matrix-static + "/assets";
+  };
 }
