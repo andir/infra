@@ -75,7 +75,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "cdf1a67b92b1112fa16d7d52777cc450f6ab7095",
+        "rev": "d239333f0231ab260303500aa0b36ebbf6461e7a",
         "type": "git"
     },
     "dn42-regparse": {
@@ -206,10 +206,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "27b14087e28d169aa7b88cfeb4ee53cc4cd8f792",
-        "sha256": "068y6yxwlxd4jyjvy7cf3gi9cbzs7mr0d88an4rkn56bcrkg6y6b",
+        "rev": "171a4e799aededf58db6b19e3f033b17e6680402",
+        "sha256": "1vq9g6vyq4ag2b8151axgrl15lqcc01ssxify03n0hvfkm8m8j2j",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/27b14087e28d169aa7b88cfeb4ee53cc4cd8f792.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/171a4e799aededf58db6b19e3f033b17e6680402.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {

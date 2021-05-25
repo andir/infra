@@ -5,12 +5,12 @@
 , fetchurl
 , fetchzip
 , runCommand
-, buildGoModule
+, buildGo116Module
 , libtensorflow-bin
 , nodejs-14_x
 , callPackage
 }:
-buildGoModule {
+buildGo116Module {
   name = "photoprism-go";
   inherit src;
 
