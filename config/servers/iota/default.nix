@@ -254,6 +254,12 @@ in
       forceSSL = true;
     };
   };
+  mods.hetzner.vm.persistentDisks."/persist/postgresql".id = 11409641;
+  fileSystems."/var/lib/postgresql" = {
+    fsType = "none";
+    options = [ "bind" ];
+    device = "/persist/postgresql/postgresql";
+  };
   services.nixos-security-tracker = {
     enable = true;
     virtualHost = "iota.h4ck.space";
