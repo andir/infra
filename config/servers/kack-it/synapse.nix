@@ -1,5 +1,14 @@
-{ pkgs, ... }:
+{ pkgs, lib, config, ... }:
 {
+  h4ck.monitoring.targets.synapse = {
+    port = 443;
+    targetHost = "matrix.kack.it";
+    job_config = {
+      scheme = "https";
+    };
+  };
+
+
   services.nginx = {
     enable = true;
     virtualHosts."kack.it" = {
@@ -43,7 +52,15 @@
             proxy_set_header X-Forwarded-For $remote_addr;
             proxy_set_header X-Forwarded-Proto $scheme;'';
         };
+        "/metrics" = {
+          proxyPass = "http://127.0.0.1:9148";
+          extraConfig = ''
+            access_log off;
+            ${lib.concatMapStringsSep "\n" (host: "allow ${host};") (config.h4ck.monitoring.defaultMonitoringHosts ++ [ "127.0.0.1" "::1" ])}
+            deny all;
+          '';
 
+        };
         "/" = {
           root = pkgs.element-web.override (_: {
             conf = {
@@ -76,11 +93,12 @@
       cp_max = 10;
     };
     report_stats = true;
+    enable_metrics = true;
     listeners = [
       {
         type = "metrics";
         port = 9148;
-        bind_address = "::";
+        bind_address = "127.0.0.1";
         resources = [ ];
         tls = false;
       }
@@ -124,7 +142,37 @@
     dynamic_thumbnails = true; # might be a nicer user experience?
     allow_guest_access = false;
     enable_registration = false; # for admin purposes
+    logConfig = ''
+      version: 1
 
+      formatters:
+        journal_fmt:
+          format: '%(name)s: [%(request)s] %(message)s'
+
+      filters:
+        context:
+          (): synapse.util.logcontext.LoggingContextFilter
+          request: ""
+
+      handlers:
+        journal:
+          class: systemd.journal.JournalHandler
+          formatter: journal_fmt
+          filters: [context]
+          SYSLOG_IDENTIFIER: synapse
+
+      disable_existing_loggers: True
+
+      loggers:
+        synapse:
+          level: WARN
+        synapse.storage.SQL:
+          level: WARN
+
+      root:
+        level: WARN
+        handlers: [journal]
+    '';
     extraConfigFiles = [
       (pkgs.writeText "misc.yml" (builtins.toJSON ({
         #session_lifetime = "24h"; # disabled to allow guest accounts
@@ -257,5 +305,6 @@
   systemd.services.matrix-synapse.environment = {
     LD_PRELOAD = "${pkgs.jemalloc}/lib/libjemalloc.so";
     SYNAPSE_CACHE_FACTOR = "1.0";
+    LimitNOFILE = "4096";
   };
 }
