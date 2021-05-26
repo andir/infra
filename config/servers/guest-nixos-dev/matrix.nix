@@ -188,6 +188,32 @@
       (pkgs.writeText "misc.yml" (builtins.toJSON ({
         #session_lifetime = "24h"; # disabled to allow guest accounts
         experimental_features = { spaces_enabled = true; };
+        alias_creation_rules = [
+          # allow creating aliases to nixos.org in the nixos-* namespace
+          # for any of our local users
+          {
+            user_id = "*";
+            alias = "nixos-*";
+            room_id = "*:nixos.org";
+            action = "allow";
+          }
+
+          # Any local users can create aliases in the community-* namespace
+          {
+            user_id = "*";
+            alias = "community-*";
+            room_id = "*";
+            action = "allow";
+          }
+
+          # Allow andi do create any aliases :-)
+          {
+            user_id = "@andir:guest.nixos.dev";
+            alias = "*";
+            room_id = "*";
+            action = "allow";
+          }
+        ];
       })))
       (pkgs.writeText "retention.yml" (builtins.toJSON ({
         retention = {
@@ -310,6 +336,7 @@
         enable_partitionwise_aggregate = "on";
         jit = "on";
       };
+
   };
 
   # use jemalloc to improve the memory situation with synapse
