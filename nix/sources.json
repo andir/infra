@@ -65,10 +65,10 @@
         "homepage": "https://dexidp.io",
         "owner": "dexidp",
         "repo": "dex",
-        "rev": "5451188e29723be57f93612dc8a102a43acd3555",
-        "sha256": "11k3d02l9gp5ixwbmyc178f8fy96dmgri44nv2xzlm80zivhw824",
+        "rev": "95941506f5e4894d43f691fe90322d1fcd18f68b",
+        "sha256": "146r9mb2q4fwachvf3z9xkpcn9pm9qadimz3vh2s8z3mxxvnn802",
         "type": "tarball",
-        "url": "https://github.com/dexidp/dex/archive/5451188e29723be57f93612dc8a102a43acd3555.tar.gz",
+        "url": "https://github.com/dexidp/dex/archive/95941506f5e4894d43f691fe90322d1fcd18f68b.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dn42-registry": {
