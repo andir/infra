@@ -147,7 +147,7 @@
     max_upload_size = "10M";
     url_preview_enabled = false;
     dynamic_thumbnails = false; # might be a nicer user experience?
-    allow_guest_access = true;
+    allow_guest_access = true; # required for the log viewer
     enable_registration = false; # for admin purposes
     logConfig = ''
       version: 1
@@ -174,7 +174,7 @@
         synapse:
           level: WARN
         synapse.handlers.oidc:
-          level: DEBUG
+          level: WARN
         synapse.storage.SQL:
           level: WARN
 
