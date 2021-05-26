@@ -188,6 +188,9 @@
       (pkgs.writeText "misc.yml" (builtins.toJSON ({
         #session_lifetime = "24h"; # disabled to allow guest accounts
         experimental_features = { spaces_enabled = true; };
+        password_config = {
+          enabled = false; # we use SSO for all the logins
+        };
         alias_creation_rules = [
           # allow creating aliases to nixos.org in the nixos-* namespace
           # for any of our local users
