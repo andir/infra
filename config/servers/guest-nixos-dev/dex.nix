@@ -53,10 +53,12 @@ in
   systemd.services.dex-roll-random-client-secrets = {
     wantedBy = [ "multi-user.target" ];
     before = [ "dex.service" "matrix-synapse.service" ];
+    path = [ pkgs.utillinux ];
 
     script = ''
+      set -e
       cd /run/dex-synapse
-      if ! [ test -f client_secret]; then
+      if ! test -f client_secret; then
         printf "%s-%s" $(uuidgen) $(uuidgen) > client_secret
       fi
     '';
