@@ -73,6 +73,13 @@
               integrations_widgets_urls = [ ];
               disable_guests = true;
               roomDirectory.servers = [ "nixos.org" "kack.it" "matrix.org" ];
+              features = {
+                feature_pinning = "labs";
+                feature_custom_status = "labs";
+                feature_custom_tags = "labs";
+                feature_state_counters = "labs";
+              };
+              showLabsSettings = true;
             };
           });
         };
