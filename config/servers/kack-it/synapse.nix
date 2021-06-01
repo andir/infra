@@ -91,7 +91,6 @@
     enable = true;
     server_name = "kack.it";
     public_baseurl = "https://matrix.kack.it";
-    registration_shared_secret = "564523924234"; # for setting up initial users
     database_type = "psycopg2";
     database_args = {
       user = "matrix-synapse";
@@ -190,24 +189,24 @@
           enabled = true;
           default_policy = {
             min_lifetime = "1d";
-            max_lifetime = "90d";
+            max_lifetime = "36500d";
           };
 
-          allowed_lifetime_min = "1d";
-          allowed_lifetime_max = "90d";
+          #allowed_lifetime_min = "1d";
+          #allowed_lifetime_max = "365d";
 
-          purge_jobs = [
-            {
-              shorted_max_lifetime = "1d";
-              longest_max_lifetime = "7d";
-              interval = "5m";
-            }
-            {
-              shorted_max_lifetime = "7d";
-              longest_max_lifetime = "90d";
-              interval = "24h";
-            }
-          ];
+          #purge_jobs = [
+          #  {
+          #    shorted_max_lifetime = "1d";
+          #    longest_max_lifetime = "7d";
+          #    interval = "5m";
+          #  }
+          #  {
+          #    shorted_max_lifetime = "7d";
+          #    longest_max_lifetime = "90d";
+          #    interval = "24h";
+          #  }
+          #];
         };
       })))
       (pkgs.writeText "url-preview.yml" (builtins.toJSON ({
@@ -243,7 +242,10 @@
 
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_12;
+    package = pkgs.postgresql_12.overrideAttrs ({ nativeBuildInputs, configureFlags, ... }: {
+      nativeBuildInputs = nativeBuildInputs ++ [ pkgs.llvm pkgs.clang ];
+      configureFlags = configureFlags ++ [ "--with-llvm" ];
+    });
     initialScript = pkgs.writeText "synapse-init.sql" ''
       CREATE USER "matrix-synapse";
       CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"
@@ -266,7 +268,7 @@
         effective_io_concurrency = 100; # concurrent IO only really activated if OS supports posix_fadvise function;
         random_page_cost = 1.25; # speed of random disk access relative to sequential access (1.0);
         # Monitoring;
-        shared_preload_libraries = "pg_stat_statements"; # per statement resource usage stats;
+        shared_preload_libraries = "pg_stat_statements,auto_explain"; # per statement resource usage stats & log explain statements for slow queries
         track_io_timing = "on"; # measure exact block IO times;
         track_functions = "pl"; # track execution times of pl-language procedures if any;
         # Replication;
@@ -305,6 +307,14 @@
         enable_partitionwise_join = "on";
         enable_partitionwise_aggregate = "on";
         jit = "on";
+
+        jit_above_cost = 100000;
+        jit_inline_above_cost = 150000;
+        jit_optimize_above_cost = 500000;
+
+        # log slow queries
+        log_min_duration_statement = 100;
+        "auto_explain.log_min_duration" = 100;
       };
   };
 
