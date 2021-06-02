@@ -46,7 +46,7 @@ in
   };
 
   fileSystems = {
-    "/var/www/" = {
+    "/var/www" = {
       fsType = "none";
       options = [ "bind" ];
       device = "/data/wordpress";

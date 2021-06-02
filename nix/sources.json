@@ -118,7 +118,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://git.darmstadt.ccc.de/nixos/modules.git",
-        "rev": "53bcd169448379695e1936e12e9019179c8bcb28",
+        "rev": "bf5329d14ce941e09593c98ba0fc7208ec5a4925",
         "type": "git"
     },
     "morph": {
@@ -177,15 +177,15 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "nixos-20.09",
+        "branch": "nixos-21.05",
         "description": "A read-only mirror of NixOS/nixpkgs tracking the released channels. Send issues and PRs to",
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "38fce8ec004b3e61c241e3b64c683f719644f350",
-        "sha256": "12azgdf3zihlxqiw33dx0w9afhgzka8pqha4irp7sn0jgka0zyxs",
+        "rev": "d25ea6a0d2a847fb52131da546f2a866656fbafa",
+        "sha256": "0y2h71pvzrhc2svib4lwjl04hrzy8901ravvlyxlqdbal8hy3838",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/38fce8ec004b3e61c241e3b64c683f719644f350.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/d25ea6a0d2a847fb52131da546f2a866656fbafa.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-unstable": {

@@ -26,6 +26,7 @@ in
 
     users.users.photoprism = {
       createHome = false;
+      isSystemUser = true;
     };
 
     h4ck.backup.paths = [ "${cfg.storagePath}" ] ++ lib.optional (cfg.storagePath == "/var/lib/photoprism") "/var/lib/private/photoprism";

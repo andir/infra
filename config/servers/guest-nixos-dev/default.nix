@@ -31,5 +31,5 @@
     };
   };
 
-  mods.hetzner.vm.persistentDisks."/persist/".id = 11315455;
+  mods.hetzner.vm.persistentDisks."/persist".id = 11315455;
 }

@@ -14,11 +14,13 @@
   };
   services.unbound = {
     enable = lib.mkDefault true;
-    interfaces = [ "127.0.1.53" ];
-    allowedAccess = [
-      "::1/128"
-      "127.0.0.0/8"
-    ];
+    settings = {
+      server.interface = [ "127.0.1.53" ];
+      server.access-control = map (addr: "\"${addr}\" allow") [
+        "::1/128"
+        "127.0.0.0/8"
+      ];
+    };
   };
   systemd.services.unbound.serviceConfig.RestrictAddressFamilies = [ "AF_NETLINK" ]; # required since some nixpkgs bump…
 }

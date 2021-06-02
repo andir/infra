@@ -10,6 +10,12 @@ let
   };
 in
 {
+
+  users.users.radicale = {
+    home = "/var/lib/radicale";
+    createHome = true;
+    isSystemUser = true;
+  };
   services.radicale = {
     enable = true;
     package = pkgs.radicale3.overrideAttrs (
@@ -19,20 +25,21 @@ in
         ];
       }
     );
-    config = ''
-      [server]
-      hosts = 127.0.0.1:5232
+    settings = {
+      server.hosts = "127.0.0.1:5232";
 
-      [auth]
-      delay = 1
-      type = radicale_auth_crypt
-      htpasswd_filename = ${builtins.toFile "passwd" (lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "${name}:${value.hashedPassword}") config.mailserver.loginAccounts)) }
-      # htpasswd_encryption = crypt
+      auth = {
+        delay = 1;
+        type = "radicale_auth_crypt";
+        htpasswd_filename = builtins.toFile "passwd" (lib.concatStringsSep "\n" (lib.mapAttrsToList (name: value: "${name}:${value.hashedPassword}") config.mailserver.loginAccounts));
+        # htpasswd_encryption = crypt
+      };
 
-      [storage]
-      filesystem_folder = ${config.users.users.radicale.home}
-      # hook = git add -A && (git diff --cached --quiet || git commit -m "Changes by "%(user)s)
-    '';
+      storage = {
+        filesystem_folder = config.users.users.radicale.home;
+        # hook = git add -A && (git diff --cached --quiet || git commit -m "Changes by "%(user)s)
+      };
+    };
   };
 
   services.nginx = {
