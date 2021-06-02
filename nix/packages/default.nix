@@ -124,13 +124,13 @@ self: super: {
   };
 
 
-  dex = unstable.buildGoModule {
+  dex = self.buildGoModule {
     name = "dex";
     src = sources.dex;
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "1a6h43dw1qg4cfz5flchy38dv7wyy8b0ahlh54wxr3fjnb2fliaw";
+    vendorSha256 = "0s577q1j05w9cq56vhm79h9mbfrf13hichl0wqv3hmm23wr275q4";
   };
 
   matrix-static = unstable.buildGoModule {
