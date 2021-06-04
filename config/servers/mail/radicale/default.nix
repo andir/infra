@@ -14,7 +14,6 @@ in
   users.users.radicale = {
     home = "/var/lib/radicale";
     createHome = true;
-    isSystemUser = true;
   };
   services.radicale = {
     enable = true;
