@@ -141,6 +141,15 @@ in
         Id = 42;
       };
     };
+    "00-iot" = {
+      netdevConfig = {
+        Name = "iot";
+        Kind = "vlan";
+      };
+      vlanConfig = {
+        Id = 43;
+      };
+    };
 
   };
 
@@ -149,7 +158,7 @@ in
       matchConfig = {
         Name = "internal";
       };
-      vlan = [ "oldlan" "lan" "mgmt" "sc-agx" ];
+      vlan = [ "oldlan" "lan" "mgmt" "sc-agx" "iot" ];
     };
     "00-bond0-1" = {
       matchConfig = {
@@ -227,6 +236,17 @@ in
           { address = "fd21:a07e:735e:ff42::"; prefixLength = 64; }
         ];
       }
+      {
+        interface = "iot";
+        subnetId = "43";
+        v4Addresses = [
+          { address = "10.250.43.1"; prefixLength = 24; }
+        ];
+        v6Addresses = [
+          { address = "fd21:a07e:735e:ff43::"; prefixLength = 64; }
+        ];
+      }
+
     ];
   };
 
@@ -258,6 +278,7 @@ in
           iifname oldlan jump lan_input
           iifname mgmt accept;
           iifname sc-agx jump agx_input
+          iifname iot jump iot_input
 
           ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
 
@@ -299,6 +320,14 @@ in
           tcp dport { domain, domain-s } accept
         }
 
+        chain iot_input {
+          ip protocol icmp accept
+          ip6 nexthdr icmpv6 accept
+          udp sport bootpc udp dport bootps accept comment "DHCP clients"
+          udp dport { domain, domain-s } accept
+          tcp dport { domain, domain-s } accept
+        }
+
         chain upstream_input {
           # make dhcp client and ipv6 ra work on the uplink interface
           udp sport bootps udp dport bootpc accept
@@ -323,12 +352,13 @@ in
           ip protocol icmp accept
           ip6 nexthdr icmpv6 accept
 
-          # everything can go out
+          iifname iot log prefix "IOT isn't granted internet access: " reject
+
+          # everything can go out (except for those above)
           oifname uplink accept
 
           oifname lan iifname oldlan accept
           oifname oldlan iifname lan accept
-
 
           oifname lan jump forward_to_lan
           oifname oldlan jump forward_to_lan
