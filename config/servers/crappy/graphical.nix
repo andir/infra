@@ -3,7 +3,21 @@
   environment.systemPackages = with pkgs; [
     ate
     firefox
+    (kodi-wayland.withPackages (p: with p; [
+      netflix
+    ]))
   ];
+
+  networking.firewall.extraStopCommands = ''
+    iptables -D INPUT -p tcp --dport 8080 -s 172.20.23.0/24 -j ACCEPT || : # kodi
+    ip6tables -D INPUT -p tcp --dport 8080 -s fd21:a07e:735e:ff00::/64 -j ACCEPT  || # kodi
+  '';
+
+  networking.firewall.extraCommands = ''
+    iptables -I INPUT 1 -p tcp --dport 8080 -s 172.20.23.0/24 -j ACCEPT || : # kodi
+    ip6tables -I INPUT 1 -p tcp --dport 8080  -s fd21:a07e:735e:ff00::/64 -j ACCEPT  || # kodi
+  '';
+
 
   programs.sway = {
     enable = true;
