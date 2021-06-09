@@ -75,7 +75,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "294b84f6ec15f8a50978c5a4ccc7a9b1aeb4c589",
+        "rev": "370dc1e6a427037e8ae8aa1a0d0ea103dd9a6348",
         "type": "git"
     },
     "dn42-regparse": {
@@ -108,10 +108,10 @@
         "homepage": "http://view.matrix.org/",
         "owner": "matrix-org",
         "repo": "matrix-static",
-        "rev": "32cddd12c028937f1c1425c27e0909acba41c640",
-        "sha256": "0c960bfkyr7mmh74kvda8b4282yirl6cx9q385avw5xwvq29ylpp",
+        "rev": "c778780f604b32e6c3603874231e3819789d8241",
+        "sha256": "1n59vv4xjzbs7237b1v8vlgblsdyw2hw8fi8sfjh05mqhxh5panf",
         "type": "tarball",
-        "url": "https://github.com/matrix-org/matrix-static/archive/32cddd12c028937f1c1425c27e0909acba41c640.tar.gz",
+        "url": "https://github.com/matrix-org/matrix-static/archive/c778780f604b32e6c3603874231e3819789d8241.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "modules": {
