@@ -188,6 +188,18 @@
         "url": "https://github.com/NixOS/nixpkgs/archive/5de44c15758465f8ddf84d541ba300b48e56eda4.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "nixpkgs-esp32": {
+        "branch": "esp32",
+        "description": "Nix Packages collection",
+        "homepage": "",
+        "owner": "plietar",
+        "repo": "nixpkgs",
+        "rev": "56d622f706e9c09331eadd08914464e779fe057d",
+        "sha256": "18m3lry7id4w9dyp8hw5f13nma837cr4y0nx5qz95zfqfii0ckpd",
+        "type": "tarball",
+        "url": "https://github.com/plietar/nixpkgs/archive/56d622f706e9c09331eadd08914464e779fe057d.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "nixpkgs-unstable": {
         "branch": "nixos-unstable",
         "description": "Nix Packages collection",

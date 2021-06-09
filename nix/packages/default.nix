@@ -148,4 +148,86 @@ self: super: {
 
     passthru.assets = sources.matrix-static + "/assets";
   };
+
+  esp32Pkgs = import sources.nixpkgs-esp32 {
+    inherit (self) system;
+    overlays = let buildPackages = self; in
+      [
+        (self: super:
+          let
+            python3 = buildPackages.python3.override {
+              self = python3;
+              packageOverrides = s: super: {
+                cryptography = super.cryptography.overridePythonAttrs (_: { doCheck = false; });
+                pyparsing = super.pyparsing.overridePythonAttrs (old: rec {
+                  version = "2.3.1";
+                  src = s.fetchPypi {
+                    pname = "pyparsing";
+                    inherit version;
+                    sha256 = "66c9268862641abcac4a96ba74506e594c884e3f57690a696d21ad8210ed667a";
+                  };
+                });
+              };
+            };
+            py = (python3.withPackages (p: with p; [
+              pyserial
+              future
+              cryptography
+              setuptools
+              pyelftools
+              pyparsing
+              click
+              ecdsa
+              kconfiglib
+              reedsolo
+              python-socketio
+              bitstring
+              construct
+            ]));
+          in
+          {
+            # ESP32 SDK
+            esp-idf = self.runCommandNoCC "esp-idf"
+              {
+                src = self.fetchgit {
+                  url = "https://github.com/espressif/esp-idf.git";
+                  rev = "v4.2";
+                  sha256 = "0h60xnxny0q4m3mqa1ghr2144j0cn6wb7mg3nyn31im3dwclf68h";
+                  fetchSubmodules = true;
+                };
+                nativeBuildInputs =
+                  [ py ];
+                passthru.python = py;
+              } ''
+              set -ex
+              python --version
+              cp -r --no-preserve=mode $src $out
+              # nuke the requirements to make the toolchain happy
+              echo > $out/requirements.txt
+              echo $PATH
+              chmod +x $out/tools/*.py
+              patchShebangs --build $out/tools
+              cd $out
+              set +ex
+            '';
+
+            # ESP32 Framework
+            smooth = self.runCommandNoCC "smooth"
+              {
+                src = self.fetchgit {
+                  url = "https://github.com/PerMalmberg/Smooth.git";
+                  fetchSubmodules = true;
+                  rev = "b4bf80b4c5195e1c5d5c39f8285142e2af523d93";
+                  sha256 = "0dy0vjwcyw7s1w44p0xgmbd24f58idmnmsx56wkp1iapx33gsvw3";
+                };
+              } ''
+              cp -r --no-preserve=mode $src $out
+              cd $out
+              sed -e '1 p #include <mutex>' -i lib/smooth/include/smooth/core/io/i2c/I2CMasterDevice.h
+            '';
+          })
+      ];
+  };
+
+  watering = self.esp32Pkgs.pkgsCross.esp32.callPackage ./watering { };
 }
