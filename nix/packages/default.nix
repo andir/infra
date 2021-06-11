@@ -207,6 +207,7 @@ self: super: {
               echo $PATH
               chmod +x $out/tools/*.py
               patchShebangs --build $out/tools
+              patchShebangs --build $out/components/esptool_py/esptool
               cd $out
               set +ex
             '';

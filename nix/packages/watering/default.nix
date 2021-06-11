@@ -11,13 +11,9 @@ stdenv.mkDerivation rec {
   '';
   hardeningDisable = [ "format" ]; # -Werror=format-security
   cmakeFlags = [ "-DESP_PLATFORM=1" "-DCMAKE_TOOLCHAIN_FILE=$IDF_PATH/tools/cmake/toolchain-esp32.cmake" ];
-} /* ''
-  export PATH="$IDF_TOOLS_PATH:$PATH"
-  cd $(mktemp -d)
-  cp -r --no-preserve=mode $src src
-  mkdir build
-  cd build
-  cmake ../src 
-  make
-  ls -la
-  '' */
+
+  installPhase = ''
+    mkdir $out
+    cp name_of_your_project.* $out
+  '';
+}
