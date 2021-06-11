@@ -52,6 +52,7 @@ in
     ../../profiles/server.nix
     ./unifi.nix
     ./nginx.nix
+    ./watering.nix
   ];
 
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
@@ -326,6 +327,7 @@ in
           udp sport bootpc udp dport bootps accept comment "DHCP clients"
           udp dport { domain, domain-s } accept
           tcp dport { domain, domain-s } accept
+          tcp dport 1883 accept # mosquitto
         }
 
         chain upstream_input {
@@ -360,6 +362,8 @@ in
           oifname lan iifname oldlan accept
           oifname oldlan iifname lan accept
 
+          oifname iot iifname lan accept
+
           oifname lan jump forward_to_lan
           oifname oldlan jump forward_to_lan
           oifname mgmt jump forward_to_mgmt
@@ -367,6 +371,7 @@ in
           oifname sc-agx iifname lan accept
           oifname sc-agx iifname oldlan accept
           oifname sc-agx ip6 nexthdr tcp tcp dport 22 accept
+
 
           oifname "wg-*" jump forward_to_wg
 
@@ -454,7 +459,6 @@ in
   users.users.root.initialPassword = "password";
 
   environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
-
 
   h4ck.dn42 = {
     enable = true;
@@ -559,5 +563,4 @@ in
       };
     };
   };
-
 }
