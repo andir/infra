@@ -52,7 +52,7 @@ in
     ../../profiles/server.nix
     ./unifi.nix
     ./nginx.nix
-    ./watering.nix
+    ./mqtt2prom.nix
   ];
 
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
@@ -310,6 +310,7 @@ in
           ${lib.optionalString (config.router.enableAvahiReflector) ''
             udp dport { mdns } accept
             tcp dport { mdns } accept
+            tcp dport 1883 accept # mqtt
           ''}
         }
 
