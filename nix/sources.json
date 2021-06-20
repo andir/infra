@@ -209,7 +209,19 @@
         "rev": "fbfb79400a08bf754e32b4d4fc3f7d8f8055cf94",
         "sha256": "0pgyx1l1gj33g5i9kwjar7dc3sal2g14mhfljcajj8bqzzrbc3za",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/fbfb79400a08bf754e32b4d4fc3f7d8f8055cf94.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/fa0326ce5233f7d592271df52c9d0812bec47b84.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "npmlock2nix": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "tweag",
+        "repo": "npmlock2nix",
+        "rev": "8ada8945e05b215f3fffbd10111f266ea70bb502",
+        "sha256": "0ni3z64wf1cha7xf5vqzqfqs73qc938zvnnbn147li1m4v8pnzzx",
+        "type": "tarball",
+        "url": "https://github.com/tweag/npmlock2nix/archive/8ada8945e05b215f3fffbd10111f266ea70bb502.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "photoprism": {
@@ -253,6 +265,18 @@
         "sha256": "0jaxw74srgabzz5sawy6nv27rpghmwxw53m5csnrhgy39a9yaki4",
         "type": "tarball",
         "url": "https://github.com/andir/ranz2nix/archive/637276c3110716d2a798e737fe62e54b37190d50.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "zigbee2mqtt": {
+        "branch": "dev",
+        "description": "Zigbee 🐝 to MQTT bridge 🌉, get rid of your proprietary Zigbee bridges 🔨",
+        "homepage": "https://www.zigbee2mqtt.io",
+        "owner": "Koenkk",
+        "repo": "zigbee2mqtt",
+        "rev": "76a0cd507fee00b9cc21d2bc85d1da405265febb",
+        "sha256": "1c1nxxqf6lfns65dn740czhsa2r2ilwzrhbh9g2l551zx8ggcbjh",
+        "type": "tarball",
+        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/76a0cd507fee00b9cc21d2bc85d1da405265febb.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

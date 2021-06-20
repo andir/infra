@@ -231,4 +231,37 @@ self: super: {
   };
 
   watering = self.esp32Pkgs.pkgsCross.esp32.callPackage ./watering { };
+
+  my-zigbee2mqtt = self.npmlock2nix.build rec {
+    src = sources.zigbee2mqtt;
+    node_modules_attrs = {
+      packageLockJson = src + "/npm-shrinkwrap.json";
+      nativeBuildInputs = [ self.python3 ];
+      preBuild = ''
+        mv package-lock.json npm-shrinkwrap.json
+      '';
+    };
+    buildCommands = [
+      #"jest test"
+    ];
+    installPhase = ''
+      mkdir -p $out/lib/node_modules
+      cp -r . $out/lib/node_modules/zigbee2mqtt
+      mkdir -p $out/bin
+      #ln -s $out/lib/node_modules/zigbee2mqtt/cli.js $out/bin/zigbee2mqtt
+      cat - <<EOF > $out/bin/zigbee2mqtt
+      #!/usr/bin/env sh
+      export NODE_PATH="${placeholder "out"}/lib/node_modules/zigbee2mqtt:${placeholder "out"}/lib/node_modules/zigbee2mqtt/node_modules"
+      set -ex
+      cd ${placeholder "out"}/lib/node_modules/zigbee2mqtt
+      exec ./run.js
+      EOF
+      cat - <<EOF > $out/lib/node_modules/zigbee2mqtt/run.js
+      #!/usr/bin/env node
+      require('./index.js')
+      EOF
+      chmod +x $out/bin/zigbee2mqtt
+      chmod +x $out/lib/node_modules/zigbee2mqtt/run.js
+    '';
+  };
 }

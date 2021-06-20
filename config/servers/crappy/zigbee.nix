@@ -7,6 +7,7 @@
 
   services.zigbee2mqtt = {
     enable = true;
+    package = pkgs.my-zigbee2mqtt;
     settings = {
       permit_join = false;
       serial = {
@@ -35,6 +36,11 @@
         "0x04cf8cdf3c8240ce".friendly_name = "0x04cf8cdf3c8240ce";
         "0x00158d00058a6475".friendly_name = "0x00158d00058a6475";
         "0x00158d000588ceb6".friendly_name = "0x00158d000588ceb6";
+      };
+
+      frontend = {
+        port = 8080;
+        host = "::1";
       };
     };
   };

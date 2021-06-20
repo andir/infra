@@ -7,6 +7,7 @@ in
   (_: _: { c3schedule = import sources.c3schedule { }; })
   (import ./packages { inherit sources system config; })
   (_: _: { nix-pre-commit-hooks = import (sources."pre-commit-hooks.nix"); })
+  (self: _: { npmlock2nix = self.callPackage sources.npmlock2nix { }; })
   (
     _: pkgs: {
       grafana-dashboards = pkgs.symlinkJoin {

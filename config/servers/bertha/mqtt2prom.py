@@ -62,6 +62,10 @@ def on_message(client, userdata, msg):
         payload = json.loads(msg.payload)
         for key, value in payload.items():
             metric_name = f'zigbee{{device="{device}", metric="{key}"}}'
+            if value == 'ON':
+                value = 1.0
+            elif value == 'OFF':
+                value = 0.0
             states[metric_name] = (value, now)
 
     with open("output.prom", "w") as fh:
