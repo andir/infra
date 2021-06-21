@@ -174,7 +174,7 @@ in
               ipv4 {
                 table master4;
                 export filter {
-                  if (source = RTS_BABEL || source = RTS_STATIC || source = RTS_DEVICE) && (net ~ 172.20.0.0/14) then {
+                  if (source = RTS_BABEL || source = RTS_STATIC || source = RTS_DEVICE || source = RTS_INHERIT) && (net ~ 172.20.0.0/14) then {
                     accept;
                   }
                   reject;

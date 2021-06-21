@@ -363,6 +363,7 @@ in
           oifname lan iifname oldlan accept
           oifname oldlan iifname lan accept
 
+          oifname iot iifname wg-mbp_m1 accept
           oifname iot iifname lan accept
 
           oifname lan jump forward_to_lan
@@ -460,6 +461,22 @@ in
   users.users.root.initialPassword = "password";
 
   environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
+
+
+  h4ck.wireguardBackbone = {
+    peers.mbp_m1 = {
+      babel = true;
+      remotePublicKey = "g8WxwwB3Yopa6J3o46R2CKJS4xN+AV/sHQSlespU1lw=";
+      localPort = 42019;
+      localAddresses = [
+        "172.20.25.4/32"
+        "fd21:a07e:735e:ffff::1/128"
+      ];
+      remoteAddresses = [
+        "172.20.25.42/32"
+      ];
+    };
+  };
 
   h4ck.dn42 = {
     enable = true;
