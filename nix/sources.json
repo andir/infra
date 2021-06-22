@@ -53,10 +53,10 @@
         "homepage": "",
         "owner": "matrix-org",
         "repo": "dendrite",
-        "rev": "3a77bca28b520668d5a4ce8d596f99bc4974a4af",
-        "sha256": "1frhibl0hcbl7spsf05pdrf177j86av0llhbx2vqmb9zwl58d8ad",
+        "rev": "5357df36c9adc6de24653f181a5d3a5070a23ce2",
+        "sha256": "1wcw1fgg4n1jgg37bk37yc7yrhskj7vmck3x73wg2rmzxhzvfgp2",
         "type": "tarball",
-        "url": "https://github.com/matrix-org/dendrite/archive/3a77bca28b520668d5a4ce8d596f99bc4974a4af.tar.gz",
+        "url": "https://github.com/matrix-org/dendrite/archive/5357df36c9adc6de24653f181a5d3a5070a23ce2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dex": {
@@ -75,7 +75,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "a5b9fe3612246f57359b6361b5b9b5b16212aff0",
+        "rev": "8810995884bf617728dc07fa1303bfce934646c5",
         "type": "git"
     },
     "dn42-regparse": {
@@ -182,10 +182,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "bad3ccd099ebe9a8aa017bda8500ab02787d90aa",
-        "sha256": "07ik6rcfpcvj2zch3mzkxwxjs817iysbvsydkm85f14kn7gnyzp5",
+        "rev": "6613a30c5e3ee59753181512b4bedd4121569925",
+        "sha256": "18v74cwjcl7qkdhgc8xic9fvp3330dsc82ah4xs3qzl5ks2h9d5h",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/bad3ccd099ebe9a8aa017bda8500ab02787d90aa.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/6613a30c5e3ee59753181512b4bedd4121569925.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-esp32": {
@@ -273,10 +273,10 @@
         "homepage": "https://www.zigbee2mqtt.io",
         "owner": "Koenkk",
         "repo": "zigbee2mqtt",
-        "rev": "76a0cd507fee00b9cc21d2bc85d1da405265febb",
-        "sha256": "1c1nxxqf6lfns65dn740czhsa2r2ilwzrhbh9g2l551zx8ggcbjh",
+        "rev": "02e4abbff29a13ee592eef107b3d2a6b5c5a3bdb",
+        "sha256": "1k8l79dyx7wlrln8ww4ak9728r0mwry4ll2r7b3imy23j10wf3g6",
         "type": "tarball",
-        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/76a0cd507fee00b9cc21d2bc85d1da405265febb.tar.gz",
+        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/02e4abbff29a13ee592eef107b3d2a6b5c5a3bdb.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }
