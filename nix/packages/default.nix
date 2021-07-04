@@ -130,7 +130,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "16048yn9mrwkvdgfjhbp3w6h2gpk1w85899hn60dfyqvagbksksm";
+    vendorSha256 = "1h1zifg9r64jpklxcy938iq12ckcbssfafllyd7525grfdqc4192";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -148,6 +148,7 @@ self: super: {
 
     passthru.assets = sources.matrix-static + "/assets";
   };
+
 
   esp32Pkgs = import sources.nixpkgs-esp32 {
     inherit (self) system;
