@@ -355,7 +355,7 @@ in
           ip protocol icmp accept
           ip6 nexthdr icmpv6 accept
 
-          iifname iot log prefix "IOT isn't granted internet access: " reject
+          iifname iot jump forward_from_iot
 
           # everything can go out (except for those above)
           oifname uplink accept
@@ -378,6 +378,17 @@ in
           oifname "wg-*" jump forward_to_wg
 
           log prefix "not forwarding: " reject
+        }
+
+        chain forward_from_iot {
+          # allow NTP as long as I don't have a local (s)NTP server setup
+          oifname uplink tcp dport 123 accept
+          oifname uplink udp dport 123 accept
+
+          # allow octave to access https resources
+          oifname uplink ether saddr 5c:02:72:30:fa:83 tcp dport { 443 } accept
+
+          log prefix "IOT isn't granted internet access: " reject
         }
 
         chain forward_to_wg {

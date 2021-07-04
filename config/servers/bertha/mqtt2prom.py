@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 import time
 import threading
 import json
+import argparse
 
 states = {}
 
@@ -18,10 +19,10 @@ def cleanup_states():
         now = int(time.time() * 1000)
         to_delete = []
         for key, (_, ts) in states.items():
-            if key.startswith('watering_'):
+            if key.startswith("watering_"):
                 if now - ts > MAX_AGE_SECONDS * 1000:
                     to_delete.append(key)
-            elif key.startswith('zigbee'):
+            elif key.startswith("zigbee"):
                 if now - ts > ZIGBEE_MAX_AGE_SECONDS * 1000:
                     to_delete.append(key)
 
@@ -35,9 +36,9 @@ threading.Thread(target=cleanup_states).start()
 
 def on_connect(client, userdata, flags, rc):
     print("connected")
-    client.subscribe('experimental/watering/v0/sensor/+/state')
-    client.subscribe('experimental/watering/v1/sensor/+/state')
-    client.subscribe('zigbee2mqtt/+')
+    client.subscribe("experimental/watering/v0/sensor/+/state")
+    client.subscribe("experimental/watering/v1/sensor/+/state")
+    client.subscribe("zigbee2mqtt/+")
 
 
 def on_message(client, userdata, msg):
@@ -45,38 +46,66 @@ def on_message(client, userdata, msg):
     print(msg.topic, str(msg.payload))
     global states
 
-    if msg.topic.startswith('experimental/watering/v0/sensor'):
-        parts = msg.topic.split('/')
+    if msg.topic.startswith("experimental/watering/v0/sensor"):
+        parts = msg.topic.split("/")
         _, _, _, _, sensor, _ = parts
         prefix = "watering_experiment_moisture_percent"
-        metric_name = "%s{sensor=\"%s\"}" % (prefix, sensor)
+        metric_name = '%s{sensor="%s"}' % (prefix, sensor)
         states[metric_name] = (msg.payload.decode(), now)
-    elif msg.topic.startswith('experimental/watering/v1/sensor'):
-        parts = msg.topic.split('/')
+    elif msg.topic.startswith("experimental/watering/v1/sensor"):
+        parts = msg.topic.split("/")
         _, _, _, _, sensor, _ = parts
         prefix = "watering_experiment_v1_moisture_percent"
-        metric_name = "%s{sensor=\"%s\"}" % (prefix, sensor)
+        metric_name = '%s{sensor="%s"}' % (prefix, sensor)
         states[metric_name] = (msg.payload.decode(), now)
-    elif msg.topic.startswith('zigbee2mqtt/'):
-        _, device = msg.topic.split('/', 1)
+    elif msg.topic.startswith("zigbee2mqtt/"):
+        _, device = msg.topic.split("/", 1)
         payload = json.loads(msg.payload)
+
         for key, value in payload.items():
             metric_name = f'zigbee{{device="{device}", metric="{key}"}}'
-            if value == 'ON':
+            if value == "ON":
                 value = 1.0
-            elif value == 'OFF':
+            elif value == "OFF":
                 value = 0.0
+
             states[metric_name] = (value, now)
 
-    with open("output.prom", "w") as fh:
+    with open(userdata.statefile, "w") as fh:
+        json.dump(states, fh)
+
+    with open(userdata.promfile, "w") as fh:
         for key, (value, ts) in states.items():
+            # ignore all values that can't be represented as float
+            try:
+                value = float(value)
+            except TypeError:
+                continue
+
             fh.write(f"{key} {value}\n")
 
 
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
+def main():
+    global states
+    parser = argparse.ArgumentParser(description="pipe mqtt updated to prometheus")
+    parser.add_argument("promfile", help="Name of the prometheus file to write")
+    parser.add_argument("statefile", help="Name of the state file")
 
-client.connect("10.250.43.1", 1883, 60)
+    args = parser.parse_args()
 
-client.loop_forever()
+    try:
+        with open(args.statefile, "r") as fh:
+            states = json.load(fh)
+    except IOError:
+        pass
+
+    client = mqtt.Client(userdata=args)
+    client.on_connect = on_connect
+    client.on_message = on_message
+
+    client.connect("10.250.43.1", 1883, 60)
+
+    client.loop_forever()
+
+
+main()

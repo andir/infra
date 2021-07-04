@@ -3,6 +3,7 @@ let
   simpleMqttExporter = pkgs.writers.writePython3 "simple-mqtt-exporter"
     {
       libraries = [ pkgs.python3Packages.paho-mqtt ];
+      flakeIgnore = [ "E501" ];
     }
     (builtins.readFile ./mqtt2prom.py);
 in
@@ -20,14 +21,15 @@ in
   systemd.services.mqtt2prom = {
     after = [ "network.target" "mosquitto.service" ];
     wantedBy = [ "multi-user.target" ];
+    script = "exec ${simpleMqttExporter} $RUNTIME_DIRECTORY/output.prom $STATE_DIRECTORY/state.json";
     serviceConfig = {
       DynamicUser = true;
-      ExecStart = simpleMqttExporter;
       RuntimeDirectory = "mqtt2prom";
       Restart = "always";
       StandardOutput = "journal";
       StandardError = "journal";
       WorkingDirectory = "/run/mqtt2prom";
+      StateDirectory = "mqtt2prom";
     };
   };
 
