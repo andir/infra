@@ -276,7 +276,7 @@
 
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_12;
+    package = pkgs.postgresql_12_jit;
     initialScript = pkgs.writeText "synapse-init.sql" ''
       CREATE USER "matrix-synapse";
       CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"

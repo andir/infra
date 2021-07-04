@@ -265,4 +265,10 @@ self: super: {
       chmod +x $out/lib/node_modules/zigbee2mqtt/run.js
     '';
   };
+
+  # postgresql with JIT enabled to speedup CPU intensive operations
+  postgresql_12_jit = self.postgresql_12.overrideAttrs ({ nativeBuildInputs, configureFlags, ... }: {
+    nativeBuildInputs = nativeBuildInputs ++ [ self.llvm self.clang ];
+    configureFlags = configureFlags ++ [ "--with-llvm" ];
+  });
 }
