@@ -30,124 +30,6 @@
       "type": "row"
     },
     {
-      "datasource": "prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 4,
-        "x": 0,
-        "y": 1
-      },
-      "id": 2,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "/^watering_experiment_moisture_percent\\{instance=\"fd21:a07e:735e:ffff::1:9100\", job=\"node\", sensor=\"moisture_air\"\\}$/",
-          "values": false
-        },
-        "text": {},
-        "textMode": "value"
-      },
-      "pluginVersion": "7.5.7",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "watering_experiment_moisture_percent{sensor=\"moisture_air\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "title": "Humidity Air %",
-      "type": "stat"
-    },
-    {
-      "datasource": "prometheus",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "continuous-GrYlRd"
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "light-red",
-                "value": null
-              }
-            ]
-          },
-          "unit": "percent"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 7,
-        "w": 4,
-        "x": 8,
-        "y": 1
-      },
-      "id": 3,
-      "options": {
-        "colorMode": "value",
-        "graphMode": "area",
-        "justifyMode": "auto",
-        "orientation": "auto",
-        "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
-          "fields": "",
-          "values": false
-        },
-        "text": {},
-        "textMode": "auto"
-      },
-      "pluginVersion": "7.5.7",
-      "targets": [
-        {
-          "exemplar": true,
-          "expr": "watering_experiment_moisture_percent{sensor=\"moisture_plant\"}",
-          "hide": false,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
-      "timeFrom": null,
-      "timeShift": null,
-      "title": "Humidity Plant %",
-      "type": "stat"
-    },
-    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -165,7 +47,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 1
       },
       "hiddenSeries": false,
       "id": 7,
@@ -197,27 +79,25 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "watering_experiment_moisture_percent",
+          "expr": "watering_experiment_v1_moisture_percent{sensor=~\"moisture_1\"}",
           "interval": "",
-          "legendFormat": "{{ sensor }}",
+          "legendFormat": "Moisture right",
           "refId": "A"
-        }
-      ],
-      "thresholds": [
+        },
         {
-          "$$hashKey": "object:205",
-          "colorMode": "critical",
-          "fill": true,
-          "line": true,
-          "op": "gt",
-          "value": 60,
-          "yaxis": "left"
+          "exemplar": true,
+          "expr": "watering_experiment_v1_moisture_percent{sensor=~\"moisture_2\"}",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "Moisture left",
+          "refId": "B"
         }
       ],
+      "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Panel Title",
+      "title": "Moisture",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -265,7 +145,7 @@
     "list": []
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-7d",
     "to": "now"
   },
   "timepicker": {},
