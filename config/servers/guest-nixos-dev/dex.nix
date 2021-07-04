@@ -18,29 +18,8 @@ let
           };
         };
       }
-      #{
-      #  idp_id = "github";
-      #  idp_name = "GitHub";
-      #  idp_brand = "github";
-      #  discover = false;
-      #  issuer = "https://github.com/";
-      #  client_id = "...";
-      #  client_secret = "....";
-      #  authorization_endpoint = "https://github.com/login/oauth/authorize";
-      #  token_endpoint = "https://github.com/login/oauth/access_token";
-      #  userinfo_endpoint = "https://api.github.com/user";
-      #  scopes = [ "read:user" ];
-      #  user_mapping_provider = {
-      #    config = {
-      #      subject_claim = "id";
-      #      localpart_template = "{{ user.login }}";
-      #      display_name_template = "{{ user.name }}";
-      #    };
-      #  };
-      #}
     ];
   };
-
 
 in
 {
@@ -73,10 +52,12 @@ in
     "dex-github-client-id" = {
       source = toString ../../../secrets/dex-github-client-id;
       destination = "/run/keys/dex-github-client-id";
+      action = [ "sudo" "systemctl" "restart" "dex" ];
     };
     "dex-github-client-secret" = {
       source = toString ../../../secrets/dex-github-client-secret;
       destination = "/run/keys/dex-github-client-secret";
+      action = [ "sudo" "systemctl" "restart" "dex" ];
     };
   };
   h4ck.dex = {

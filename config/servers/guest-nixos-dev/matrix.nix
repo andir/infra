@@ -1,8 +1,12 @@
 { pkgs, lib, config, ... }:
+let
+  domain = "guest.nixos.dev";
+  matrixDomain = "guest.nixos.dev";
+in
 {
   h4ck.monitoring.targets.synapse = {
     port = 443;
-    targetHost = "guest.nixos.dev";
+    targetHost = domain;
     job_config = {
       scheme = "https";
     };
@@ -12,13 +16,13 @@
   networking.firewall.allowedTCPPorts = [ 80 443 ];
   services.nginx = {
     enable = true;
-    virtualHosts."guest.nixos.dev" = {
+    virtualHosts.${domain} = {
       enableACME = true;
       forceSSL = true;
       locations = {
         "/.well-known/matrix/server".extraConfig =
           let
-            server."m.server" = "guest.nixos.dev:443";
+            server."m.server" = "${matrixDomain}:443";
           in
           ''
             add_header Content-Type application/json;
@@ -26,7 +30,7 @@
           '';
         "/.well-known/matrix/client".extraConfig =
           let
-            client."m.homeserver".base_url = "https://guest.nixos.dev";
+            client."m.homeserver".base_url = "https://${matrixDomain}";
           in
           ''
             add_header Content-Type application/json;
@@ -57,18 +61,21 @@
 
         };
 
+        "=/welcome.html" = {
+          alias = ./welcome.html;
+        };
         "/" = {
           root = pkgs.element-web.override (_: {
             conf = {
               default_server_config."m.homeserver" = {
-                server_name = "guest.nixos.dev";
-                base_url = "https://guest.nixos.dev";
+                server_name = domain;
+                base_url = "https://${matrixDomain}";
               };
               integrations_ui_url = "";
               integgrations_rest_url = "";
               integrations_widgets_urls = [ ];
               disable_guests = false;
-              roomDirectory.servers = [ "nixos.org" "guest.nixos.dev" "kack.it" ];
+              roomDirectory.servers = [ "nixos.org" domain "kack.it" ];
               features = {
                 feature_pinning = "labs";
                 feature_custom_status = "labs";
@@ -89,8 +96,8 @@
   ];
   services.matrix-synapse = {
     enable = true;
-    server_name = "guest.nixos.dev";
-    public_baseurl = "https://guest.nixos.dev";
+    server_name = domain;
+    public_baseurl = "https://${matrixDomain}";
     dataDir = "/persist/synapse";
     database_type = "psycopg2";
     database_args = {
@@ -196,7 +203,7 @@
           # for any of our local users
           {
             user_id = "*";
-            alias = "nixos-*";
+            alias = "#nixos-*";
             room_id = "*:nixos.org";
             action = "allow";
           }
@@ -204,14 +211,14 @@
           # Any local users can create aliases in the community-* namespace
           {
             user_id = "*";
-            alias = "community-*";
+            alias = "#community-*";
             room_id = "*";
             action = "allow";
           }
 
           # Allow andi do create any aliases :-)
           {
-            user_id = "@andir:guest.nixos.dev";
+            user_id = "@andir:${matrixDomain}";
             alias = "*";
             room_id = "*";
             action = "allow";
@@ -270,6 +277,19 @@
       })))
       (pkgs.writeText "push.yml" (builtins.toJSON ({
         push.include_content = false;
+      })))
+      (pkgs.writeText "notices.yml" (builtins.toJSON ({
+        server_notices = {
+          system_mxid_localpart = "server";
+          system_mxid_display_name = "Server Notices";
+          # system_mxid_avatar_url = "mxc://server.com/oumMVlgDnLYFaPVkExemNVVZ";
+          room_name = "Server Notices";
+        };
+      })))
+      (pkgs.writeText "auto_join.yml" (builtins.toJSON ({
+        auto_join_rooms = [
+          "#meta:${matrixDomain}"
+        ];
       })))
     ];
   };
@@ -344,4 +364,6 @@
 
   # use jemalloc to improve the memory situation with synapse
   systemd.services.matrix-synapse.environment.LD_PRELOAD = "${pkgs.jemalloc}/lib/libjemalloc.so";
+
+  environment.systemPackages = [ pkgs.matrix-synapse-tools.synadm ];
 }

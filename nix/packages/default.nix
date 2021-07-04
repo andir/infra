@@ -271,4 +271,17 @@ self: super: {
     nativeBuildInputs = nativeBuildInputs ++ [ self.llvm self.clang ];
     configureFlags = configureFlags ++ [ "--with-llvm" ];
   });
+
+
+  # remove requirement to pass a password to synadm when modifying user
+  matrix-synapse-tools = super.matrix-synapse-tools // {
+    synadm = super.matrix-synapse-tools.synadm.overrideAttrs ({ patches ? [ ], ... }: {
+      patches = patches ++ [
+        (super.fetchpatch {
+          url = https://github.com/JOJ0/synadm/commit/8e23f01aa04bf9ab389094f83df35794e94652bd.patch;
+          sha256 = "0gs0xf5jfn5qh4xiq0s738ilc9ng21y0n4d7a6daighamdsx9ka4";
+        })
+      ];
+    });
+  };
 }
