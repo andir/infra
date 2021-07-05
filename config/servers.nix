@@ -70,9 +70,9 @@ in
     system = "x86_64-linux";
   };
 
-  guest-nixos-dev = mkMachine {
-    name = "guest.nixos.dev";
-    config = ./servers/guest-nixos-dev;
+  nixos-dev = mkMachine {
+    name = "nixos.dev";
+    config = ./servers/nixos-dev;
     system = "x86_64-linux";
   };
 }
