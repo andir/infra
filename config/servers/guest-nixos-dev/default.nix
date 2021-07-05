@@ -4,10 +4,11 @@
     ./matrix.nix
     ./dex.nix
     ./matrix-static.nix
+    ./website.nix
   ];
 
   deployment = {
-    targetHost = "guest.nixos.dev";
+    targetHost = "matrix.nixos.dev";
     targetUser = "morph";
     substituteOnDestination = true;
   };
@@ -20,7 +21,7 @@
   };
 
   networking = {
-    hostName = "guest";
+    hostName = "matrix";
     domain = "nixos.dev";
   };
 

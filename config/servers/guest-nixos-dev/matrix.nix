@@ -1,12 +1,13 @@
 { pkgs, lib, config, ... }:
 let
-  domain = "guest.nixos.dev";
-  matrixDomain = "guest.nixos.dev";
+  domain = "nixos.dev";
+  matrixDomain = "matrix.nixos.dev";
+  chatDomain = "chat.nixos.dev";
 in
 {
   h4ck.monitoring.targets.synapse = {
     port = 443;
-    targetHost = domain;
+    targetHost = matrixDomain;
     job_config = {
       scheme = "https";
     };
@@ -37,6 +38,12 @@ in
             add_header Access-Control-Allow-Origin *;
             return 200 '${builtins.toJSON client}';
           '';
+      };
+    };
+    virtualHosts.${matrixDomain} = {
+      enableACME = true;
+      forceSSL = true;
+      locations = {
         "/_matrix/" = {
           proxyPass = "http://[::1]:8448";
           extraConfig = ''
@@ -58,9 +65,14 @@ in
             ${lib.concatMapStringsSep "\n" (host: "allow ${host};") (config.h4ck.monitoring.defaultMonitoringHosts ++ [ "127.0.0.1" "::1" ])}
             deny all;
           '';
-
         };
+      };
+    };
 
+    virtualHosts.${chatDomain} = {
+      enableACME = true;
+      forceSSL = true;
+      locations = {
         "=/welcome.html" = {
           alias = ./welcome.html;
         };
@@ -93,6 +105,7 @@ in
 
   systemd.tmpfiles.rules = [
     "d /persist/synapse 0700 matrix-synapse - - -"
+    "d /persist/postgresql 0700 postgres - - -"
   ];
   services.matrix-synapse = {
     enable = true;
@@ -218,7 +231,7 @@ in
 
           # Allow andi do create any aliases :-)
           {
-            user_id = "@andir:${matrixDomain}";
+            user_id = "@andir:${domain}";
             alias = "*";
             room_id = "*";
             action = "allow";
@@ -292,6 +305,13 @@ in
         ];
       })))
     ];
+  };
+
+
+  fileSystems."/var/lib/postgresql" = {
+    fsType = "none";
+    options = [ "bind" ];
+    device = "/persist/postgresql";
   };
 
   services.postgresql = {

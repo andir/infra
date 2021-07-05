@@ -285,5 +285,16 @@ self: super: {
     });
   };
 
+  nixos-dev-website = super.runCommandNoCC "nixos.dev-website"
+    {
+      nativeBuildInputs = [ self.pandoc ];
+      src = ../../config/servers/guest-nixos-dev/website;
+    } ''
+    set -ex
+    mkdir $out
+    pandoc -f markdown -t html -s --data-dir $out -o $out/index.html $src/index.md
+    set +x
+  '';
+
   spacesbot = super.callPackage ./spacesbot { };
 }

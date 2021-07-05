@@ -6,7 +6,7 @@ let
       {
         idp_id = "dex";
         idp_name = "NixOS GitHub Org Membership";
-        issuer = "https://auth.guest.nixos.dev/dex";
+        issuer = "https://auth.nixos.dev/dex";
         client_id = "synapse";
         client_secret = secret "/run/dex-synapse/client_secret";
         scopes = [ "openid" "profile" ];
@@ -62,7 +62,7 @@ in
   };
   h4ck.dex = {
     enable = true;
-    issuer = "https://auth.guest.nixos.dev/dex";
+    issuer = "https://auth.nixos.dev/dex";
     connectorsConfig = [
       {
         type = "github";
@@ -72,11 +72,14 @@ in
           {
             clientId = secret "/run/keys/dex-github-client-id";
             clientSecret = secret "/run/keys/dex-github-client-secret";
-            redirectURI = "https://auth.guest.nixos.dev/dex/callback";
+            redirectURI = "https://auth.nixos.dev/dex/callback";
             orgs = [
               {
                 name = "NixOS";
               }
+              #{
+              #  name = "some-test-org123";
+              #}
             ];
           };
       }
@@ -88,13 +91,13 @@ in
         name = "synapse";
         secret = secret "/run/dex-synapse/client_secret";
         redirectURIs = [
-          "https://guest.nixos.dev/_synapse/client/oidc/callback"
+          "https://matrix.nixos.dev/_synapse/client/oidc/callback"
         ];
       }
     ];
   };
 
-  services.nginx.virtualHosts."auth.guest.nixos.dev" = {
+  services.nginx.virtualHosts."auth.nixos.dev" = {
     forceSSL = true;
     enableACME = true;
     locations."/" = {

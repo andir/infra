@@ -1,11 +1,11 @@
 {
   h4ck.matrix-static = {
     enable = true;
-    homeserverUrl = "https://guest.nixos.dev";
+    homeserverUrl = "https://matrix.nixos.dev";
     listenPort = 8000;
   };
 
-  services.nginx.virtualHosts."logs.guest.nixos.dev" = {
+  services.nginx.virtualHosts."logs.nixos.dev" = {
     enableACME = true;
     forceSSL = true;
     locations."/" = {
