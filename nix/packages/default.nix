@@ -284,4 +284,6 @@ self: super: {
       ];
     });
   };
+
+  spacesbot = super.callPackage ./spacesbot { };
 }

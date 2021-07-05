@@ -366,4 +366,17 @@ in
   systemd.services.matrix-synapse.environment.LD_PRELOAD = "${pkgs.jemalloc}/lib/libjemalloc.so";
 
   environment.systemPackages = [ pkgs.matrix-synapse-tools.synadm ];
+
+
+  deployment.secrets."spacesbot-access-token" = {
+    source = toString ../../../secrets/spacesbot-access-token;
+    destination = "/run/keys/spacesbot-access-token";
+  };
+  h4ck.spacesbot = {
+    enable = true;
+    user = "@spacesbot:nixos.dev";
+    homeserver = "http://localhost:8448";
+    roomId = "!MKvhXlSTLGJUXpYuWF:nixos.org";
+    accessTokenFile = "/run/keys/spacesbot-access-token";
+  };
 }

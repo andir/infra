@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "spacesbot"
+version = "0.1.0"
+description = ""
+authors = ["Andreas Rammhold <andreas@rammhold.de>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+matrix-nio = "^0.18.1"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+spacesbot = "spacesbot.__main__:main"

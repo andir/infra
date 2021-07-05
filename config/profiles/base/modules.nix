@@ -21,5 +21,6 @@
     ../../modules/dendrite.nix
     ../../modules/dex.nix
     ../../modules/matrix-static.nix
+    ../../modules/spacesbot.nix
   ];
 }
