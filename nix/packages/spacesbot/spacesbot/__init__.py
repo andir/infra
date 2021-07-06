@@ -76,7 +76,6 @@ class SpacesBot:
 
         await self.client.sync(timeout=30000)
         await self.join_space()
-        await self.write_space_index()
 
     async def join_space(self):
         joined_rooms = await self.client.joined_rooms()

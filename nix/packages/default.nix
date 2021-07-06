@@ -288,7 +288,7 @@ self: super: {
   nixos-dev-website = super.runCommandNoCC "nixos.dev-website"
     {
       nativeBuildInputs = [ self.pandoc ];
-      src = ../../config/servers/guest-nixos-dev/website;
+      src = ../../config/servers/nixos-dev/website;
     } ''
     set -ex
     mkdir $out
