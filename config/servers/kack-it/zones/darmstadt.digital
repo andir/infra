@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN darmstadt.digital.
 @    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
-                2019081302 ; Serial - date by convention
+                2021070601 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -12,6 +12,3 @@ $ORIGIN darmstadt.digital.
         IN      NS      ns2.h4ck.space.
         IN      MX      20 mx.h4ck.space.
         IN      TXT     "v=spf1 mx -all"
-        IN      A       104.198.14.52
-	IN 	AAAA	2a03:b0c0:3:d0::d24:5001
-www	IN	CNAME	darmstadt.digital.
