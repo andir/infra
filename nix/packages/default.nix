@@ -297,4 +297,15 @@ self: super: {
   '';
 
   spacesbot = super.callPackage ./spacesbot { };
+
+  fastPython3 = self.python3.override {
+    enableOptimizations = true;
+    reproducibleBuild = false;
+    self = self.fastPython3;
+    pythonAttr = "fastPython3";
+  };
+
+  matrix-synapse = super.matrix-synapse.override {
+    python3 = self.fastPython3;
+  };
 }
