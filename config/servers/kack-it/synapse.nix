@@ -140,8 +140,8 @@
     };
 
     redaction_retention_period = 1;
-    rc_messages_per_second = "0.2";
-    rc_message_burst_count = "3";
+    rc_messages_per_second = "10";
+    rc_message_burst_count = "15";
     key_refresh_interval = "1h"; # for initial setup so we can invalidate the key earlier
     max_upload_size = "10M";
     url_preview_enabled = false;
