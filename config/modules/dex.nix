@@ -99,7 +99,7 @@ in
             "+${(pkgs.writeShellScript "dex-config.sh" ''
               umask u=rwx,g=,o=
               ${configFleGenerator}
-              chown dex: /run/dex/config.yml
+              chown dex /run/dex/config.yml
             '')}"
           ];
           DynamicUser = true;
