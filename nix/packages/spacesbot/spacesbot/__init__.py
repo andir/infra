@@ -71,7 +71,7 @@ class SpacesBot:
         self.space_room_id = room_id
 
     async def run(self) -> None:
-        await self.client.set_displayname("spacesbot")
+        await self.client.set_displayname("spacesbot - keeps a log of public NixOS channels")
         await self.client.set_presence("unavailable", "I am just a bot")
 
         await self.client.sync(timeout=30000)
@@ -88,7 +88,21 @@ class SpacesBot:
             await self.join_via(self.space_room_id)
             joined_rooms = await self.client.joined_rooms()
 
+        additional_spaces = True
+        while additional_spaces:
+            additional_spaces = False
+            response = await self.query_spaces(self.space_room_id)
+            joined_rooms = await self.client.joined_rooms()
+            for room in response.rooms:
+                if room.room_id in joined_rooms.rooms:
+                    continue
+                if room.room_type == 'm.space':
+                    await self.client.join_via(room.room_id)
+                    await self.client.sync(timeout=30000)
+                    additional_spaces = True
+
         response = await self.query_spaces(self.space_room_id)
+        joined_rooms = await self.client.joined_rooms()
         for room in response.rooms:
             if room.room_id not in joined_rooms.rooms:
                 print("joining", room.room_id, room)
