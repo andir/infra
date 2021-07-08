@@ -240,7 +240,7 @@ in
       })))
       (pkgs.writeText "retention.yml" (builtins.toJSON ({
         retention = {
-          enabled = true;
+          enabled = false;
           default_policy = {
             min_lifetime = "1d";
             max_lifetime = "90d";
