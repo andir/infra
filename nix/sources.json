@@ -17,10 +17,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "036dc0c709650e0c833822307af801f576d67273",
-        "sha256": "0pnrygs6xf7id63zi17pq5379hfppwbb5cfazhypcqz6l3dfk00g",
+        "rev": "dd14e5d78e90a2ccd6007e569820de9b4861a6c2",
+        "sha256": "1zmhwx1qqgl1wrrb9mjkck508887rldrnragvximhd7jrh1ya3fb",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/036dc0c709650e0c833822307af801f576d67273.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/dd14e5d78e90a2ccd6007e569820de9b4861a6c2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "c3schedule": {
@@ -41,10 +41,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "036dc0c709650e0c833822307af801f576d67273",
-        "sha256": "0pnrygs6xf7id63zi17pq5379hfppwbb5cfazhypcqz6l3dfk00g",
+        "rev": "dd14e5d78e90a2ccd6007e569820de9b4861a6c2",
+        "sha256": "1zmhwx1qqgl1wrrb9mjkck508887rldrnragvximhd7jrh1ya3fb",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/036dc0c709650e0c833822307af801f576d67273.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/dd14e5d78e90a2ccd6007e569820de9b4861a6c2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dendrite": {
@@ -53,10 +53,10 @@
         "homepage": "",
         "owner": "matrix-org",
         "repo": "dendrite",
-        "rev": "d72d634391b937810c23c1c5cd9724ecfd96caf0",
-        "sha256": "1zhh2y8g5j5ikaqby537liyic52pl7wkbkh5ib71yck9cq3bb9ng",
+        "rev": "75d0f009ece6676b10523a41794670c6277b0d86",
+        "sha256": "0g4af2zccjkba0ypj4lhbh9a1n2vb3pa86pmg72pamz4zalfjhs1",
         "type": "tarball",
-        "url": "https://github.com/matrix-org/dendrite/archive/d72d634391b937810c23c1c5cd9724ecfd96caf0.tar.gz",
+        "url": "https://github.com/matrix-org/dendrite/archive/75d0f009ece6676b10523a41794670c6277b0d86.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dex": {
@@ -65,17 +65,17 @@
         "homepage": "https://dexidp.io",
         "owner": "dexidp",
         "repo": "dex",
-        "rev": "39f0e0e0b0574c61b91e83c3a896badb25ec947c",
-        "sha256": "17v9lk2wm2i0y7y2pwjf7hjsp26lmb26nj3m0xq7sqzj440xjy5f",
+        "rev": "e650aef331608c33d8188b840bea7336179f5737",
+        "sha256": "0qvlsn07351293d0k4cpirc8mc5glz6lflqz44wjy81spjlsvpd1",
         "type": "tarball",
-        "url": "https://github.com/dexidp/dex/archive/39f0e0e0b0574c61b91e83c3a896badb25ec947c.tar.gz",
+        "url": "https://github.com/dexidp/dex/archive/e650aef331608c33d8188b840bea7336179f5737.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dn42-registry": {
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "1fa1554b939c1933040f686f81a0644b972a8d2d",
+        "rev": "e94d8a6ba7ca30fdf794861aa10c12e15df7ab24",
         "type": "git"
     },
     "dn42-regparse": {
@@ -161,7 +161,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
-        "rev": "a9f87ca461a1f0e23e85a1ba8c696672ed9e11e2",
+        "rev": "9578dbac69ec3ddf9b2fd38a40d74332b7454dfa",
         "type": "git"
     },
     "nixos-security-tracker": {
@@ -182,10 +182,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9d1350d9d56411b685ff3de5839ed6728b1bf808",
-        "sha256": "1vgf9r7g5ikxb582ja0wp5xbjq1dsdvbs2nybckdfsd05w0dnay8",
+        "rev": "973910f5c31b9ba6c171c33a8bd7199990b14c72",
+        "sha256": "1n1kibmn1fcjazaxp8lydwdx646lknqksv5b2fm33fdq2dvafvj7",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/9d1350d9d56411b685ff3de5839ed6728b1bf808.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/973910f5c31b9ba6c171c33a8bd7199990b14c72.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-esp32": {
@@ -206,10 +206,10 @@
         "homepage": null,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "036dc0c709650e0c833822307af801f576d67273",
-        "sha256": "0pnrygs6xf7id63zi17pq5379hfppwbb5cfazhypcqz6l3dfk00g",
+        "rev": "dd14e5d78e90a2ccd6007e569820de9b4861a6c2",
+        "sha256": "1zmhwx1qqgl1wrrb9mjkck508887rldrnragvximhd7jrh1ya3fb",
         "type": "tarball",
-        "url": "https://github.com/nixos/nixpkgs/archive/036dc0c709650e0c833822307af801f576d67273.tar.gz",
+        "url": "https://github.com/nixos/nixpkgs/archive/dd14e5d78e90a2ccd6007e569820de9b4861a6c2.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "npmlock2nix": {
@@ -218,10 +218,10 @@
         "homepage": null,
         "owner": "tweag",
         "repo": "npmlock2nix",
-        "rev": "9d71a0fc7a7450e740dba1bcdaed1eb9faa57bc2",
-        "sha256": "1qivxvm9shqi44pv1fbhmbb605nnrp8sirs8slbv0d1idrvsdyq5",
+        "rev": "3820a83f25e56f189158d2d62d71a9d6e003376b",
+        "sha256": "17p0wcr3p40kxnra78fncvgpcgc0syq2mvmpyszavfzr353a8150",
         "type": "tarball",
-        "url": "https://github.com/tweag/npmlock2nix/archive/9d71a0fc7a7450e740dba1bcdaed1eb9faa57bc2.tar.gz",
+        "url": "https://github.com/tweag/npmlock2nix/archive/3820a83f25e56f189158d2d62d71a9d6e003376b.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "photoprism": {
@@ -230,10 +230,10 @@
         "homepage": "https://demo.photoprism.org/",
         "owner": "photoprism",
         "repo": "photoprism",
-        "rev": "caf792067274694f890d10660fcceb4f41fc92f6",
-        "sha256": "1aa53fpnf3r6n69fbw6ma1a3vxs8avwcci4j7z6qxs3hs4wrw0cd",
+        "rev": "5076af2979638b1722003ad6c22a0d59e4af76cf",
+        "sha256": "1slmmly18a46psvb303vx8r8mvvmg6v77734xayf35zn1f4pns8p",
         "type": "tarball",
-        "url": "https://github.com/photoprism/photoprism/archive/caf792067274694f890d10660fcceb4f41fc92f6.tar.gz",
+        "url": "https://github.com/photoprism/photoprism/archive/5076af2979638b1722003ad6c22a0d59e4af76cf.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks.nix": {
@@ -273,10 +273,10 @@
         "homepage": "https://www.zigbee2mqtt.io",
         "owner": "Koenkk",
         "repo": "zigbee2mqtt",
-        "rev": "8c929cf94b2e4410d67d2c0fe6f9b5858ff3be45",
-        "sha256": "0zal9sb6qjmxq4z8jqmz1p4hz4qzhs9zs32j71svrwlhbghy2b22",
+        "rev": "35c2ffc0e5e45e819d85cec9ba77a23d76e681f4",
+        "sha256": "033n66d2s1cnm940601j76lk5fj7jjdbw232g4rcgb8pk6ck71m2",
         "type": "tarball",
-        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/8c929cf94b2e4410d67d2c0fe6f9b5858ff3be45.tar.gz",
+        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/35c2ffc0e5e45e819d85cec9ba77a23d76e681f4.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

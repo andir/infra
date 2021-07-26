@@ -130,7 +130,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "1wgi9lysw272lw07y8fjsgg2d3117ip0xbbci8dikb1bss9khy7y";
+    vendorSha256 = "0kvk1vi9f69jangxzsddsgszzq4pafyp6frcalb8bzv80356nvfw";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -243,7 +243,7 @@ self: super: {
       '';
     };
     buildCommands = [
-      #"jest test"
+      "npm run build"
     ];
     installPhase = ''
       mkdir -p $out/lib/node_modules
@@ -258,9 +258,10 @@ self: super: {
       exec ./run.js
       EOF
       cat - <<EOF > $out/lib/node_modules/zigbee2mqtt/run.js
-      #!/usr/bin/env node
+      #!/usr/bin/env node --trace-warnings
       require('./index.js')
       EOF
+      sed -e 's/async function checkDist/async function checkDist() {}; async function oldCheckDist/' -i $out/lib/node_modules/zigbee2mqtt/index.js
       chmod +x $out/bin/zigbee2mqtt
       chmod +x $out/lib/node_modules/zigbee2mqtt/run.js
     '';
@@ -305,7 +306,14 @@ self: super: {
     pythonAttr = "fastPython3";
   };
 
-  matrix-synapse = super.matrix-synapse.override {
+  matrix-synapse = (super.matrix-synapse.override {
     python3 = self.fastPython3;
-  };
+  }).overridePythonAttrs ({ patches ? [ ], ... }: {
+    patches = patches ++ [
+      (super.fetchpatch {
+        url = https://github.com/matrix-org/synapse/commit/db2d5daa7264f4b9f273c91daa3615ea3f76b4a1.patch;
+        sha256 = "1lx5zm06xm20xdmjxj0xw0bc6q76w26p22yaq16v8ryifqzvn06l";
+      })
+    ];
+  });
 }
