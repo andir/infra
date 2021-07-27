@@ -39,7 +39,7 @@
       };
 
       frontend = {
-        port = 8080;
+        port = 8083;
         host = "::1";
       };
     };
