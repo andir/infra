@@ -32,26 +32,53 @@
             add_header Access-Control-Allow-Origin *;
             return 200 '${builtins.toJSON client}';
           '';
+        "/_matrix/".return = "307 http://matrix.kack.it$request_uri";
+      };
+    };
+    virtualHosts."element.kack.it" = {
+      enableACME = true;
+      forceSSL = true;
+      locations."/" = {
+        root = pkgs.element-web.override (_: {
+          conf = {
+            default_server_config."m.homeserver" = {
+              server_name = "kack.it";
+              base_url = "https://matrix.kack.it";
+            };
+            integrations_ui_url = "";
+            integgrations_rest_url = "";
+            integrations_widgets_urls = [ ];
+            disable_guests = true;
+            roomDirectory.servers = [ "nixos.org" "kack.it" "matrix.org" ];
+            features = {
+              feature_pinning = "labs";
+              feature_custom_status = "labs";
+              feature_custom_tags = "labs";
+              feature_state_counters = "labs";
+            };
+            showLabsSettings = true;
+          };
+        });
       };
     };
     virtualHosts."matrix.kack.it" = {
       enableACME = true;
       forceSSL = true;
       locations = {
-        "/_matrix/" = {
+        "~* ^(\\/_matrix|\\/_synapse\\/client)" = {
           proxyPass = "http://[::1]:8448";
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $remote_addr;
             proxy_set_header X-Forwarded-Proto $scheme;'';
         };
-        "/_synapse/" = {
-          proxyPass = "http://[::1]:8448";
-          extraConfig = ''
-            proxy_set_header Host $host;
-            proxy_set_header X-Forwarded-For $remote_addr;
-            proxy_set_header X-Forwarded-Proto $scheme;'';
-        };
+        #        "/_synapse/" = {
+        #          proxyPass = "http://[::1]:8448";
+        #          extraConfig = ''
+        #            proxy_set_header Host $host;
+        #            proxy_set_header X-Forwarded-For $remote_addr;
+        #            proxy_set_header X-Forwarded-Proto $scheme;'';
+        #        };
         "/metrics" = {
           proxyPass = "http://127.0.0.1:9148";
           extraConfig = ''
@@ -59,29 +86,6 @@
             ${lib.concatMapStringsSep "\n" (host: "allow ${host};") (config.h4ck.monitoring.defaultMonitoringHosts ++ [ "127.0.0.1" "::1" ])}
             deny all;
           '';
-
-        };
-        "/" = {
-          root = pkgs.element-web.override (_: {
-            conf = {
-              default_server_config."m.homeserver" = {
-                server_name = "kack.it";
-                base_url = "https://matrix.kack.it";
-              };
-              integrations_ui_url = "";
-              integgrations_rest_url = "";
-              integrations_widgets_urls = [ ];
-              disable_guests = true;
-              roomDirectory.servers = [ "nixos.org" "kack.it" "matrix.org" ];
-              features = {
-                feature_pinning = "labs";
-                feature_custom_status = "labs";
-                feature_custom_tags = "labs";
-                feature_state_counters = "labs";
-              };
-              showLabsSettings = true;
-            };
-          });
         };
       };
     };
