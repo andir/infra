@@ -4,6 +4,7 @@
     homeserverUrl = "https://matrix.nixos.dev";
     listenPort = 8000;
   };
+  systemd.services.matrix-static.after = [ "matrix-synapse.service" "dex.service" ];
 
   services.nginx.virtualHosts."logs.nixos.dev" = {
     enableACME = true;
