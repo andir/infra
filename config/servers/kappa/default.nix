@@ -55,6 +55,16 @@
         remoteEndpoint = "kif.gsc.io";
         pskFile = "/var/lib/secrets/kif-psk";
       };
+
+      haos = {
+        localAddresses = [ "172.20.25.12" ];
+        remoteAddresses = [ "172.20.25.50" ];
+        localPort = 42255;
+        mtu = 140;
+        babel = false;
+        remotePublicKey = "WFXMh8V3roRkY9OmLcseVb20/NcjqWR+LKvAZV6th2c=";
+        remotePort = 42255;
+      };
     };
   };
 
