@@ -53,10 +53,10 @@
         "homepage": "",
         "owner": "matrix-org",
         "repo": "dendrite",
-        "rev": "75d0f009ece6676b10523a41794670c6277b0d86",
-        "sha256": "0g4af2zccjkba0ypj4lhbh9a1n2vb3pa86pmg72pamz4zalfjhs1",
+        "rev": "a060df91e206903e4e3cbf7b7d2dabddfa0bf788",
+        "sha256": "1faiqblbdgr02084livwv5r6s20fv1428hawmky3n0lr32nhy5bk",
         "type": "tarball",
-        "url": "https://github.com/matrix-org/dendrite/archive/75d0f009ece6676b10523a41794670c6277b0d86.tar.gz",
+        "url": "https://github.com/matrix-org/dendrite/archive/a060df91e206903e4e3cbf7b7d2dabddfa0bf788.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "dex": {
@@ -75,7 +75,7 @@
         "branch": "master",
         "ref": "master",
         "repo": "https://gitlab.com/andi-/dn42-registry.git",
-        "rev": "e94d8a6ba7ca30fdf794861aa10c12e15df7ab24",
+        "rev": "766ec8c928204ca7f077ff51892a3024bc5db5c1",
         "type": "git"
     },
     "dn42-regparse": {
@@ -127,10 +127,10 @@
         "homepage": null,
         "owner": "DBCDK",
         "repo": "morph",
-        "rev": "c4d0ba03a83decba3b616293b398b532b8d187e9",
-        "sha256": "1qzp5vw1kbykab0k5b49gczx7j7dmczs539qy5d58852gj7k9rdc",
+        "rev": "4812418a7fa13ba13076be486f4c446477ce52b6",
+        "sha256": "0brx1ml0wfang5hcaaqfjyr0mcin5nbbpkflm66j9101qb6al9wi",
         "type": "tarball",
-        "url": "https://github.com/DBCDK/morph/archive/c4d0ba03a83decba3b616293b398b532b8d187e9.tar.gz",
+        "url": "https://github.com/DBCDK/morph/archive/4812418a7fa13ba13076be486f4c446477ce52b6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "niv": {
@@ -182,10 +182,10 @@
         "homepage": "https://github.com/NixOS/nixpkgs",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "973910f5c31b9ba6c171c33a8bd7199990b14c72",
-        "sha256": "1n1kibmn1fcjazaxp8lydwdx646lknqksv5b2fm33fdq2dvafvj7",
+        "rev": "91903ceb294dbe63a696759bfba3d23ee667f2dc",
+        "sha256": "1hmpwi27r4q0lnspg7ylfzxakwz2fhl3r07vjvq5yalcdqwiain3",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/973910f5c31b9ba6c171c33a8bd7199990b14c72.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/91903ceb294dbe63a696759bfba3d23ee667f2dc.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs-esp32": {
