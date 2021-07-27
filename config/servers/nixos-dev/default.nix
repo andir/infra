@@ -5,6 +5,7 @@
     ./dex.nix
     ./matrix-static.nix
     ./website.nix
+    ./backup.nix
   ];
 
   deployment = {
