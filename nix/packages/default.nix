@@ -130,7 +130,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "0kvk1vi9f69jangxzsddsgszzq4pafyp6frcalb8bzv80356nvfw";
+    vendorSha256 = "069p1l5kwknp30h07q1j3kw8ni8rdib7kv2hprg5hh81pbapzhwj";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -307,12 +307,5 @@ self: super: {
 
   matrix-synapse = (super.matrix-synapse.override {
     python3 = self.fastPython3;
-  }).overridePythonAttrs ({ patches ? [ ], ... }: {
-    patches = patches ++ [
-      (super.fetchpatch {
-        url = https://github.com/matrix-org/synapse/commit/db2d5daa7264f4b9f273c91daa3615ea3f76b4a1.patch;
-        sha256 = "1lx5zm06xm20xdmjxj0xw0bc6q76w26p22yaq16v8ryifqzvn06l";
-      })
-    ];
   });
 }
