@@ -273,10 +273,10 @@
         "homepage": "https://www.zigbee2mqtt.io",
         "owner": "Koenkk",
         "repo": "zigbee2mqtt",
-        "rev": "35c2ffc0e5e45e819d85cec9ba77a23d76e681f4",
-        "sha256": "033n66d2s1cnm940601j76lk5fj7jjdbw232g4rcgb8pk6ck71m2",
+        "rev": "db61a623d5d351e165239d5e9bd90f48c0cad9fe",
+        "sha256": "18hpx973j9fiklmk4gqls3rpcd7qq1kj74ldvh74yk4fl5fqps8c",
         "type": "tarball",
-        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/35c2ffc0e5e45e819d85cec9ba77a23d76e681f4.tar.gz",
+        "url": "https://github.com/Koenkk/zigbee2mqtt/archive/db61a623d5d351e165239d5e9bd90f48c0cad9fe.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

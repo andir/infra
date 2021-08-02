@@ -261,7 +261,6 @@ self: super: {
       #!/usr/bin/env node --trace-warnings
       require('./index.js')
       EOF
-      sed -e 's/async function checkDist/async function checkDist() {}; async function oldCheckDist/' -i $out/lib/node_modules/zigbee2mqtt/index.js
       chmod +x $out/bin/zigbee2mqtt
       chmod +x $out/lib/node_modules/zigbee2mqtt/run.js
     '';
