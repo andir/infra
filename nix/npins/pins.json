@@ -1,0 +1,200 @@
+{
+  "pins": {
+    "ate": {
+      "type": "GitHub",
+      "repository": "ate",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "d6e1c1a007f1c9616153e160bcc3ffa5330dac7c",
+      "hash": "1vil5sq2w6b7z66g87wmsl9vjnvlbwlmzsi4f730zd22dbmm481j"
+    },
+    "bertha-nixpkgs": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "nixos-unstable",
+      "revision": "c464dc811babfe316ed4ab7bbc12351122e69dd7",
+      "hash": "0aij4q6pc99xjqh0inv6z74wiqfdgxnbg7jli6gnjqxg2lcirrc2"
+    },
+    "c3schedule": {
+      "type": "GitHub",
+      "repository": "c3schedule",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "50e754471953f271d13c07af42f9f1455bda467e",
+      "hash": "1b5b724d2ggk4cl19kivg99sd2s5i608xpp1j0krzj5j8ksgm39s"
+    },
+    "crappy-nixpkgs": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "nixos-unstable",
+      "revision": "c464dc811babfe316ed4ab7bbc12351122e69dd7",
+      "hash": "0aij4q6pc99xjqh0inv6z74wiqfdgxnbg7jli6gnjqxg2lcirrc2"
+    },
+    "dendrite": {
+      "type": "GitHub",
+      "repository": "dendrite",
+      "owner": "matrix-org",
+      "branch": "master",
+      "revision": "7a9a2547b337acaa01a911a150871665799147a7",
+      "hash": "1pw3mr3ibqm8fyisf63ad4vgabpj9i05rj1aid8c8757r3s5g3r2"
+    },
+    "dex": {
+      "type": "GitHub",
+      "repository": "dex",
+      "owner": "dexidp",
+      "branch": "master",
+      "revision": "3fac2ab6bc3bc3cb56afa6d71adce293d5abbed8",
+      "hash": "08hapaisikwd8f9zs91r1m3l4yav929hijrwfq4xay3vpq6zvxb7"
+    },
+    "dn42-registry": {
+      "type": "Git",
+      "repository_url": "https://gitlab.com/andi-/dn42-registry.git",
+      "branch": "master",
+      "revision": "10f0c6da92a122b8cb9f9ac9874fa38ecd850bdd",
+      "hash": "0w0f3rwnq3fwnc32izpjp6wrwj04pfkcc4i2n5n5z26f32yijj0b"
+    },
+    "dn42-regparse": {
+      "type": "GitHub",
+      "repository": "dn42-regparse",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "455644586b893ff0badb8006aa8f46308438264a",
+      "hash": "1zx6bi3b87dwzlx8ry0d303dbaxqnq2vz8pdaa8mhra7x13hyyiy"
+    },
+    "knot_exporter": {
+      "type": "GitHub",
+      "repository": "knot_exporter",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "6f35fc84a14b6cf6641d9b716991ac7581b17e9d",
+      "hash": "1jibfcsfn3qyz53iyqan8bvzskvb6g55c9ffhic93s98fld86zdy"
+    },
+    "matrix-static": {
+      "type": "GitHub",
+      "repository": "matrix-static",
+      "owner": "matrix-org",
+      "branch": "master",
+      "revision": "c778780f604b32e6c3603874231e3819789d8241",
+      "hash": "1n59vv4xjzbs7237b1v8vlgblsdyw2hw8fi8sfjh05mqhxh5panf"
+    },
+    "modules": {
+      "type": "Git",
+      "repository_url": "https://git.darmstadt.ccc.de/nixos/modules.git",
+      "branch": "master",
+      "revision": "bf5329d14ce941e09593c98ba0fc7208ec5a4925",
+      "hash": "1ylx1qzh4clb7kf7nnnh9y5vdk81r7q325c0smwh20x2dawm5wzs"
+    },
+    "morph": {
+      "type": "GitHub",
+      "repository": "morph",
+      "owner": "DBCDK",
+      "branch": "master",
+      "revision": "f5a168e995ca72079c86e40ec79f81fc342a1680",
+      "hash": "09b3gi6z2h06rr75nw5bfias4yrj44mnlad1j10ki2qclz3d9nmj"
+    },
+    "nixos-1909": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "nixos-19.09",
+      "revision": "75f4ba05c63be3f147bcc2f7bd4ba1f029cedcb1",
+      "hash": "157c64220lf825ll4c0cxsdwg7cxqdx4z559fdp7kpz0g6p8fhhr"
+    },
+    "nixos-mailserver": {
+      "type": "Git",
+      "repository_url": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
+      "branch": "master",
+      "revision": "42db23553d433646398ca08e9c61071d01d3350f",
+      "hash": "17za9fi1af10pc7cb16746vf85wclbkdib77wmn3gp05zgnfbbng"
+    },
+    "nixos-security-tracker": {
+      "type": "GitHub",
+      "repository": "nixos-security-tracker",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "be4a9d82f7b7bf4baf61c288f1f03808a8df72bb",
+      "hash": "11csfpdqblb9dzqizq33d1ddaz34q2wjhmld2aqdf8z51qdpaw3v"
+    },
+    "nixpkgs": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "nixos-21.05",
+      "revision": "d4590d21006387dcb190c516724cb1e41c0f8fdf",
+      "hash": "17q39hlx1x87xf2rdygyimj8whdbx33nzszf4rxkc6b85wz0l38n"
+    },
+    "nixpkgs-esp32": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "plietar",
+      "branch": "esp32",
+      "revision": "56d622f706e9c09331eadd08914464e779fe057d",
+      "hash": "18m3lry7id4w9dyp8hw5f13nma837cr4y0nx5qz95zfqfii0ckpd"
+    },
+    "nixpkgs-unstable": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "nixos-unstable",
+      "revision": "c464dc811babfe316ed4ab7bbc12351122e69dd7",
+      "hash": "0aij4q6pc99xjqh0inv6z74wiqfdgxnbg7jli6gnjqxg2lcirrc2"
+    },
+    "npins": {
+      "type": "GitHub",
+      "repository": "npins",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "bf04082df684b2fb00f83e6a2f50f97d362b8b90",
+      "hash": "0a4svn4qb3f6r8n4k6rwcmbxs3is6adbjni2im1zzb5wi886ij2p"
+    },
+    "npmlock2nix": {
+      "type": "GitHub",
+      "repository": "npmlock2nix",
+      "owner": "tweag",
+      "branch": "master",
+      "revision": "a84ef095fe899f8a932b753880901d2864cd7350",
+      "hash": "0bwgsx793zxfyiq5i1bpllchbzdds5znv4qsbj9rj61qbx5j11ai"
+    },
+    "photoprism": {
+      "type": "GitHub",
+      "repository": "photoprism",
+      "owner": "photoprism",
+      "branch": "master",
+      "revision": "3ce4fddbf36c8023f43784cc8e28da45cab3dd19",
+      "hash": "0knglyiz9xr2lipk45rcp9cg8xsi8nx0srx2cyynk7w6a4d3vgyv"
+    },
+    "pre-commit-hooks.nix": {
+      "type": "GitHub",
+      "repository": "pre-commit-hooks.nix",
+      "owner": "cachix",
+      "branch": "master",
+      "revision": "397f0713d007250a2c7a745e555fa16c5dc8cadb",
+      "hash": "0hjbq4pf8a2qdndx0xdb3yjhx9l3l5grk4mlk78vw4zm32fgyrq2"
+    },
+    "publictransport": {
+      "type": "Git",
+      "repository_url": "https://git.darmstadt.ccc.de/cda/publictransport.git",
+      "branch": "master",
+      "revision": "df632629948513f322b9d58ffb4d4b7e0bc20b7a",
+      "hash": "0iqccm4ajr28qkiba4fx5fqbgahnrdxqyfjqdd3mcabl8zrp8qhm"
+    },
+    "ranz2nix": {
+      "type": "GitHub",
+      "repository": "ranz2nix",
+      "owner": "andir",
+      "branch": "master",
+      "revision": "637276c3110716d2a798e737fe62e54b37190d50",
+      "hash": "0jaxw74srgabzz5sawy6nv27rpghmwxw53m5csnrhgy39a9yaki4"
+    },
+    "zigbee2mqtt": {
+      "type": "GitHub",
+      "repository": "zigbee2mqtt",
+      "owner": "Koenkk",
+      "branch": "dev",
+      "revision": "a380df4f216a78205bd7452909e0b546773b3d73",
+      "hash": "0gz2rgc4lxj8p21sl8d1yq8i6y7jigcw3sbb6rpcgh92x6ikld8z"
+    }
+  }
+}

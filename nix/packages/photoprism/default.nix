@@ -65,7 +65,7 @@ buildGo116Module {
 
         inherit src;
 
-        sourceRoot = "photoprism-src/frontend";
+        sourceRoot = "source/frontend";
 
         postUnpack = ''
           chmod -R +rw .

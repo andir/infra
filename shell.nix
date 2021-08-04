@@ -25,7 +25,6 @@ pkgs.mkShell {
     gzip
     hcloud
     morph
-    niv
     npins
     nix
     nixpkgs-fmt
@@ -34,4 +33,6 @@ pkgs.mkShell {
   ];
 
   inherit (pre-commit-hooks) shellHook;
+
+  NPINS_FOLDER = toString ./nix/npins;
 }
