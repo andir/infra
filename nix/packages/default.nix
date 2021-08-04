@@ -7,6 +7,9 @@ self: super: {
 
   ate = self.callPackage sources.ate { };
 
+  # use unstable because of the cargoLock based import
+  npins = unstable.callPackage sources.npins { };
+
   # systemd variant that fixes my weird netlink message issue on bootup
   # on machines that have more than just one or two wireguard interfaces.
   # See https://github.com/systemd/systemd/issues/17232 for details.

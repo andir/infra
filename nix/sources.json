@@ -212,6 +212,18 @@
         "url": "https://github.com/nixos/nixpkgs/archive/c464dc811babfe316ed4ab7bbc12351122e69dd7.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
+    "npins": {
+        "branch": "master",
+        "description": null,
+        "homepage": null,
+        "owner": "andir",
+        "repo": "npins",
+        "rev": "9a1c5cd49399de5ca5ab05032e9d7eaa54ed19f5",
+        "sha256": "09fg84b7v0qp0wh40iqa0xkmsgnh2i0895f0lsvv9rjlnci3jw0y",
+        "type": "tarball",
+        "url": "https://github.com/andir/npins/archive/9a1c5cd49399de5ca5ab05032e9d7eaa54ed19f5.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
     "npmlock2nix": {
         "branch": "master",
         "description": null,

@@ -26,6 +26,7 @@ pkgs.mkShell {
     hcloud
     morph
     niv
+    npins
     nix
     nixpkgs-fmt
     openssh
