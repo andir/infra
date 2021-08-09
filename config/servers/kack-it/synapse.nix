@@ -319,9 +319,9 @@
       };
   };
 
-  # use jemalloc to improve the memory situation with synapse
+  # use mimalloc to improve the memory situation with synapse
   systemd.services.matrix-synapse.environment = {
-    LD_PRELOAD = "${pkgs.jemalloc}/lib/libjemalloc.so";
+    LD_PRELOAD = "${pkgs.mimalloc}/lib/libmimalloc.so";
     SYNAPSE_CACHE_FACTOR = "1.0";
     LimitNOFILE = "4096";
   };

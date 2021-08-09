@@ -2,6 +2,9 @@
 {
   services.borgbackup.jobs = {
     "mail" = {
+      environment = {
+        LD_PRELOAD = "${pkgs.mimalloc}/lib/libmimalloc.so";
+      };
       paths = map
         (path:
           if path == config.mailserver.mailDirectory then "/data/snapshots/mails" else
