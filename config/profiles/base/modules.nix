@@ -22,5 +22,6 @@
     ../../modules/dex.nix
     ../../modules/matrix-static.nix
     ../../modules/spacesbot.nix
+    ../../modules/compact-matrix-states.nix
   ];
 }

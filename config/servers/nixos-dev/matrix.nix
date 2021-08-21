@@ -403,4 +403,7 @@ in
     roomId = "!MKvhXlSTLGJUXpYuWF:nixos.org";
     accessTokenFile = "/run/keys/spacesbot-access-token";
   };
+
+  h4ck.compact-matrix-states.enable = true;
+
 }

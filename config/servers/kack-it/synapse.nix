@@ -325,4 +325,6 @@
     SYNAPSE_CACHE_FACTOR = "1.0";
     LimitNOFILE = "4096";
   };
+
+  h4ck.compact-matrix-states.enable = true;
 }

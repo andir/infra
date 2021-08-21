@@ -311,4 +311,6 @@ self: super: {
   matrix-synapse = (super.matrix-synapse.override {
     python3 = self.fastPython3;
   });
+
+  compact-matrix-states = self.callPackage ./compact-matrix-states.nix { };
 }
