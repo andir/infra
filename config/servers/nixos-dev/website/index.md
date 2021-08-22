@@ -81,5 +81,5 @@ title: NixOS.dev
 
 ----
 <small>
-The source code for this page can be found at [andir/infra](https://github.com/andir/infra/blob/master/config/servers/gues-nixos-dev/website).
+The source code for this page can be found at [andir/infra](https://github.com/andir/infra/blob/master/config/servers/nixos-dev/website).
 </small>
