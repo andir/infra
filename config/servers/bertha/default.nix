@@ -366,6 +366,8 @@ in
           oifname iot iifname wg-mbp_m1 accept
           oifname iot iifname lan accept
 
+          oifname lan iifname wg-mbp_m1 accept
+
           oifname lan jump forward_to_lan
           oifname oldlan jump forward_to_lan
           oifname mgmt jump forward_to_mgmt
