@@ -70,7 +70,9 @@
           extraConfig = ''
             proxy_set_header Host $host;
             proxy_set_header X-Forwarded-For $remote_addr;
-            proxy_set_header X-Forwarded-Proto $scheme;'';
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_read_timeout 900s;
+          '';
         };
         #        "/_synapse/" = {
         #          proxyPass = "http://[::1]:8448";
