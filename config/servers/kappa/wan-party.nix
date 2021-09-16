@@ -51,6 +51,7 @@
     ];
     config = { pkgs, ... }:
       {
+        imports = [ ./xonotic.nix ];
         networking.firewall.allowedTCPPorts = [ 5863 655 80 ];
         networking.firewall.allowedUDPPorts = [ 5863 655 80 ];
         environment.systemPackages = [ pkgs.tinc_pre ];
