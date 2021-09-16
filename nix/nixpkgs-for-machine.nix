@@ -10,4 +10,7 @@ if sources ? "${name}-nixpkgs" then
     inherit system overlays;
     config = _config;
   }
-else import ./default.nix ({ inherit system; config = _config; })
+else
+  import ./default.nix ({
+    inherit system; config = _config;
+  })

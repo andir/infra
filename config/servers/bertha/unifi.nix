@@ -13,6 +13,9 @@
     );
   };
 
+  users.users.unifi.group = "unifi";
+  users.groups.unifi = { };
+
   services.nginx = {
     # disabled since unifi seems to request logins for unknown reason..
     #enable = true;

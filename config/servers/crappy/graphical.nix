@@ -24,6 +24,8 @@
     enable = true;
   };
 
+  users.groups.greeter = { };
+  users.users.greeter.group = "greeter";
   services.greetd = {
     enable = true;
     settings = {

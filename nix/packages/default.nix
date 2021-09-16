@@ -55,7 +55,7 @@ self: super: {
     }
   );
 
-  bird2 = super.enableDebugging (super.bird2.overrideAttrs (
+  bird2 = super.bird2.overrideAttrs (
     { patches ? [ ], configureFlags ? [ ], nativeBuildInputs ? [ ], ... }: {
 
       #configureFlags = configureFlags ++ [ "--enable-debug" ];
@@ -67,7 +67,7 @@ self: super: {
       };
       patches = patches ++ [ ./bird-next-hop-logging.patch ];
     }
-  ));
+  );
 
   dn42-regparse = self.callPackage sources.dn42-regparse { };
   dn42-roa =
@@ -133,7 +133,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "0hmy353136a50qi0gsrhb2v1fmz0vfp9rpr46fp0xg7winc57wjs";
+    vendorSha256 = "0237chrsr88xlz0frr2bk73jr6wgmy3w6gzh5953kr0kzpbmrafy";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -240,9 +240,12 @@ self: super: {
     src = sources.zigbee2mqtt;
     node_modules_attrs = {
       packageLockJson = src + "/npm-shrinkwrap.json";
-      nativeBuildInputs = [ self.python3 ];
+      nativeBuildInputs = [ self.python3 self.nukeReferences ];
       preBuild = ''
         mv package-lock.json npm-shrinkwrap.json
+      '';
+      postBuild = ''
+        find . -type f -iname "package.json" -exec nuke-refs {} \;
       '';
     };
     buildCommands = [
@@ -252,7 +255,7 @@ self: super: {
       mkdir -p $out/lib/node_modules
       cp -r . $out/lib/node_modules/zigbee2mqtt
       mkdir -p $out/bin
-      #ln -s $out/lib/node_modules/zigbee2mqtt/cli.js $out/bin/zigbee2mqtt
+      find $out/lib/node_modules -type f -iname "package.json" -delete
       cat - <<EOF > $out/bin/zigbee2mqtt
       #!/usr/bin/env sh
       export NODE_PATH="${placeholder "out"}/lib/node_modules/zigbee2mqtt:${placeholder "out"}/lib/node_modules/zigbee2mqtt/node_modules"
