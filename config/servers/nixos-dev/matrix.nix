@@ -77,6 +77,9 @@ in
           alias = ./welcome.html;
         };
         "/" = {
+          # extraConfig = ''
+          #   add_header Cache-Control no-cache;
+          # '';
           root = pkgs.element-web.override (_: {
             conf = {
               default_server_config."m.homeserver" = {
