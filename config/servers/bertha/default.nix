@@ -160,6 +160,11 @@ in
         Name = "internal";
       };
       vlan = [ "oldlan" "lan" "mgmt" "sc-agx" "iot" ];
+      networkConfig = {
+        DHCP = "no";
+        IPv6AcceptRA = false;
+        EmitLLDP = true;
+      };
     };
     "00-bond0-1" = {
       matchConfig = {
@@ -167,6 +172,8 @@ in
       };
       networkConfig = {
         Bond = "internal";
+        DHCP = "no";
+        IPv6AcceptRA = false;
       };
     };
     "00-bond0-2" = {
@@ -175,6 +182,8 @@ in
       };
       networkConfig = {
         Bond = "internal";
+        DHCP = "no";
+        IPv6AcceptRA = false;
       };
     };
     "00-oldlan" = {

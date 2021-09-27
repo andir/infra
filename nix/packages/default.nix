@@ -316,4 +316,23 @@ self: super: {
   });
 
   compact-matrix-states = self.callPackage ./compact-matrix-states.nix { };
+
+  mumble-web = self.npmlock2nix.build {
+    src = sources.mumble-web;
+    buildCommands = [ "npm run build" ];
+    installPhase = "cp dist $out";
+  };
+
+  dashjs_src = self.fetchzip {
+    url = "https://github.com/Dash-Industry-Forum/dash.js/archive/refs/tags/v4.0.1.zip";
+    sha256 = "1q1jbrh41h9yviprla88872dfm2w0wmp8iv2gn343biw92wn6zlg";
+  };
+
+  dashjs = self.runCommand "dash.js"
+    {
+      inherit (self) dashjs_src;
+    } ''
+    cp $dashjs_src/dist/dash.all.min.js $out
+  '';
+
 }

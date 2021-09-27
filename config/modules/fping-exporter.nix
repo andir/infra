@@ -18,8 +18,16 @@ in
   };
   config = mkIf cfg.enable {
     security.wrappers = {
-      fping4.source = "${pkgs.fping}/bin/fping";
-      fping6.source = "${pkgs.fping}/bin/fping";
+      fping4 = {
+        owner = "root";
+        group = "root";
+        source = "${pkgs.fping}/bin/fping";
+      };
+      fping6 = {
+        source = "${pkgs.fping}/bin/fping";
+        owner = "root";
+        group = "root";
+      };
     };
 
     users.users.fping_exporter = { isSystemUser = true; group = "fping_exporter"; };

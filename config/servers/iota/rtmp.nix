@@ -1,17 +1,8 @@
 { config, pkgs, lib, ... }:
 let
-  dashjs_src = pkgs.fetchzip {
-    url = "https://github.com/Dash-Industry-Forum/dash.js/archive/refs/tags/v4.0.1.zip";
-    sha256 = "1q1jbrh41h9yviprla88872dfm2w0wmp8iv2gn343biw92wn6zlg";
-  };
-
-  dashjs = pkgs.runCommand "dash.js" { inherit dashjs_src; } ''
-    cp $dashjs_src/dist/dash.all.min.js $out
-  '';
   fragmentLengthSeconds = 4;
 in
 {
-
   services.nginx = {
     enable = true;
     package = pkgs.nginxStable.override {
@@ -86,7 +77,7 @@ in
       '';
       locations."= /dash.all.min.js".extraConfig = ''
         default_type "text/javascript";
-        alias ${dashjs};
+        alias ${pkgs.dashjs};
       '';
       locations."= /".return = "302 /player";
       locations."= /player.config.js".alias = pkgs.writeText "player.config.js" (
