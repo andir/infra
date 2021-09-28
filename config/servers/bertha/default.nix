@@ -53,6 +53,7 @@ in
     ./unifi.nix
     ./nginx.nix
     ./mqtt2prom.nix
+    ./streetmerchant.nix
   ];
 
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";

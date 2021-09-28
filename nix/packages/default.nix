@@ -335,4 +335,5 @@ self: super: {
     cp $dashjs_src/dist/dash.all.min.js $out
   '';
 
+  streetmerchant = self.callPackage ./streetmerchant.nix { };
 }

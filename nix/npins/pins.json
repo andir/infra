@@ -196,6 +196,14 @@
       "revision": "637276c3110716d2a798e737fe62e54b37190d50",
       "hash": "0jaxw74srgabzz5sawy6nv27rpghmwxw53m5csnrhgy39a9yaki4"
     },
+    "streetmerchant": {
+      "type": "GitHub",
+      "repository": "streetmerchant",
+      "owner": "jef",
+      "branch": "main",
+      "revision": "430ec73ecd7e37477b0088f247a3e9bf72c82586",
+      "hash": "04g6mbwkhfzsxfvm8gnbj4cyxb1jal19f2pi4l6cark3dh1l5y54"
+    },
     "zigbee2mqtt": {
       "type": "GitHub",
       "repository": "zigbee2mqtt",
