@@ -32,7 +32,7 @@ buildGo116Module {
     sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
   '';
 
-  vendorSha256 = "01cj8hvyl57q7qn6rnl3cvk2y7gwdhh018sb568dw1plr33csgbv";
+  vendorSha256 = "1ry273nf08493cv2j17b8ddj10x2lisr4bldl691b380ilix00fv";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";
@@ -96,6 +96,10 @@ buildGo116Module {
           sha256 = "0j0r39cgrr0zf2sc1hpr8jh19lr3jxdw9wz6sq3s7kkqay324ab8";
         };
 
+        facenet = fetchzip {
+          url = "https://dl.photoprism.org/tensorflow/facenet.zip";
+          sha256 = "0vyfy7hidlzibm59236ipaymj0mzclnriv9bi86dab1sa627cqpd";
+        };
       in
       runCommand "photoprims-assets" { } ''
         cp -rv ${src}/assets $out
@@ -104,6 +108,7 @@ buildGo116Module {
         cp -rv ${frontend} $out/static/build
         ln -s ${nsfw} $out/nsfw
         ln -s ${nasnet} $out/nasnet
+        ln -s ${facenet} $out/facenet
       '';
   };
 }

@@ -78,7 +78,7 @@ npmlock2nix.build {
     #!/usr/bin/env sh
     export NODE_PATH="${placeholder "out"}/src:${placeholder "out"}/lib/node_modules"
     export PATH="${lib.getBin puppeteer-cli}/bin/:${lib.getBin chromium}/bin/:\$PATH"
-    export PUPPETEER_EXECUTABLE_PATH="${lib.getBin self.chromium}/bin/chromium"
+    export PUPPETEER_EXECUTABLE_PATH="${lib.getBin chromium}/bin/chromium"
 
     set -ex
     cd ${placeholder "out"}/src
