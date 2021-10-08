@@ -13,8 +13,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "82155ff501c7622cb2336646bb62f7624261f6d7",
-      "hash": "0xv47cpgaxb4j46ggjx9gkg299m9cdfzar27xw5h5k2lg5d3dljg"
+      "revision": "5e2018f7b383aeca6824a30c0cd1978c9532a46a",
+      "hash": "1i4ak2qb1q9rign398ycr190qv5ckc9inl24gf00070ykymzjs00"
     },
     "c3schedule": {
       "type": "GitHub",
@@ -29,31 +29,31 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "82155ff501c7622cb2336646bb62f7624261f6d7",
-      "hash": "0xv47cpgaxb4j46ggjx9gkg299m9cdfzar27xw5h5k2lg5d3dljg"
+      "revision": "5e2018f7b383aeca6824a30c0cd1978c9532a46a",
+      "hash": "1i4ak2qb1q9rign398ycr190qv5ckc9inl24gf00070ykymzjs00"
     },
     "dendrite": {
       "type": "GitHub",
       "repository": "dendrite",
       "owner": "matrix-org",
       "branch": "master",
-      "revision": "d08399d1a41063561b7c497ca77ffd88b52dbc1e",
-      "hash": "1df2djjmh6yb75hn987vbgx44k5vy2gn74yg2a2lxyijwb3abmv8"
+      "revision": "be9e1b536745e7e821f954239f832a309a88e67b",
+      "hash": "1mjhkdbs3g45vsc97s04jv5wbz5c977jail0dqxlxzg7hfg2yfxz"
     },
     "dex": {
       "type": "GitHub",
       "repository": "dex",
       "owner": "dexidp",
       "branch": "master",
-      "revision": "ff6e7c7688f363841f5cb8ffe12b41b990042f58",
-      "hash": "00nv0s26fyvkvjb6aimnksi18ij6grg6b6ykf8h1i4cdahld51x8"
+      "revision": "67ba7a1c70675ebd66420d9417f34cd712aa7197",
+      "hash": "0apylyav2ijqw3ag9agjsr57nad01j4lqz29wcw2cipq118kcgj3"
     },
     "dn42-registry": {
       "type": "Git",
       "repository_url": "https://gitlab.com/andi-/dn42-registry.git",
       "branch": "master",
-      "revision": "2986ad6477ffafd0e32d91359f8c9e88dfa65466",
-      "hash": "0jvb9qzalqy9j9syw835xnz42a2srrix559bcxxmahjsp1j7ajc9"
+      "revision": "e091fca85698ec7fed69b0ed5b6da01300f0d029",
+      "hash": "1cmhd2hfbw8362dk9yv6zal8wxiv3d7x7vrscmh28461x719yc8h"
     },
     "dn42-regparse": {
       "type": "GitHub",
@@ -76,8 +76,8 @@
       "repository": "matrix-static",
       "owner": "matrix-org",
       "branch": "master",
-      "revision": "c778780f604b32e6c3603874231e3819789d8241",
-      "hash": "1n59vv4xjzbs7237b1v8vlgblsdyw2hw8fi8sfjh05mqhxh5panf"
+      "revision": "dfe7d9d028bf91d2facc3dc99ec610b862c39310",
+      "hash": "183lawhizal121fp85c5yl95gpxprh9vq4wna94c3l0d43az2d1h"
     },
     "modules": {
       "type": "Git",
@@ -130,8 +130,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-21.05",
-      "revision": "ee90403e147b181300dffca5b0afa405e14f1945",
-      "hash": "1mk3s4ncfa8z8mr6vrgjh74s8dci12yam7plpc1bqgz12wld73ax"
+      "revision": "aff647e2704fa1223994604887bb78276dc57083",
+      "hash": "18zi4dq9d4c4v5rr5chkpb6mj27xrdybsp1qy17d9038clzgd315"
     },
     "nixpkgs-esp32": {
       "type": "GitHub",
@@ -146,8 +146,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "82155ff501c7622cb2336646bb62f7624261f6d7",
-      "hash": "0xv47cpgaxb4j46ggjx9gkg299m9cdfzar27xw5h5k2lg5d3dljg"
+      "revision": "5e2018f7b383aeca6824a30c0cd1978c9532a46a",
+      "hash": "1i4ak2qb1q9rign398ycr190qv5ckc9inl24gf00070ykymzjs00"
     },
     "npins": {
       "type": "GitHub",
@@ -170,8 +170,8 @@
       "repository": "photoprism",
       "owner": "photoprism",
       "branch": "develop",
-      "revision": "2e6c9079870eb30f6eab0f567cfb1302bebeec45",
-      "hash": "01hn5agvk60ryiss7l5n3i9yr7gwhw54b33j09nxij9hnmvvbx4i"
+      "revision": "6c2245d2ffc7b6088044786122d17eaa139473d7",
+      "hash": "089s1py7rc9f5705fkqayxllyh5v8ylirrvx19wil3411flq6689"
     },
     "pre-commit-hooks.nix": {
       "type": "GitHub",
@@ -209,8 +209,8 @@
       "repository": "zigbee2mqtt",
       "owner": "Koenkk",
       "branch": "dev",
-      "revision": "2fb59f8efa9d8e97ad34401dc2612ff3f55863f1",
-      "hash": "0hkai8ja2vlm3nb3psd2wp139cbsrsqjy89l16vlifrlcjpijysl"
+      "revision": "42497f3176cad4d9b90fd5e5fdf90d32c115c87d",
+      "hash": "0cm9g904ydn576fhqkgmd9y76vysk146gxa8ji9hgi75wxds0zcf"
     }
   }
 }

@@ -103,9 +103,9 @@ self: super: {
   rockpi4 = self.callPackage ./rockpi4 { };
 
   lego = super.lego.overrideAttrs (_: {
-    patches = [
-      ./lego-retry.diff
-    ];
+    #patches = [
+    #  ./lego-retry.diff
+    #];
   });
 
   python3 = super.python3.override {
