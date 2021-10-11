@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
-                2020122301 ; Serial - date by convention
+                2021100801 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -184,4 +184,6 @@ u-boot.l     IN      MX      20 mx.h4ck.space.
 mail._domainkey.u-boot.l	IN	TXT	( "v=DKIM1; k=rsa; "
 	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDNO6WurFVgQL35xENADnVcZolGDVanaTcKXWAaNdvWkwQIgjKu7+HvyqzvIOR9iS8bFznufiV94zL2KXtndk0acUf8tw+FGjzuGeVBnKZuSw9fqCV5srCrwah4cVKsPSqtpV2scahO7Vr2+Z3684/VPGbZh8S0I8jyZQMTrrW4/wIDAQAB" )  ; ----- DKIM key mail for u-boot.l.notmuch.email
 
-
+yocto.l     IN      MX      20 mx.h4ck.space.
+mail._domainkey.yocto.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCol5JeXa0vBAzEsvZQSBBHWYllYOKtYb4A7J8wkwytJO1PpkozyKalGRK9V/iYrdDDFIExPUaqh/dLGYMfxZBTTkMaNQpxsvZr8KgzbKKq/7fjOeGzxgUuZxOxzETUIrssWsG/cjJEaOYL4ES+jjTfwW0CFG5HyFR1RaqhLxZ85wIDAQAB" )  ; ----- DKIM key mail for yocto.l.notmuch.email
