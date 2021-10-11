@@ -398,7 +398,7 @@ in
           oifname uplink udp dport 123 accept
 
           # allow octave to access https resources
-          oifname uplink ether saddr 5c:02:72:30:fa:83 tcp dport { 443 } accept
+          oifname uplink ether saddr 5c:02:72:30:fa:83 tcp dport { 80, 443, 9000 } accept
 
           log prefix "IOT isn't granted internet access: " reject
         }
