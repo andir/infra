@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>livestream</title>
+    <style>
+      video {
+        max-width: 1920px;
+        max-height: 1080px;
+        height: 100vh;
+        width: 100vw;
+      }
+      body {
+	color: white;
+	font-family: monospace;
+        margin: 0;
+        padding: 0;
+        background-color: black;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: stretch;
+	/* flex-direction: row;*/
+	flex-flow: row wrap;
+        justify-content: center;
+      }
+
+      #debug {
+	width: 100%;
+	margin: auto;
+	height: 100px;
+      }
+
+      code {
+	font-style:italic;
+	color: grey;
+      }
+
+    </style>
+  </head>
+  <body>
+    <script src="/player.config.js"></script>
+    <script src="/dash.all.min.js"></script>
+    <video id="player" controls="true"></video>
+
+    <div id="urls">
+	<h2>Urls</h2>
+	<p>HLS: {{hls}}</p>
+	<p>DASH: {{dash}}</p>
+	<code>$ mpv {{hls}}</code>
+    </div>
+    <div id="debug" style="display: none">
+      <p>WClock: <span id="min"></span>:<span id="sec"></span></p>
+      <p>Delay: <span id="delay"></span></p>
+      <p>Buffer: <span id="buffer"></span></p>
+    </div>
+
+    <script>
+      var playerConfig = window.playerConfig || {};
+
+      if ((document.location.hash || "") == "#debug") {
+         document.getElementById("debug").style.display = null;
+      }
+
+      {
+	  var base = document.location.protocol + "//" + document.location.host;
+          var urls = document.getElementById("urls");
+          urls.innerHTML = urls.innerHTML.replaceAll("{{hls}}", base + "/" + playerConfig.urls.hls).replaceAll("{{dash}}", base + "/" + playerConfig.urls.dash);
+      }
+
+      var video = document.querySelector('#player');
+      var player = dashjs.MediaPlayer().create();
+      player.clearDefaultUTCTimingSources();
+      player.updateSettings(playerConfig.dashjsConfig || {});
+      player.initialize(video, playerConfig.urls.dash, true);
+
+      setInterval(function() {
+        var d = new Date();
+        var seconds = d.getSeconds();
+        var minutes = d.getMinutes();
+        document.querySelector("#sec").innerHTML = (seconds < 10 ? '0' : '""') + seconds;
+        document.querySelector("#min").innerHTML = (minutes < 10 ? '0' : '""') + minutes;
+
+        var delay = Math.round((d.getTime() / 1000) - Number(player.timeAsUTC()));
+        document.querySelector("#delay").innerHTML = delay;
+
+        var buffer = player.getBufferLength();
+        document.querySelector("#buffer").innerHTML = buffer;
+      }, 1000);
+    </script>
+  </body>
+</html>
