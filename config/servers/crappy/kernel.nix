@@ -1,32 +1,29 @@
 { config, pkgs, lib, ... }:
 let
-  version = "5.13.12"; # 5.13.11, 5.13.12 works
-  kernelPkg = pkgs.linux_latest; /* pkgs.linux_5_13.override {
-  modDirVersionArg = version;
-  argsOverride = {
-  inherit version;
-  src = pkgs.fetchurl {
-  url = "mirror://kernel/linux/kernel/v5.x/linux-${version}.tar.xz";
-  sha256 = "0948w1zc2gqnl8x60chjqngfzdi0kcxm12i1nx3nx4ksiwj5vc98";
+  version = "5.15-rc6"; # 5.13.11, 5.13.12 works
+  kernelPkg = pkgs.linux_latest.override {
+    modDirVersionArg = "5.15.0-rc6";
+    argsOverride = {
+      inherit version;
+      src = pkgs.fetchurl {
+        url = "https://git.kernel.org/torvalds/t/linux-${version}.tar.gz";
+        sha256 = "1lp3jqwsbd97k3bx4crs8rc2wssyaf0v8x4kl4zv7g7ww2kkg2ii";
+      };
+    };
   };
-  };
-  };*/
 in
 {
 
   boot.kernelPackages =
     pkgs.linuxPackagesFor (kernelPkg.override {
-      # extraConfig = ''
       #   STAGING_MEDIA y
       #   VIDEO_ROCKCHIP_VDEC m
-      # '';
+      extraConfig = ''
+        FB_SIMPLE m
+      '';
       kernelPatches = with pkgs.kernelPatches; [
         bridge_stp_helper
         request_key_helper
-        {
-          name = "0001-net-stmmac-dwmac-rk-Fix-ethernet-on-rk3399-based-dev";
-          patch = ./0001-net-stmmac-dwmac-rk-Fix-ethernet-on-rk3399-based-dev.patch;
-        }
         #   {
         #     name = "enable-rockpi4-spi";
         #     patch = ./enable-spi.patch;

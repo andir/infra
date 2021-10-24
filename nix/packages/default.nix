@@ -133,7 +133,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "0cnbxrwlbknjw333i56mvhx7xl4b02pc8a186fwxh8nn4qqdsdm9";
+    vendorSha256 = "0p4lwxn784vw2mkg1rn425jgc98p35mzivgav7rv27sdmh6z5zs1";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -269,6 +269,9 @@ self: super: {
       EOF
       chmod +x $out/bin/zigbee2mqtt
       chmod +x $out/lib/node_modules/zigbee2mqtt/run.js
+
+      # zigbee2mqtt now checks the configured engine version during runtime
+      cp package.json $out/lib/node_modules/zigbee2mqtt/
     '';
   };
 
