@@ -76,34 +76,37 @@ class SpacesBot:
 
         sync_response = await self.client.sync(timeout=30)
         await self.mark_as_read(sync_response)
-        await self.join_space()
+        await self.join_space(self.space_room_id)
 
-    async def join_space(self):
+    async def join_space(self, space_room_id: str):
         joined_rooms = await self.client.joined_rooms()
 
         if isinstance(joined_rooms, JoinedRoomsError):
             print(joined_rooms)
             raise joined_rooms
 
-        if self.space_room_id not in joined_rooms.rooms:
+        if space_room_id not in joined_rooms.rooms:
             await self.join_via(self.space_room_id)
             joined_rooms = await self.client.joined_rooms()
 
         additional_spaces = True
         while additional_spaces:
             additional_spaces = False
-            response = await self.query_spaces(self.space_room_id)
+            response = await self.query_spaces(space_room_id)
             joined_rooms = await self.client.joined_rooms()
             for room in response.rooms:
                 if room.room_id in joined_rooms.rooms:
                     continue
                 if room.room_type == 'm.space':
                     await self.client.join_via(room.room_id)
+                    await self.join_space(room.room_id)
+
                     additional_spaces = True
                     await asyncio.sleep(5)
 
-        response = await self.query_spaces(self.space_room_id)
+        response = await self.query_spaces(space_room_id)
         joined_rooms = await self.client.joined_rooms()
+        print("spaces rooms", response.rooms)
         for room in response.rooms:
             if room.room_id not in joined_rooms.rooms:
                 print("joining", room.room_id, room)
@@ -133,6 +136,9 @@ class SpacesBot:
 
     async def join_via(self, room_id: str) -> Union[JoinResponse, JoinError]:
         via = room_id.split(':')[1]
+        print(f"joining {room_id} via {via}")
 
         path = Api._build_path(['join', room_id], dict(access_token=self.client.access_token, server_name=via))
-        return await self.client._send(JoinResponse, 'POST', path, Api.to_json({}))
+        response = await self.client._send(JoinResponse, 'POST', path, Api.to_json({}))
+        print("join via response: ", response)
+        return response

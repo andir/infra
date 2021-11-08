@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, config, lib, ... }:
 let
   sources = import ../../../nix/sources.nix;
 in
@@ -36,12 +36,12 @@ in
     targetUser = "morph";
     substituteOnDestination = true;
 
-    # secrets."gitlab-runner.env" = {
-    #   source = "../secrets/gitlab-runner.env";
-    #   destination = "/var/secrets/gitlab-runner.env";
-    #   owner.user = "gitlab-runner";
-    #   action = [ "sudo" "systemctl" "restart" "gitlab-runner2" ];
-    # };
+    secrets."gitlab-runner.env" = {
+      source = "../secrets/gitlab-runner.env";
+      destination = "/var/secrets/gitlab-runner.env";
+      owner.user = "gitlab-runner";
+      action = [ "sudo" "systemctl" "restart" "gitlab-runner2" ];
+    };
   };
 
   mods.hetzner = {
@@ -56,11 +56,58 @@ in
     domain = "h4ck.space";
   };
 
-  services.gitlab-runner2 = {
-    enable = false; # has been restarting in loops forever and I do not really use it anymore
-    registrationConfigFile = "/var/secrets/gitlab-runner.env";
+  services.gitlab-runner = {
+    enable = true;
+    package = pkgs.unstable.gitlab-runner;
+    services = {
+      # runner for building in docker via host's nix-daemon
+      # nix store will be readable in runner, might be insecure
+      nix = {
+        # File should contain at least these two variables:
+        # `CI_SERVER_URL`
+        # `REGISTRATION_TOKEN`
+        registrationConfigFile = "/var/secrets/gitlab-runner.env";
+        dockerImage = "alpine";
+        dockerVolumes = [
+          "/nix/store:/nix/store:ro"
+          "/nix/var/nix/db:/nix/var/nix/db:ro"
+          "/nix/var/nix/daemon-socket:/nix/var/nix/daemon-socket:ro"
+        ];
+        dockerDisableCache = true;
+        preBuildScript = pkgs.writeScript "setup-container" ''
+          mkdir -p -m 0755 /nix/var/log/nix/drvs
+          mkdir -p -m 0755 /nix/var/nix/gcroots
+          mkdir -p -m 0755 /nix/var/nix/profiles
+          mkdir -p -m 0755 /nix/var/nix/temproots
+          mkdir -p -m 0755 /nix/var/nix/userpool
+          mkdir -p -m 1777 /nix/var/nix/gcroots/per-user
+          mkdir -p -m 1777 /nix/var/nix/profiles/per-user
+          mkdir -p -m 0755 /nix/var/nix/profiles/per-user/root
+          mkdir -p -m 0700 "$HOME/.nix-defexpr"
+
+          . ${pkgs.nix}/etc/profile.d/nix.sh
+
+          ${pkgs.nix}/bin/nix-env -i ${lib.concatStringsSep " " (with pkgs; [ nix cacert git openssh ])}
+        '';
+        environmentVariables = {
+          ENV = "/etc/profile";
+          USER = "root";
+          NIX_REMOTE = "daemon";
+          PATH = "/nix/var/nix/profiles/default/bin:/nix/var/nix/profiles/default/sbin:/bin:/sbin:/usr/bin:/usr/sbin";
+          NIX_SSL_CERT_FILE = "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+        };
+        tagList = [ "nix" "docker" ];
+        runUntagged = true;
+      };
+    };
   };
 
+  services.k3s = {
+    enable = false;
+    docker = true;
+    role = "server";
+    package = pkgs.unstable.k3s;
+  };
 
   systemd.network.networks."99-main".enable = false;
 

@@ -10,12 +10,15 @@ in
 {
   services.mosquitto = {
     enable = true;
-    users = { };
-    aclExtraConf = ''
-      topic readwrite #
-    '';
-    allowAnonymous = true;
-    host = "10.250.43.1";
+    listeners = [
+      {
+        settings.allow_anonymous = true;
+        acl = [
+          "topic readwrite #"
+        ];
+        address = "10.250.43.1";
+      }
+    ];
   };
 
   systemd.services.mqtt2prom = {
