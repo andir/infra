@@ -339,4 +339,26 @@ self: super: {
   '';
 
   streetmerchant = self.callPackage ./streetmerchant.nix { };
+
+  cinny = self.npmlock2nix.build {
+    src = sources.cinny;
+
+    installPhase = [ "cp -r dist $out" ];
+    node_modules_attrs = {
+      buildInputs = [ self.vips ];
+      nativeBuildInputs = [ self.pkgconfig self.python3 ];
+    };
+
+    passthru.withConfig = config: self.runCommand "cinny-with-config"
+      {
+        cinny = self.cinny;
+        config = builtins.toJSON config;
+        passAsFile = [ "config" ];
+      } ''
+      cp -rv $cinny $out
+      rm $out/config.json || :
+      chmod +rw -R $out
+      cp $configPath $out/config.json
+    '';
+  };
 }

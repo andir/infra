@@ -24,6 +24,14 @@
       "revision": "50e754471953f271d13c07af42f9f1455bda467e",
       "hash": "1b5b724d2ggk4cl19kivg99sd2s5i608xpp1j0krzj5j8ksgm39s"
     },
+    "cinny": {
+      "type": "GitHubRelease",
+      "repository": "cinny",
+      "owner": "ajbura",
+      "tarball_url": "https://api.github.com/repos/ajbura/cinny/tarball/v1.5.0",
+      "release_name": "Cinny v1.5.0: Login page redesign",
+      "hash": "1v4872lwvyj995qqfxm3kj2qj6dvjd6lm5dld4717xigiq1fs4rb"
+    },
     "crappy-nixpkgs": {
       "type": "GitHub",
       "repository": "nixpkgs",

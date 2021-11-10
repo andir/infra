@@ -69,6 +69,15 @@ in
       };
     };
 
+    virtualHosts."cinny.nixos.dev" = {
+      enableACME = true;
+      forceSSL = true;
+      locations."/".root = pkgs.cinny.withConfig {
+        defaultHomeserver = 0;
+        homeserverList = [ matrixDomain ];
+      };
+    };
+
     virtualHosts.${chatDomain} = {
       enableACME = true;
       forceSSL = true;
