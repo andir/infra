@@ -7,6 +7,12 @@
 
   services.nginx = {
     enable = true;
+    virtualHosts."kack.it" = {
+      locations."/".extraConfig = ''
+        add_header Content-Type text/plain;
+        return 200 'Probably broken.';
+      '';
+    };
     virtualHosts."s.rammhold.de" = {
       enableACME = true;
       forceSSL = true;
