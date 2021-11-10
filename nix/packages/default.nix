@@ -349,6 +349,10 @@ self: super: {
       nativeBuildInputs = [ self.pkgconfig self.python3 ];
     };
 
+    preBuild = ''
+      sed -e "/'process.env': JSON.stringify(process.env),/d" -i webpack.common.js
+    '';
+
     passthru.withConfig = config: self.runCommand "cinny-with-config"
       {
         cinny = self.cinny;
