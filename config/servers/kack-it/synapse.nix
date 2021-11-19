@@ -8,6 +8,7 @@
     };
   };
 
+  h4ck.backup.paths = [ "/var/lib/matrix-synapse" "/var/lib/postgresql" ];
 
   services.nginx = {
     enable = true;
