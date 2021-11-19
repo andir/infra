@@ -26,7 +26,7 @@ pkgs.mkShell {
     hcloud
     morph
     npins
-    nix
+    nixUnstable
     nixpkgs-fmt
     openssh
     gitAndTools.git-bug
