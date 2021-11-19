@@ -10,6 +10,7 @@
     ./nixos-cloud.nix
     ./dendrite.nix
     ./synapse.nix
+    ./calibre-web.nix
   ];
 
   deployment = {
