@@ -1,6 +1,10 @@
 { sources, system, config }:
 let
-  unstable = import sources.nixpkgs-unstable { inherit system config; };
+  unstable = import sources.nixpkgs-unstable {
+    inherit system config; overlays = [
+    (import ./. { inherit sources system config; })
+  ];
+  };
 in
 self: super: {
   inherit sources unstable;
@@ -339,6 +343,23 @@ self: super: {
   '';
 
   streetmerchant = self.callPackage ./streetmerchant.nix { };
+
+  matrix-org-olm = self.emscriptenStdenv {
+    name = "matrix-org-olm";
+    nativeBuildInputs = [ self.emscripten self.python3 self.closurecompiler ];
+    src = sources.matrix-org-olm;
+    postUnpack = ''
+      patchShebangs $PWD
+    '';
+
+    EM_CLOSURE_COMPILER = "closure-compiler";
+
+    makeFlags = [ "js" ];
+
+    installPhase = ''
+      cp -rv javascript $out
+    '';
+  };
 
   cinny = self.npmlock2nix.build {
     src = sources.cinny;
