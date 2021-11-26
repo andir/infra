@@ -13,8 +13,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "263ef4cc4146c9fab808085487438c625d4426a9",
-      "hash": "0739s6g7ixrcl0wgmc730m4482n75q7pd56ni4mf22jaa70hqhif"
+      "revision": "73369f8d0864854d1acfa7f1e6217f7d6b6e3fa1",
+      "hash": "11z477rs1s2lhpw9h45npby86nqs7rqhi45ikh742ssxfwla52j1"
     },
     "c3schedule": {
       "type": "GitHub",
@@ -37,31 +37,31 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "263ef4cc4146c9fab808085487438c625d4426a9",
-      "hash": "0739s6g7ixrcl0wgmc730m4482n75q7pd56ni4mf22jaa70hqhif"
+      "revision": "73369f8d0864854d1acfa7f1e6217f7d6b6e3fa1",
+      "hash": "11z477rs1s2lhpw9h45npby86nqs7rqhi45ikh742ssxfwla52j1"
     },
     "dendrite": {
       "type": "GitHub",
       "repository": "dendrite",
       "owner": "matrix-org",
       "branch": "master",
-      "revision": "6e93531e9412a16d39567e141c98b538a7e1e739",
-      "hash": "0blhggniwncvpr6adzk55g71gkvp78vb6hpk9k1f3ykflfy1gmcx"
+      "revision": "11f588b0d603517be2c0509335c88b85b88f91f8",
+      "hash": "182q31zqvaqy8nv8dr8d1fa2s1f69c1wvagxs0sr42c3x0dlww7p"
     },
     "dex": {
       "type": "GitHub",
       "repository": "dex",
       "owner": "dexidp",
       "branch": "master",
-      "revision": "98e7d7a99d8942161d93a241fdbe13261348ca54",
-      "hash": "1jhkyi09f2j662fxll0s08rzk8jr3nwq6x2khr1bsxl9f3dr9mnb"
+      "revision": "e00e75b7731aeb33928463ebe1e730b507afbb0e",
+      "hash": "0nnf9qi3qxwxl9mgzj7bcvr4h9b6vxzcc2zjlvqwj29pp4q6cb5g"
     },
     "dn42-registry": {
       "type": "Git",
       "repository_url": "https://gitlab.com/andi-/dn42-registry.git",
       "branch": "master",
-      "revision": "85d618e5e4598746f933a3f1e184d48d01b304ff",
-      "hash": "0jycyxvjg6qw46ajhrc2rmvc8ma748ng64viw29icgdw54k9sfzn"
+      "revision": "291a57029625d08074de79363b619953fb159f4c",
+      "hash": "1isz3k0kaqy7pyhd2bcs5595jjia80xf05i1zqy77cj4frfwlmhb"
     },
     "dn42-regparse": {
       "type": "GitHub",
@@ -83,8 +83,8 @@
       "type": "Git",
       "repository_url": "https://gitlab.matrix.org/matrix-org/olm.git",
       "branch": "master",
-      "revision": "5039c0cc3a58f6d269ba65e8a4e2f3b8427de647",
-      "hash": "1qhjmbdcqnlji68pm7gw2s08d3c2w96yhqk75jsb8cqskdq84fa7"
+      "revision": "701f9c765dcb3fc71583083d8bb254dffec13892",
+      "hash": "1vkq65cgnyp0hqdkfad2f7gjm90hidnym6w9lrsahw024c7zi7mm"
     },
     "matrix-static": {
       "type": "GitHub",
@@ -100,6 +100,14 @@
       "branch": "master",
       "revision": "bf5329d14ce941e09593c98ba0fc7208ec5a4925",
       "hash": "1ylx1qzh4clb7kf7nnnh9y5vdk81r7q325c0smwh20x2dawm5wzs"
+    },
+    "mon-nixpkgs": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "release-21.11",
+      "revision": "a4df4905856fe331d899ec9ba86b5cdb4dbc76c0",
+      "hash": "0f87i5xgpf6ssbw4qavmwpbkyxhqndall56q4bb6xnc8fb2hwmy6"
     },
     "morph": {
       "type": "GitHub",
@@ -125,6 +133,14 @@
       "revision": "75f4ba05c63be3f147bcc2f7bd4ba1f029cedcb1",
       "hash": "157c64220lf825ll4c0cxsdwg7cxqdx4z559fdp7kpz0g6p8fhhr"
     },
+    "nixos-21.11": {
+      "type": "GitHub",
+      "repository": "nixpkgs",
+      "owner": "nixos",
+      "branch": "release-21.11",
+      "revision": "a4df4905856fe331d899ec9ba86b5cdb4dbc76c0",
+      "hash": "0f87i5xgpf6ssbw4qavmwpbkyxhqndall56q4bb6xnc8fb2hwmy6"
+    },
     "nixos-mailserver": {
       "type": "Git",
       "repository_url": "https://gitlab.com/simple-nixos-mailserver/nixos-mailserver.git",
@@ -145,8 +161,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-21.05",
-      "revision": "09650059d7f5ae59a7f0fb2dd3bfc6d2042a74de",
-      "hash": "0f06zcc8mh934fya0hwzklmga238yxiyfp183y48vyzkdsg7xgn0"
+      "revision": "91e6a9a6568f751bb10222a937507e7e151a035e",
+      "hash": "0yb2h8l3ip2j0ii698k7hpnz99l9g866bxxqsx9kjfm2cyhfdcrj"
     },
     "nixpkgs-esp32": {
       "type": "GitHub",
@@ -161,8 +177,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "263ef4cc4146c9fab808085487438c625d4426a9",
-      "hash": "0739s6g7ixrcl0wgmc730m4482n75q7pd56ni4mf22jaa70hqhif"
+      "revision": "73369f8d0864854d1acfa7f1e6217f7d6b6e3fa1",
+      "hash": "11z477rs1s2lhpw9h45npby86nqs7rqhi45ikh742ssxfwla52j1"
     },
     "npins": {
       "type": "GitHub",
@@ -185,16 +201,16 @@
       "repository": "photoprism",
       "owner": "photoprism",
       "branch": "develop",
-      "revision": "abcdee6728becb529484a96396279324256fad12",
-      "hash": "1h1ka3s04svz43gaddmbxjx1z27qpi0cj5pqr2lanymzrq0km3b3"
+      "revision": "650817a9e02a72ee5b60c3df56d741cb80ae8e2e",
+      "hash": "0q1m17y2fwyh9k81r163mamn3iq0w1wcjqgnz0hg8bdnd0jkcj48"
     },
     "pre-commit-hooks.nix": {
       "type": "GitHub",
       "repository": "pre-commit-hooks.nix",
       "owner": "cachix",
       "branch": "master",
-      "revision": "50cfce93606c020b9e69dce24f039b39c34a4c2d",
-      "hash": "0q0irn855y3gr3aqvbbv4dygq8bs1pqjfqc8k8kmc9g0c990r6i9"
+      "revision": "c3b4f94350b0e59c2546fa85890cc70d03616b9c",
+      "hash": "1x90b2m8kzxzslfssvnaq9s1m0n9rxqw41qhz298gnv4nvahcr0f"
     },
     "publictransport": {
       "type": "Git",
@@ -224,8 +240,8 @@
       "repository": "zigbee2mqtt",
       "owner": "Koenkk",
       "branch": "dev",
-      "revision": "167c05681e6915dd51d0b6eb6a8624e5ef6bf3ce",
-      "hash": "1iz7qc4652gqfwk8g6910ysrs1h2qyd1yrpb9x5g7nd9wp23iyjf"
+      "revision": "51321affcf726a5d72b341a281249738b04de664",
+      "hash": "009shfvv7mj1c4qkrfwadn7v21n5bsj678bbzwywwif5lv89fmbv"
     }
   }
 }

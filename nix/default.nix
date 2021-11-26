@@ -1,6 +1,6 @@
 { system ? builtins.currentSystem
 , config ? import ./config.nix
-, patches ? [ ./patches/matrix-synpase-1.47.1.patch ]
+, patches ? [ ]
 }:
 let
   patchedNixpkgs =

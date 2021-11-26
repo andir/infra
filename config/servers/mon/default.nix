@@ -122,6 +122,11 @@
     };
   };
 
+  services.grafana-image-renderer = {
+    provisionGrafana = true;
+    enable = true;
+  };
+
   services.nginx = {
     enable = true;
     virtualHosts."mon.h4ck.space" = {

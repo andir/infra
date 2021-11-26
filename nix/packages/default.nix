@@ -1,9 +1,8 @@
 { sources, system, config }:
 let
   unstable = import sources.nixpkgs-unstable {
-    inherit system config; overlays = [
-    (import ./. { inherit sources system config; })
-  ];
+    inherit system config; overlays =
+    (import ../overlays.nix { inherit system config; });
   };
 in
 self: super: {
