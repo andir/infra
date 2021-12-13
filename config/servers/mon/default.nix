@@ -125,6 +125,7 @@
   services.grafana-image-renderer = {
     provisionGrafana = true;
     enable = true;
+    verbose = true;
   };
 
   services.nginx = {

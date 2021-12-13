@@ -332,7 +332,7 @@ in
 
   systemd.tmpfiles.rules = [ "d /var/backups/nixos-security-tracker 0700 postgres - - -" ];
 
-  systemd.services.tmate = {
+  systemd.services.tmate = lib.mkIf false {
     # FIXME: This is currently complaining about not running as root while
     #        trying to init the "jail" and likely otherwise would just work.
     # Usage:

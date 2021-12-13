@@ -247,9 +247,22 @@
     ];
   };
 
+  boot.initrd.luks.devices = {
+    "postgresql".device = "/dev/disk/by-uuid/cf0d0b47-2f49-49b8-8feb-b3a6a4f41a2c";
+  };
+  fileSystems."/var/lib/postgresql" = {
+    fsType = "ext4";
+    device = "/dev/disk/by-uuid/f4da6312-9da8-4d65-8881-d741ecb15f51";
+  };
+  #fileSystems."/var/lib/postgresql" = {
+  #  fsType = "none";
+  #  options = [ "bind" ];
+  #  device = "/data/postgresql/data";
+  #};
+
   services.postgresql = {
     enable = true;
-    package = pkgs.postgresql_12_jit;
+    package = pkgs.postgresql_12;
     initialScript = pkgs.writeText "synapse-init.sql" ''
       CREATE USER "matrix-synapse";
       CREATE DATABASE "matrix-synapse" WITH OWNER "matrix-synapse"

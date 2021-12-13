@@ -39,10 +39,10 @@
   swapDevices = [{ device = "/swapfile"; size = 1024; }];
 
   # be gentle to the SD card
-  services.journald.extraConfig = ''
-    Storage=volatile
-    RuntimeMaxUse=64M
-  '';
+  #services.journald.extraConfig = ''
+  #  Storage=volatile
+  #  RuntimeMaxUse=64M
+  #'';
 
   networking.useNetworkd = true;
   networking.useDHCP = false;

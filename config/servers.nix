@@ -2,6 +2,7 @@ let
   inherit (import ./lib.nix) mkMachine;
   pkgs = import ../nix { };
   sources = import ../nix/sources.nix;
+  lib = import (pkgs.path + "/lib");
 in
 {
 
@@ -16,13 +17,13 @@ in
 
     inherit (pkgs) runCommand;
 
-    lib = import (pkgs.path + "/lib");
+    inherit lib;
 
     evalConfig = machineName:
       let
         prefix = sources."${machineName}-nixpkgs" or pkgs.path;
       in
-      import (prefix + "/nixos/lib/eval-config.nix");
+      import ((builtins.trace machineName prefix) + "/nixos/lib/eval-config.nix");
   };
 
   "jh4all.de" = mkMachine {

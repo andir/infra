@@ -32,7 +32,7 @@ buildGo116Module {
     sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
   '';
 
-  vendorSha256 = "sha256-fIVS/OBHLZyb1C+rWLVeSJiNCbGUCIidsWbzkqK/yMc=";
+  vendorSha256 = "sha256-CB6b5jflO+kcWnSNY4dgtiqHOU7yYJfoI7YQVwkSOlA=";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";

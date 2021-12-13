@@ -4,14 +4,15 @@
     enable = true;
     unifiPackage = pkgs.unifiStable.overrideAttrs (
       _: rec {
-        version = "6.1.71";
+        version = "6.5.54";
         src = pkgs.fetchurl {
           url = "https://dl.ubnt.com/unifi/${version}/unifi_sysvinit_all.deb";
-          sha256 = "1lvsq0xpfgwpbzs25khy7bnrhv8i1jgzi8ij75bsh65hfa3rplc2";
+          sha256 = "sha256-M2gYqKZi0czFgfWx0tTW43b+aUVqS6Mg+misRB9/Fes=";
         };
       }
     );
   };
+
 
   users.users.unifi.group = "unifi";
   users.groups.unifi = { };

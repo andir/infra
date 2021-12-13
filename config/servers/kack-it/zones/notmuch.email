@@ -187,3 +187,8 @@ mail._domainkey.u-boot.l	IN	TXT	( "v=DKIM1; k=rsa; "
 yocto.l     IN      MX      20 mx.h4ck.space.
 mail._domainkey.yocto.l IN      TXT     ( "v=DKIM1; k=rsa; "
           "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCol5JeXa0vBAzEsvZQSBBHWYllYOKtYb4A7J8wkwytJO1PpkozyKalGRK9V/iYrdDDFIExPUaqh/dLGYMfxZBTTkMaNQpxsvZr8KgzbKKq/7fjOeGzxgUuZxOxzETUIrssWsG/cjJEaOYL4ES+jjTfwW0CFG5HyFR1RaqhLxZ85wIDAQAB" )  ; ----- DKIM key mail for yocto.l.notmuch.email
+
+gcc.l     IN      MX      20 mx.h4ck.space.
+mail._domainkey.gcc.l IN      TXT     ( "v=DKIM1; k=rsa; "
+          "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdClFQ1f25DMVj/3+NfxHM3pEPwh0KiLg8qlekV9VayWfrr3jTH8GKVSXQjVYvq5OTQsFOXzLixUBLX/y5mmtfQc75dVcbP32geVJu0Cyy9tYXDZ5yxax0Y+7aY/ewGOQDtGo6IMUFZCKrg1TTBUMr1nsQR3Y4nnddRkvZeaByrwIDAQAB" )  ; ----- DKIM key mail for gcc.l.notmuch.email
+

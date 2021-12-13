@@ -27,7 +27,9 @@ in
     users.users.photoprism = {
       createHome = false;
       isSystemUser = true;
+      group = "photoprism";
     };
+    users.groups.photoprism = { };
 
     h4ck.backup.paths = [ "${cfg.storagePath}" ] ++ lib.optional (cfg.storagePath == "/var/lib/photoprism") "/var/lib/private/photoprism";
     systemd.services.photoprism = {
@@ -57,7 +59,7 @@ in
           TEMP_PATH = "/tmp";
           HTTP_PORT = cfg.port;
           SETTINGS_PATH = "${settings}";
-          PHOTOPRISM_SPONSOR = "true";
+          SPONSOR = "true";
         }
       ) // {
         HOME = "/var/cache/photoprism/home"; # darktable because it hardcoded $HOME/.config/darktable

@@ -18,12 +18,12 @@
     targetUser = "morph";
     substituteOnDestination = true;
 
-    # secrets."c3shedule.env" = {
-    #   source = "../secrets/c3schedule.env";
-    #   destination = "/var/lib/secrets/c3schedule.env";
-    #   owner.user = "c3schedule";
-    #   action = [ "sudo" "systemctl" "restart" "c3schedule" ];
-    # };
+    secrets."c3shedule.env" = {
+      source = "../secrets/c3schedule.env";
+      destination = "/var/lib/secrets/c3schedule.env";
+      owner.user = "c3schedule";
+      action = [ "sudo" "systemctl" "restart" "c3schedule" ];
+    };
   };
 
   networking = {
@@ -79,7 +79,7 @@
 
   c3schedule = {
     # only enabled during events
-    enable = false;
+    enable = true;
     config = {
       core = {
         host = "guybrush.hackint.org";
@@ -98,23 +98,23 @@
         homedir = "/var/lib/c3schedule";
         channels = lib.concatStringsSep "," [
           "#signalangel"
-          "#rc3-cbase"
+          # "#rc3-cbase"
           "#rc3-schedule"
-          "#rc3-one"
-          "#rc3-two"
-          "#rc3-oio"
-          "#rc3-restrealitaet"
-          "#rc3-r3s"
-          "#rc3-wikipaka"
-          "#rc3-xhain"
-          "#rc3-franconiannet"
-          "#rc3-csh"
-          "#rc3-chaoszone"
-          "#rc3-chaostrawler"
-          "#rc3-bitwaescherei"
-          "#rc3-cwtv"
-          "#rc3-hacc"
-          "#rc3-sendezentrum"
+          # "#rc3-one"
+          # "#rc3-two"
+          # "#rc3-oio"
+          # "#rc3-restrealitaet"
+          # "#rc3-r3s"
+          # "#rc3-wikipaka"
+          # "#rc3-xhain"
+          # "#rc3-franconiannet"
+          # "#rc3-csh"
+          # "#rc3-chaoszone"
+          # "#rc3-chaostrawler"
+          # "#rc3-bitwaescherei"
+          # "#rc3-cwtv"
+          # "#rc3-hacc"
+          # "#rc3-sendezentrum"
         ];
         prefix = ".?";
         reply_errors = "False";
