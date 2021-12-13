@@ -136,7 +136,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "13y7ar5kcwwswh7z5a8d3sqqlvwbbl505ja7bs8814pvp381bqmz";
+    vendorSha256 = "sha256-cf5npeBp03zfbyLWMGgDuzT0oJmgfiL34pKjOHym0FM=";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -385,4 +385,16 @@ self: super: {
       cp $configPath $out/config.json
     '';
   };
+
+  element-web = super.element-web.overrideAttrs (old:
+    let
+      version = "1.9.7";
+    in
+    if self.lib.versionOlder old.version "1.9.6" then {
+      version = version;
+      src = super.fetchurl {
+        url = "https://github.com/vector-im/element-web/releases/download/v${version}/element-v${version}.tar.gz";
+        sha256 = "sha256-Q/PAHunpIq/+wnj8DMW5yf87k65pCHYnQXrzhe23obs=";
+      };
+    } else { });
 }
