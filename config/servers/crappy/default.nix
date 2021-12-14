@@ -55,7 +55,7 @@
         "wled"
         "rmvtransport"
         "denonavr"
-        "pykodi"
+        "kodi"
       ];
     }).overrideAttrs (_: {
       doInstallCheck = false;
