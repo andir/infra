@@ -27,6 +27,11 @@
         cache_state_persistent = true;
         cache_state_send_on_startup = true;
         last_seen = "epoch";
+
+        homeassistant_discovery_topic = "homeassistant";
+        homeassistant_status_topic = "homeassistant/status";
+        homeassistant_legacy_entity_attributes = false;
+        homeassistant_legacy_triggers = false;
       };
 
       devices = {

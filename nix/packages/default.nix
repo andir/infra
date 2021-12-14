@@ -397,4 +397,6 @@ self: super: {
         sha256 = "sha256-Q/PAHunpIq/+wnj8DMW5yf87k65pCHYnQXrzhe23obs=";
       };
     } else { });
+
+  lovelaceModules = self.callPackage ./lovelaceModules.nix { inherit sources; };
 }

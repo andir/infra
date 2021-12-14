@@ -13,8 +13,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "e675946ecde5606c505540de2024e2732bae4185",
-      "hash": "1xnqhz0wxkgkwpwkal93k5rj72j39pvck542i9jyxh9bm25rc4j5"
+      "revision": "b0bf5f888d377dd2f36d90340df6dc9f035aaada",
+      "hash": "0l123s468r9h706grqkzf0x077r4hy6zcz529xxfiqxsh1ddx5xb"
     },
     "c3schedule": {
       "type": "GitHub",
@@ -37,16 +37,16 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "e675946ecde5606c505540de2024e2732bae4185",
-      "hash": "1xnqhz0wxkgkwpwkal93k5rj72j39pvck542i9jyxh9bm25rc4j5"
+      "revision": "b0bf5f888d377dd2f36d90340df6dc9f035aaada",
+      "hash": "0l123s468r9h706grqkzf0x077r4hy6zcz529xxfiqxsh1ddx5xb"
     },
     "dendrite": {
       "type": "GitHub",
       "repository": "dendrite",
       "owner": "matrix-org",
       "branch": "master",
-      "revision": "c3dda0779d5cc176ae6c2213f5321f876fa22a99",
-      "hash": "1hb1mkv39wb7lm297ijqjb21h54fgdzfysvamf5azwnwxsbqbldc"
+      "revision": "002c3e0a5ff18c0b36c4c8e6cebea61547c9ac51",
+      "hash": "0hp1k3lf7fvdq26s7v6102y1wqy5n9l17q4hf727q0a1hny0hh18"
     },
     "dex": {
       "type": "GitHub",
@@ -87,12 +87,28 @@
       "revision": "6f35fc84a14b6cf6641d9b716991ac7581b17e9d",
       "hash": "1jibfcsfn3qyz53iyqan8bvzskvb6g55c9ffhic93s98fld86zdy"
     },
+    "lovelace-mini-media-player": {
+      "type": "GitHubRelease",
+      "repository": "mini-media-player",
+      "owner": "kalkih",
+      "tarball_url": "https://api.github.com/repos/kalkih/mini-media-player/tarball/v1.15.0",
+      "release_name": "v1.15.0",
+      "hash": "1sg2zq6chmrgl459zkgscrw1nw8a311vsndziz4chzlb9hcpps4b"
+    },
+    "lovelance-rmv-card": {
+      "type": "GitHub",
+      "repository": "rmv-card",
+      "owner": "custom-cards",
+      "branch": "master",
+      "revision": "fcfae8e370b33216e0c257f9bc23cb9c10097d0e",
+      "hash": "0ds82rrfw84ykbg42srihrvg53apfhfybl0z2d0g245bx0iamnq0"
+    },
     "matrix-org-olm": {
       "type": "Git",
       "repository_url": "https://gitlab.matrix.org/matrix-org/olm.git",
       "branch": "master",
-      "revision": "2dbeea2f1dcc28e325c11865f8661b6db66e4dab",
-      "hash": "13pkfr8ny2jlqmda6ilk5s2mmz3pmlvrzf9ldqdkrbkzw6b79bxs"
+      "revision": "797183f27f1c8cdb9d4551aaa317bd13ff02401b",
+      "hash": "1jfhydfcnqpksb2bhi960v3h10prf4v5gx42mm2rp6p0jfbqcy50"
     },
     "matrix-static": {
       "type": "GitHub",
@@ -138,8 +154,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "release-21.11",
-      "revision": "1c79570a966602b3402fe45c41faa9da677bee9f",
-      "hash": "10hbry7yj0276g2v3my8jcipf06prnjwrqmf3chaq3fzmzzawzif"
+      "revision": "c95b2e99529891b1d52e065c34dd50c136151bcb",
+      "hash": "138b34hxi3qgwd1mrd1gmpwmbj8z3s4z44sf6k5drcfrlfm9hgr9"
     },
     "nixos-mailserver": {
       "type": "Git",
@@ -177,8 +193,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "e675946ecde5606c505540de2024e2732bae4185",
-      "hash": "1xnqhz0wxkgkwpwkal93k5rj72j39pvck542i9jyxh9bm25rc4j5"
+      "revision": "b0bf5f888d377dd2f36d90340df6dc9f035aaada",
+      "hash": "0l123s468r9h706grqkzf0x077r4hy6zcz529xxfiqxsh1ddx5xb"
     },
     "npins": {
       "type": "GitHub",
@@ -201,8 +217,8 @@
       "repository": "photoprism",
       "owner": "photoprism",
       "branch": "develop",
-      "revision": "29b4723d43a4ae5c51640fbfc6d69a11a0da7b29",
-      "hash": "1278a2k7gfpianfwf14fx4x1agjnpqzln4pypyqg34i37cbcch5s"
+      "revision": "3a89ea67b46e6d723ec82a17df4846d859889fbb",
+      "hash": "1sv2iafjbvzngjqmgv6mc6x9bwibnbvc7knyp5bbikqdmnly4ayc"
     },
     "pre-commit-hooks.nix": {
       "type": "GitHub",
@@ -240,8 +256,8 @@
       "repository": "zigbee2mqtt",
       "owner": "Koenkk",
       "branch": "dev",
-      "revision": "bb22216d0984325eca200f7e362370e62baf686d",
-      "hash": "1r88qz55hrylwr4w5gqnc0l212l5m96n6barjl0p7gz11lby7rn1"
+      "revision": "a282221e4094ed031d51eac42c9b395d386c894d",
+      "hash": "00pz4si3q3zc2xj08zqmxi0d1vc5h70ybmwn569ww3fvb1jjfqf9"
     }
   }
 }
