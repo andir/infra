@@ -11,6 +11,17 @@
     targetHost = "172.20.24.67";
     targetUser = "morph";
     substituteOnDestination = false; # TODO: is this faster?
+
+    secrets."home-assistant-secrets.yml" = {
+      source = toString ../../../secrets/home-assistant-secrets.yaml;
+      destination = "/var/lib/hass/secrets.yaml";
+      permissions = "0400";
+      owner = {
+        user = "hass";
+        group = "hass";
+      };
+      action = [ "sudo" "systemctl" "restart" "home-assistant" ];
+    };
   };
   h4ck.monitoring.targetHost = config.deployment.targetHost;
 
@@ -87,6 +98,11 @@
           cards = [
             {
               type = "custom:mini-media-player";
+              title = "Spotify";
+              entity = "media_player.spotify_andir0815";
+            }
+            {
+              type = "custom:mini-media-player";
               title = "Amplifier";
               entity = "media_player.denon";
             }
@@ -127,7 +143,7 @@
         broker = "10.250.43.1";
         discovery = true;
       };
-      automation = {
+      automation = lib.mapAttrsToList (alias: value: { id = alias; inherit alias; } // value) {
         "Turn off the music" = {
           trigger = [
             {
@@ -143,6 +159,29 @@
             }
           ];
         };
+
+        "Turn off the music when I leave the house" = {
+          trigger = [
+            {
+              platform = "zone";
+              event = "leave";
+              zone = "zone.home";
+              entity_id = "device_tracker.pixel_4";
+            }
+          ];
+          condition = [ ];
+          action = [
+            {
+              service = "media_player.turn_off";
+              target.entity_id = "media_player.denon";
+            }
+          ];
+        };
+      };
+
+      spotify = {
+        client_id = "!secret spotify_client_id";
+        client_secret = "!secret spotify_client_secret";
       };
 
       sensor = [
