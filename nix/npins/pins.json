@@ -154,8 +154,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "release-21.11",
-      "revision": "b3c227557b000ecd8482406ea39ef66fba189c7a",
-      "hash": "1h6ijr3c658h397g1w61f5v0ncd14lbdnxd9n4v08yy6ypwyrngc"
+      "revision": "6265be549cbd00d3d267176e62e1f46bae3bd666",
+      "hash": "1yhp2iipwfi6pn8bh945c76vv1wyps571wa091b8ngi25zap5gnd"
     },
     "nixos-mailserver": {
       "type": "Git",
@@ -201,8 +201,8 @@
       "repository": "npins",
       "owner": "andir",
       "branch": "master",
-      "revision": "d7dc34614a7e4e6cea50c09e8dd7abb0a159b61a",
-      "hash": "1l5nasvxp22i11i973mwsmav4kqf08mcpjaapygcayb75fiia179"
+      "revision": "a1023351ccab34dd1245037438a70b7a634d0be1",
+      "hash": "1ss59sxxcr27k1i11dd6z33ppihnq5gjs0i6k6pnf9xzckgh7naw"
     },
     "npmlock2nix": {
       "type": "GitHub",
@@ -217,8 +217,8 @@
       "repository": "photoprism",
       "owner": "photoprism",
       "branch": "develop",
-      "revision": "e45092274592c615b976303cbf4cf21fe2e978b7",
-      "hash": "1yszqxw57pvn73f4l40ycjwp1cmv69w9lh6din68h5vsg1scji0i"
+      "revision": "d6e2537b33ff4a3e050ae4e1b93303be6bdc4c44",
+      "hash": "0q42nliydhqmkpiydqmaqxflwxcs7k0x37sp8zixr144sapvsji9"
     },
     "pre-commit-hooks.nix": {
       "type": "GitHub",
