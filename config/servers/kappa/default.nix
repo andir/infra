@@ -60,10 +60,25 @@
         localAddresses = [ "172.20.25.12" ];
         remoteAddresses = [ "172.20.25.50" ];
         localPort = 42255;
-        mtu = 140;
+        mtu = 1400;
         babel = false;
         remotePublicKey = "WFXMh8V3roRkY9OmLcseVb20/NcjqWR+LKvAZV6th2c=";
         remotePort = 42255;
+      };
+
+      pixel4 = {
+        localPort = 42256;
+        localAddresses = [
+          "172.20.25.12"
+          "fd21:a07e:735e:0f01::1/64"
+        ];
+        remoteAddresses = [
+          "172.20.25.51"
+          "fd21:a07e:735e:0f01::2/64"
+        ];
+        babel = false;
+        remotePublicKey = "66r6LlBeU79xxzNKH1T1QSBpiYTXedSUpzN4Zbye3jM=";
+        mtu = 1400;
       };
     };
   };

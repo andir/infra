@@ -41,6 +41,19 @@
         "0x04cf8cdf3c8240ce".friendly_name = "0x04cf8cdf3c8240ce";
         "0x00158d00058a6475".friendly_name = "0x00158d00058a6475";
         "0x00158d000588ceb6".friendly_name = "0x00158d000588ceb6";
+
+        "0x001788010b9c608f".friendly_name = "Living Room Ceiling 1";
+        "0x001788010b9974a3".friendly_name = "Living Room Ceiling 2";
+        "0x001788010b9971a2".friendly_name = "Living Room Ceiling 3";
+
+        "0x001788010b9996f7".friendly_name = "Living Room Dining Lamp";
+
+        "0x7cb03eaa00aa8dcc".friendly_name = "Living Room Floor Lamp 2";
+        "0x84182600000e37c2".friendly_name = "Living Room Floor Lamp 4";
+        "0x7cb03eaa00aa87a8".friendly_name = "Living Room Floor Lamp 5";
+        "0x7cb03eaa00aa8924".friendly_name = "Living Room Floor Lamp 6";
+
+        "0x001788010b09f8b9".friendly_name = "Living Room Dining Motion";
       };
 
       frontend = {
