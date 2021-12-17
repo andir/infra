@@ -55,8 +55,26 @@ rec {
     })
     { };
 
+  mini-graph-card = callPackage
+    ({ npmlock2nix }: npmlock2nix.build {
+      src = sources.lovelace-mini-graph-card;
+      passthru.files = [
+        "${mini-graph-card}/dist.js"
+      ];
+      buildCommands = [
+        "npm run build"
+        "npm run babel"
+      ];
+      installPhase = ''
+        mkdir $out
+        cp dist/mini-graph-card-bundle.js $out/dist.js
+      '';
+    })
+    { };
+
   allResources = mkResources [
     rmv-card
     mini-media-player
+    mini-graph-card
   ];
 }

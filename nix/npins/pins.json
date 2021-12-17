@@ -13,8 +13,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "cfdb99fe18ac0c01872c5fbebfae6202d7a75ab2",
-      "hash": "19rvn8cw29y0ay01x941pnp6jqdgwq8h4klrwd6bwh7hdpkvsbf3"
+      "revision": "a2e281f5770247855b85d70c43454ba5bff34613",
+      "hash": "03m6b3yvx7v8gwib848aclwqpg02rhqdh9h511w9byyfvha9g0fg"
     },
     "c3schedule": {
       "type": "GitHub",
@@ -37,8 +37,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "cfdb99fe18ac0c01872c5fbebfae6202d7a75ab2",
-      "hash": "19rvn8cw29y0ay01x941pnp6jqdgwq8h4klrwd6bwh7hdpkvsbf3"
+      "revision": "a2e281f5770247855b85d70c43454ba5bff34613",
+      "hash": "03m6b3yvx7v8gwib848aclwqpg02rhqdh9h511w9byyfvha9g0fg"
     },
     "dendrite": {
       "type": "GitHub",
@@ -53,15 +53,15 @@
       "repository": "dex",
       "owner": "dexidp",
       "branch": "master",
-      "revision": "9d3471e39b24c11350b8c911fc6e736f0be7c785",
-      "hash": "0ibivjaz4xx77jnxz5w2plylsvz6lgcvpd72rvdkjxrj219222jy"
+      "revision": "4a42e80a7ae0e9c683745e5daa98d7f033fc58e9",
+      "hash": "0a9ji8q7n3c034n6ncq027jx9j3bh01xi877n5dzb0jl8d5dl66m"
     },
     "dn42-registry": {
       "type": "Git",
       "repository_url": "https://gitlab.com/andi-/dn42-registry.git",
       "branch": "master",
-      "revision": "b63a22f5f2d201aa9f1007523e9c1c1bfcb11f93",
-      "hash": "0sgnz634xn19aqzqpvf6vm5rpwz2gybq8i8499ilfp3h1y00m6l0"
+      "revision": "70e9f37c3b200ac6f115bef2085c847d095168c5",
+      "hash": "03gixbahs6crdmkahrg0fchxxf5lckxi6q6y7mf9sp905xc4a68z"
     },
     "dn42-regparse": {
       "type": "GitHub",
@@ -86,6 +86,14 @@
       "branch": "master",
       "revision": "6f35fc84a14b6cf6641d9b716991ac7581b17e9d",
       "hash": "1jibfcsfn3qyz53iyqan8bvzskvb6g55c9ffhic93s98fld86zdy"
+    },
+    "lovelace-mini-graph-card": {
+      "type": "GitHub",
+      "repository": "mini-graph-card",
+      "owner": "kalkih",
+      "branch": "master",
+      "revision": "e889848cbe9e1afcb7af5295012c7a732cfde136",
+      "hash": "0xki3p2j9fskh5hbvzm70s57arg35yynbww4qlgzd3fiyzz7li8g"
     },
     "lovelace-mini-media-player": {
       "type": "GitHubRelease",
@@ -154,8 +162,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "release-21.11",
-      "revision": "6265be549cbd00d3d267176e62e1f46bae3bd666",
-      "hash": "1yhp2iipwfi6pn8bh945c76vv1wyps571wa091b8ngi25zap5gnd"
+      "revision": "92c00af3da28838a3b7634ef49ca02f3f33611b2",
+      "hash": "1qf57pi04nph610q0kpy51cxrmdjj4p7awzcf5342ndm874xs1xl"
     },
     "nixos-mailserver": {
       "type": "Git",
@@ -193,8 +201,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "nixos-unstable",
-      "revision": "cfdb99fe18ac0c01872c5fbebfae6202d7a75ab2",
-      "hash": "19rvn8cw29y0ay01x941pnp6jqdgwq8h4klrwd6bwh7hdpkvsbf3"
+      "revision": "a2e281f5770247855b85d70c43454ba5bff34613",
+      "hash": "03m6b3yvx7v8gwib848aclwqpg02rhqdh9h511w9byyfvha9g0fg"
     },
     "npins": {
       "type": "GitHub",
@@ -217,8 +225,8 @@
       "repository": "photoprism",
       "owner": "photoprism",
       "branch": "develop",
-      "revision": "d6e2537b33ff4a3e050ae4e1b93303be6bdc4c44",
-      "hash": "0q42nliydhqmkpiydqmaqxflwxcs7k0x37sp8zixr144sapvsji9"
+      "revision": "2636255c952267314d4caa268fad104651baa8e0",
+      "hash": "0b1r3igxa56rfhgndagdrbxvccccacxzn0mb7pl07fvpq20z20pa"
     },
     "pre-commit-hooks.nix": {
       "type": "GitHub",
@@ -248,16 +256,16 @@
       "repository": "streetmerchant",
       "owner": "jef",
       "branch": "main",
-      "revision": "72140bebdb7587c071398e0e3abd41bbb8caa10d",
-      "hash": "0nwvi3xby78pl5q2icf1vs0pnljf5lll667agzhr7zkx99bsyy02"
+      "revision": "2ff7f58691c9233dbfcd49eee6b3cafb800c8539",
+      "hash": "1ir874lz1kagsb29kqcnwsscmiyvddqxsxbwjmiz2iw2ri10x1wx"
     },
     "zigbee2mqtt": {
       "type": "GitHub",
       "repository": "zigbee2mqtt",
       "owner": "Koenkk",
       "branch": "dev",
-      "revision": "d875b297ad72c1c58193e58b0b53e4e21c51dbea",
-      "hash": "03dj33hp98da3npqg1qdb9nq552rz5glmppm9zplbay06clz4wb3"
+      "revision": "5f37145a020e72d5a1f744634086d99bacebb0cc",
+      "hash": "0005s0xqxjwj3d0v6rxvi4iia24g6nr3mlbc11y0q4h3nmp19dbi"
     }
   }
 }

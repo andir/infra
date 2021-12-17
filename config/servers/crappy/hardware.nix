@@ -14,10 +14,21 @@
   hardware.enableAllFirmware = true;
 
   boot.kernelParams = [
-    "console=ttyS0,1500000n8"
-    "console=tty0"
+    "console=ttyS2,1500000n8"
+    "earlycon=uart8250,mmio32,0xff1a0000"
+    "earlyprint"
+    "boot.shell_on_fail"
+    # "console=tty0"
   ];
 
+  boot.initrd.kernelModules = [
+    "nvme"
+    "rockchip_rga"
+    "phy_rockchip_pcie"
+    "rockchip_thermal"
+    "pcie_rockchip_host"
+    "rockchip_saradc"
+  ];
   boot.kernelModules = [
     "spi-nor"
   ];
@@ -25,14 +36,23 @@
   # File systems configuration for using the installer's partition layout
   fileSystems = {
     "/" = {
+      device = "/dev/disk/by-label/NIXOS_NVME";
+      fsType = "ext4";
+    };
+    "/sdcard" = {
       device = "/dev/disk/by-label/NIXOS_SD";
       fsType = "ext4";
     };
-    "/boot/firmware" = {
-      device = "/dev/disk/by-label/FIRMWARE";
-      fsType = "vfat";
-      options = [ "nofail" "noauto" ];
+    "/boot" = {
+      fsType = "none";
+      options = [ "bind" ];
+      device = "/sdcard/boot";
     };
+    # "/boot/firmware" = {
+    #   device = "/dev/disk/by-label/FIRMWARE";
+    #   fsType = "vfat";
+    #   options = [ "nofail" "noauto" ];
+    # };
   };
 
   # !!! Adding a swap file is optional, but strongly recommended!

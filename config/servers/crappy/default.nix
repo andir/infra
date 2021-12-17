@@ -6,6 +6,7 @@
     ./graphical.nix
     ./zigbee.nix
     ./hass
+    ./snapcast.nix
   ];
 
   deployment = {
@@ -27,6 +28,15 @@
   h4ck.monitoring.targetHost = config.deployment.targetHost;
 
   sound.enable = true;
+
+  # do not create the home dir for the pulse user as otherwise
+  # the permissions will be 700 and nobody else on the system
+  # is able to access the daemon files *after* the activation
+  # script has been run.
+  users.users.pulse.createHome = lib.mkForce false;
+  systemd.tmpfiles.rules = [
+    "d '/run/pulse' 0755 pulse pulse"
+  ];
   hardware.pulseaudio = {
     enable = true;
     systemWide = true;

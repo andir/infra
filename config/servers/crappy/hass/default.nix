@@ -29,22 +29,22 @@
           cards = [
             {
               title = "Living Room Floor Lamp";
-              type = "entity";
+              type = "light";
               entity = "light.living_room_floor_lamp";
             }
             {
               title = "Living Room Ceiling Lamp";
-              type = "entity";
+              type = "light";
               entity = "light.living_room_ceiling_lamp";
             }
             {
               title = "Living Room Dining Lamp";
-              type = "entity";
+              type = "light";
               entity = "light.living_room_dining_lamp";
             }
             {
               title = "Living Room Lights";
-              type = "entity";
+              type = "light";
               entity = "light.living_room_lights";
             }
             {
@@ -87,6 +87,26 @@
               title = "Amplifier";
               entity = "media_player.denon";
             }
+            {
+              type = "custom:mini-media-player";
+              title = "Spotify Snapcast";
+              #entity = "media_player.spotify_andir0815";
+              entity = "media_player.snapcast_client_crappy";
+              hide = {
+                power = true;
+                icon = true;
+                source = true;
+              };
+              speaker_group = {
+                platform = "snapcast";
+                entities = [
+                  {
+                    entity_id = "media_player.snapcast_client_crappy";
+                    name = "Crappy";
+                  }
+                ];
+              };
+            }
           ];
         }
         {
@@ -94,15 +114,13 @@
           cards =
             let
               mkMoisture = entity: name: {
-                inherit entity name;
-                type = "sensor";
+                inherit name;
+                entities = [ entity ];
+                type = "custom:mini-graph-card";
                 unit = "%";
-                limits = {
-                  min = 0;
-                  max = 100;
-                };
-                graph = "line";
-                detail = 2;
+                lower_bound = 0;
+                upper_bound = 100;
+                hour24 = true;
                 icon = "mdi:waves-arrow-up";
               };
 
@@ -115,14 +133,16 @@
             in
             [
               {
-                type = "sensor";
-                entity = "sensor.0x00158d00056a19b8_temperature";
+                type = "custom:mini-graph-card";
                 name = "Temperature Outside";
+                entities = [ "sensor.0x00158d00056a19b8_temperature" ];
+                hour24 = true;
               }
               {
-                type = "sensor";
-                entity = "sensor.0x00158d00056a19b8_humidity";
+                type = "custom:mini-graph-card";
+                entities = [ "sensor.0x00158d00056a19b8_humidity" ];
                 name = "Humidity Outside";
+                hour24 = true;
               }
               {
                 type = "gauge";
