@@ -45,23 +45,23 @@
       "repository": "dendrite",
       "owner": "matrix-org",
       "branch": "master",
-      "revision": "002c3e0a5ff18c0b36c4c8e6cebea61547c9ac51",
-      "hash": "0hp1k3lf7fvdq26s7v6102y1wqy5n9l17q4hf727q0a1hny0hh18"
+      "revision": "e5a5be9f545e09ad86eea9d8cb8a56fb302e4852",
+      "hash": "1waqhx1knzyg1wxd5f66qnz6fyvn382s1lgjxdw9vr7ywvbfhz63"
     },
     "dex": {
       "type": "GitHub",
       "repository": "dex",
       "owner": "dexidp",
       "branch": "master",
-      "revision": "4a42e80a7ae0e9c683745e5daa98d7f033fc58e9",
-      "hash": "0a9ji8q7n3c034n6ncq027jx9j3bh01xi877n5dzb0jl8d5dl66m"
+      "revision": "a407b5861b401f3603a9884009fbac2a228997aa",
+      "hash": "0kbdf7zjaalqg9pj9mrvfwr97g62c0r4xy484za50may8lvwsw8h"
     },
     "dn42-registry": {
       "type": "Git",
       "repository_url": "https://gitlab.com/andi-/dn42-registry.git",
       "branch": "master",
-      "revision": "70e9f37c3b200ac6f115bef2085c847d095168c5",
-      "hash": "03gixbahs6crdmkahrg0fchxxf5lckxi6q6y7mf9sp905xc4a68z"
+      "revision": "51f8c0b165424dffcf8b11b11a982da9debdc1a7",
+      "hash": "01h8pvbza0yfsrqqbnjj6yalf1ssdz2jr9l7cnjnrg8ynv4fbdb0"
     },
     "dn42-regparse": {
       "type": "GitHub",
@@ -162,8 +162,8 @@
       "repository": "nixpkgs",
       "owner": "nixos",
       "branch": "release-21.11",
-      "revision": "92c00af3da28838a3b7634ef49ca02f3f33611b2",
-      "hash": "1qf57pi04nph610q0kpy51cxrmdjj4p7awzcf5342ndm874xs1xl"
+      "revision": "91cf338a4c91a00f9ec2fd3107cf8265367495f7",
+      "hash": "1ybqfl3hwa2wz94k4xsqdwzjlk1dqwh79zhhp3dq0a7vgsc57r9r"
     },
     "nixos-mailserver": {
       "type": "Git",
@@ -225,8 +225,8 @@
       "repository": "photoprism",
       "owner": "photoprism",
       "branch": "develop",
-      "revision": "2636255c952267314d4caa268fad104651baa8e0",
-      "hash": "0b1r3igxa56rfhgndagdrbxvccccacxzn0mb7pl07fvpq20z20pa"
+      "revision": "10d9ec78cdda63668d115f001314ec8bee3f904a",
+      "hash": "10z4gb9gbdzvyz665wlqcf2dskp7ck3gz0g47477fpw721h19v8z"
     },
     "pre-commit-hooks.nix": {
       "type": "GitHub",
@@ -264,8 +264,8 @@
       "repository": "zigbee2mqtt",
       "owner": "Koenkk",
       "branch": "dev",
-      "revision": "5f37145a020e72d5a1f744634086d99bacebb0cc",
-      "hash": "0005s0xqxjwj3d0v6rxvi4iia24g6nr3mlbc11y0q4h3nmp19dbi"
+      "revision": "1dd116328840866a94dd01e8e6218e7c34954202",
+      "hash": "1kdzanhd5cfhvn23y5p888csdm2dcbp7anm79v1580whv74g57gx"
     }
   }
 }

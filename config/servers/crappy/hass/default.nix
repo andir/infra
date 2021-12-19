@@ -43,15 +43,55 @@
               entity = "light.living_room_dining_lamp";
             }
             {
-              title = "Living Room Lights";
               type = "light";
               entity = "light.living_room_lights";
+            }
+            {
+              title = "Hallway Lamp";
+              type = "light";
+              entity = "light.hallway_lamp";
             }
             {
               title = "Weather";
               type = "weather-forecast";
               entity = "weather.home";
               show_forecast = true;
+            }
+            {
+              name = "Ambient";
+              type = "button";
+              show_state = false;
+              tap_action = {
+                action = "call-service";
+                service = "scene.turn_on";
+                service_data = {
+                  entity_id = "scene.ambient";
+                };
+              };
+            }
+            {
+              name = "Sleep";
+              type = "button";
+              show_state = false;
+              tap_action = {
+                action = "call-service";
+                service = "scene.turn_on";
+                service_data = {
+                  entity_id = "scene.sleep";
+                };
+              };
+            }
+            {
+              name = "TV";
+              type = "button";
+              show_state = false;
+              tap_action = {
+                action = "call-service";
+                service = "scene.turn_on";
+                service_data = {
+                  entity_id = "scene.tv";
+                };
+              };
             }
           ];
         }
@@ -105,6 +145,15 @@
                     name = "Crappy";
                   }
                 ];
+              };
+            }
+            {
+              type = "custom:mini-media-player";
+              title = "Kodi";
+              entity = "media_player.kodi";
+              hide = {
+                power = true;
+                source = true;
               };
             }
           ];
@@ -183,6 +232,52 @@
         }
       ];
 
+      scene = [
+        {
+          name = "Ambient";
+          entities = {
+            "light.living_room_ceiling_lamp" = {
+              state = "off";
+            };
+            "light.living_room_floor_lamp" = {
+              state = "on";
+              brightness_pct = 15;
+            };
+            "light.hallway_lamp" = {
+              state = "on";
+              brightness_pct = 10;
+            };
+          };
+        }
+        {
+          name = "Sleep";
+          entities = {
+            "light.living_room_lights".state = "off";
+            "light.hallway_lamp".state = "off";
+            "media_player.denon".state = "off";
+          };
+        }
+        {
+          name = "TV";
+          entities = {
+            "light.living_room_lights".state = "off";
+            "light.hallway_lamp".state = "off";
+            "media_player.denon" = {
+              state = "playing";
+              source = "GAME2";
+            };
+          };
+        }
+        {
+          name = "Sleep";
+          entities = {
+            "light.living_room_lights".state = "off";
+            "light.hallway_lamp".state = "off";
+            "media_player.denon".state = "off";
+          };
+        }
+      ];
+
       group = {
         living_room_lights = {
           name = "Living Room Lights";
@@ -232,6 +327,13 @@
             "light.living_room_floor_lamp"
             "light.living_room_ceiling_lamp"
             "light.living_room_dining_lamp"
+          ];
+        }
+        {
+          platform = "group";
+          name = "Hallway lamp";
+          entities = [
+            "light.0x7cb03eaa00ae0d59"
           ];
         }
       ];

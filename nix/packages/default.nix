@@ -136,7 +136,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "sha256-n+piGp1oH0XXyAnnHQrrsmnZ0lmYNWubtBFoWw8/AGY=";
+    vendorSha256 = "sha256-9KPoHpGvGSnw3CtgVo/zazs6HvfIwaRqHRN84bwxp9U=";
   };
 
   matrix-static = unstable.buildGoModule {
