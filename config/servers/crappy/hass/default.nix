@@ -23,6 +23,15 @@
     });
     lovelaceConfig = {
       title = "Home";
+      switch = [
+        {
+          platform = "flux";
+          lights = [
+            "light.living_room_lights"
+            "light.hallway_lamp"
+          ];
+        }
+      ];
       views = [
         {
           title = "Home";
@@ -150,7 +159,7 @@
             {
               type = "custom:mini-media-player";
               title = "Kodi";
-              entity = "media_player.kodi";
+              entity = "media_player.crappy";
               hide = {
                 power = true;
                 source = true;
