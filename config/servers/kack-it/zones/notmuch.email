@@ -1,7 +1,7 @@
 $TTL 3600
 $ORIGIN notmuch.email.
 @    IN    SOA    ns1.h4ck.space. foo.h4ck.space. (
-                2021100801 ; Serial - date by convention
+                2021123001 ; Serial - date by convention
                 10800      ; Refresh
                 600        ; Retry
                 604800     ; Expire
@@ -191,4 +191,8 @@ mail._domainkey.yocto.l IN      TXT     ( "v=DKIM1; k=rsa; "
 gcc.l     IN      MX      20 mx.h4ck.space.
 mail._domainkey.gcc.l IN      TXT     ( "v=DKIM1; k=rsa; "
           "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdClFQ1f25DMVj/3+NfxHM3pEPwh0KiLg8qlekV9VayWfrr3jTH8GKVSXQjVYvq5OTQsFOXzLixUBLX/y5mmtfQc75dVcbP32geVJu0Cyy9tYXDZ5yxax0Y+7aY/ewGOQDtGo6IMUFZCKrg1TTBUMr1nsQR3Y4nnddRkvZeaByrwIDAQAB" )  ; ----- DKIM key mail for gcc.l.notmuch.email
+
+cryptsetup.l     IN      MX      20 mx.h4ck.space.
+mail._domainkey.cryptsetup.l	IN	TXT	( "v=DKIM1; k=rsa; "
+	  "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDI27M707DaKIROq02zGqKamZJRmJuXeLZGa1sNhNrrMBgQRivneun1nHXf7GjcoEAyFIYHaWy+nteeIMJzAKIQtF88g6YyL0NZ3sJnZ9rZFoxS5dexSxN+A4sAmT93z55nDoEK4pi+zr872qrMR5usyazQBNH4Ys0FVK7nJZIWwQIDAQAB" )  ; ----- DKIM key mail for cryptsetup.l.notmuch.email
 
