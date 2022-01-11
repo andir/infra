@@ -11,6 +11,7 @@
     ./dendrite.nix
     ./synapse.nix
     ./calibre-web.nix
+    ./cgit.nix
   ];
 
   deployment = {
@@ -97,7 +98,7 @@
         pid_dir = "/var/lib/c3schedule";
         homedir = "/var/lib/c3schedule";
         channels = lib.concatStringsSep "," [
-          "#signalangel"
+          "#signal"
           # "#rc3-cbase"
           "#rc3-schedule"
           # "#rc3-one"
@@ -109,12 +110,24 @@
           # "#rc3-xhain"
           # "#rc3-franconiannet"
           # "#rc3-csh"
-          # "#rc3-chaoszone"
           # "#rc3-chaostrawler"
           # "#rc3-bitwaescherei"
           # "#rc3-cwtv"
           # "#rc3-hacc"
           # "#rc3-sendezentrum"
+          "#rc3-franconiannet"
+          "#rc3-cwtv"
+          "#rc3-aboutfuture"
+          "#rc3-chaoszone"
+          "#rc3-chaosstudio-hamburg"
+          "#rc3-r3s"
+          "#rc3-xhain"
+          "#rc3-cbase"
+          "#rc3-haecksen"
+          "#rc3-gehacktesfromhell"
+          "#rc3-sendezentrum"
+          "#rc3-fem"
+          "#rc3-csh"
         ];
         prefix = ".?";
         reply_errors = "False";
@@ -124,10 +137,10 @@
       };
       c3schedule = {
         channel = "#rc3-schedule";
-        angel_channel = "#signalangel";
-        url = "https://data.c3voc.de/rC3/everything.schedule.json";
+        angel_channel = "#signal";
+        url = "https://data.c3voc.de/rC3_21/everything.schedule.json";
         stream_url_template = "https://streaming.media.ccc.de/rc3/{{ stream_hall }}";
-        session_url = "https://rc3.world/rc3/public_fahrplan#{{ guid }}";
+        session_url = "https://fahrplan.events.ccc.de/rc3/2021/Fahrplan/#{{ guid }}";
       };
     };
   };

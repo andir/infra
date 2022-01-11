@@ -1,13 +1,13 @@
 { config, pkgs, lib, ... }:
 let
-  version = "5.15-rc7"; # 5.13.11, 5.13.12 works
+  version = "5.16-rc8"; # 5.13.11, 5.13.12 works
   kernelPkg = pkgs.linux_latest.override {
-    modDirVersionArg = "5.15.0-rc7";
+    modDirVersionArg = "5.16.0-rc8";
     argsOverride = {
       inherit version;
       src = pkgs.fetchurl {
         url = "https://git.kernel.org/torvalds/t/linux-${version}.tar.gz";
-        sha256 = "0x5p7dcxsaaz8qi1l9rynra2fpyz196hfsgvk7sh54nmmshsdfnj";
+        sha256 = "1f732wy75vid6d8rbmkgv3iwhshf7zcra6pp362z2xrriv2b4r2d";
       };
     };
   };

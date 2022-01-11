@@ -56,6 +56,9 @@
         "0x001788010b09f8b9".friendly_name = "Living Room Dining Motion";
 
         "0x7cb03eaa00ae0d59".friendly_name = "Hallway Lamp";
+        "0x001788010b095fd9".friendly_name = "Hallway Motion";
+
+        "0x7cb03eaa0a00bab7".friendly_name = "Bedroom Lamp";
       };
 
       frontend = {

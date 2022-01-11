@@ -8,6 +8,16 @@
       netflix
       pvr-iptvsimple
       a4ksubtitles
+      (p.buildKodiAddon {
+        pname = "plugin.video.media-ccc-de";
+        version = "git+" + pkgs.sources."plugin.video.media-ccc-de".revision;
+        namespace = "plugin.video.media-ccc-de";
+        src = sources."plugin.video.media-ccc-de";
+        propagatedBuildInputs = with p; [
+          requests
+          routing
+        ];
+      })
     ]))
   ];
 
@@ -26,6 +36,7 @@
 
   programs.sway = {
     enable = true;
+    extraPackages = pkgs.lib.mkForce [ pkgs.dmenu ];
   };
 
   users.groups.greeter = { };

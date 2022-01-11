@@ -41,6 +41,9 @@
     enable = true;
     systemWide = true;
     package = pkgs.pulseaudioFull;
+    extraModules = [
+      pkgs.pulseaudio-modules-bt
+    ];
     zeroconf.publish.enable = true;
     tcp = {
       enable = true;
@@ -65,6 +68,25 @@
     '';
   };
 
+  services.mopidy = {
+    enable = true;
+    extensionPackages = with pkgs; [
+      mopidy-mpd
+      mopidy-iris
+      mopidy-local
+      mopidy-somafm
+      mopidy-tunein
+    ];
+    configuration = ''
+      [http]
+      enabled = true
+      hostname = 127.0.0.1
+      port = 6680
+      [audio]
+      output = audioresample ! audio/x-raw,rate=48000,channels=2,format=S16LE ! audioconvert ! wavenc ! filesink location=/run/snapserver/mopidy
+    '';
+  };
+
   networking.firewall.allowedTCPPorts = [
     4713 # pulseaudio
     5353 # avahi
@@ -86,6 +108,8 @@
     ffmpeg
     syncplay
     streamlink
+
+    ncmpcpp
   ];
 
   hardware.opengl.enable = true;

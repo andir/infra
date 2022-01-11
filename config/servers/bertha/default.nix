@@ -537,6 +537,21 @@ in
           ipv6.prefix_length = 64;
         };
       };
+      kappa = {
+        tunnelType = null;
+        interfaceName = "wg-kappa";
+        bgp = {
+          asn = 4242423991;
+          ipv4.next_hop_self = false;
+          ipv4.gateway_recursive = true;
+        };
+        addresses = {
+          ipv6.local_address = "fe80::1";
+          ipv6.remote_address = "fe80::12";
+          ipv6.prefix_length = 64;
+        };
+      };
+
 
       cccda = {
         tunnelType = "wireguard";

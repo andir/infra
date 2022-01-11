@@ -39,8 +39,9 @@ rec {
     { };
 
   mini-media-player = callPackage
-    ({ npmlock2nix }: npmlock2nix.build {
+    ({ npmlock2nix, nodejs-14_x }: npmlock2nix.build {
       src = sources.lovelace-mini-media-player;
+      nodejs = nodejs-14_x;
       passthru.files = [
         "${mini-media-player}/dist.js"
       ];
@@ -56,8 +57,9 @@ rec {
     { };
 
   mini-graph-card = callPackage
-    ({ npmlock2nix }: npmlock2nix.build {
+    ({ npmlock2nix, nodejs-14_x }: npmlock2nix.build {
       src = sources.lovelace-mini-graph-card;
+      nodejs = nodejs-14_x;
       passthru.files = [
         "${mini-graph-card}/dist.js"
       ];

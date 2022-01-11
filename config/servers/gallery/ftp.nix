@@ -8,7 +8,7 @@ let
   pasv_max_port = 15400;
 
 in
-lib.mkIf false {
+lib.mkIf true {
   services.vsftpd = {
     enable = true;
     writeEnable = true;

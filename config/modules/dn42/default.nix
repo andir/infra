@@ -157,7 +157,7 @@ in
     let
       wireguardPeers = filterAttrs (n: v: v.tunnelType == "wireguard" && v ? wireguardConfig) cfg.peers;
 
-      wireguardInterfaceNameMapping = mapAttrs (_: v: v.interfaceName) (filterAttrs (n: v: hasPrefix "wg-dn42_" v.interfaceName) config.h4ck.wireguardBackbone.peers);
+      wireguardInterfaceNameMapping = mapAttrs (_: v: v.interfaceName) (filterAttrs (n: v: hasPrefix "wg-" v.interfaceName) config.h4ck.wireguardBackbone.peers);
       wireguardInterfaceNames = attrValues wireguardInterfaceNameMapping;
 
       interfaceNames = wireguardInterfaceNames ++ (mapAttrsToList (_: p: p.interfaceName) (filterAttrs (_: p: p.interfaceName != null) cfg.peers));

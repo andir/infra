@@ -34,5 +34,5 @@ pkgs.mkShell {
 
   inherit (pre-commit-hooks) shellHook;
 
-  NPINS_FOLDER = toString ./nix/npins;
+  NPINS_DIRECTORY = toString ./nix/npins;
 }

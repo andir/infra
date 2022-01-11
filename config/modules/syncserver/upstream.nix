@@ -9,7 +9,7 @@ let
     inherit (pkgs) system;
   };
 
-  cfg = config.services.firefox.syncserver;
+  cfg = config.h4ck.firefox.syncserver;
 
   defaultDbLocation = "/var/db/firefox-sync-server/firefox-sync-server.db";
   defaultSqlUri = "sqlite:///${defaultDbLocation}";
@@ -42,7 +42,7 @@ in
 {
 
   options = {
-    services.firefox.syncserver = {
+    h4ck.firefox.syncserver = {
       enable = mkOption {
         type = types.bool;
         default = false;

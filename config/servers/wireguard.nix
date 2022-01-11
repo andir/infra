@@ -65,5 +65,18 @@
       publicKey = "Jf/uH/pP0Bc1ktZoWVKdX/MwgsdT9M8X2t+XZgOROGQ=";
       hostName = "kappa.h4ck.space";
     };
+    "omicron" = {
+      addresses = [
+        "fe80::64/64"
+      ];
+
+      loopbackAddresses = [
+        "172.20.25.64/32"
+        "fd21:a07e:735e:ffff::64/128"
+      ];
+      publicKey = "+FrnFzf9BNoL1FCZEiD5WBt7Ja4cOUKfydMFioKiVyE=";
+
+      hostName = "omicron.h4ck.space";
+    };
   };
 }

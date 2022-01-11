@@ -15,7 +15,7 @@ in
 
   config = lib.mkIf config.h4ck.syncserver.enable {
     h4ck.backup.paths = [ "/var/db/firefox-sync-server" ];
-    services.firefox.syncserver = {
+    h4ck.firefox.syncserver = {
       enable = true;
       publicUrl = "https://${domain}";
       allowNewUsers = true;

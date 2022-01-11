@@ -136,7 +136,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "sha256-wHPhURyXN6hjfCRQExEouzz6LD26d3vVaI4EuGpYIg4=";
+    vendorSha256 = "10pgj21qgs76cgyrrdf28l0gddqlnz4185bl4fs9a1wxk58z3jg3";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -241,6 +241,7 @@ self: super: {
 
   my-zigbee2mqtt = self.npmlock2nix.build rec {
     src = sources.zigbee2mqtt;
+    nodejs = self.nodejs-14_x;
     node_modules_attrs = {
       packageLockJson = src + "/npm-shrinkwrap.json";
       nativeBuildInputs = [ self.python3 self.nukeReferences ];
@@ -399,4 +400,12 @@ self: super: {
     } else { });
 
   lovelaceModules = self.callPackage ./lovelaceModules.nix { inherit sources; };
+
+  mopidy-radionet = self.python3Packages.buildPythonApplication {
+    pname = "mopidy-radionet";
+    version = sources.mopidy-radionet.release_name;
+    src = sources.mopidy-radionet;
+    propagatedBuildInputs = [ self.mopidy self.python3Packages.uritools ];
+    doCheck = false; # requires network access :(
+  };
 }

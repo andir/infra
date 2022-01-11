@@ -149,6 +149,21 @@ in
           ipv6.prefix_length = 64;
         };
       };
+      kappa = {
+        interfaceName = "wg-kappa";
+        tunnelType = null;
+        bgp = {
+          asn = 4242423991;
+          ipv4.gateway_recursive = true;
+          #ipv4.next_hop_address = "172.20.25.2";
+          ipv4.extended_next_hop = true;
+        };
+        addresses = {
+          ipv6.remote_address = "fe80::12";
+          ipv6.local_address = "fe80::3";
+          ipv6.prefix_length = 64;
+        };
+      };
 
 
       cloudfiles_at = {

@@ -67,6 +67,11 @@
               show_forecast = true;
             }
             {
+              title = "Bedroom Lamp";
+              type = "light";
+              entity = "light.bedroom_lights";
+            }
+            {
               name = "Ambient";
               type = "button";
               show_state = false;
@@ -125,47 +130,49 @@
         }
         {
           title = "Media";
-          cards = [
-            {
-              type = "custom:mini-media-player";
-              title = "Spotify";
-              entity = "media_player.spotify_andir0815";
-            }
-            {
-              type = "custom:mini-media-player";
-              title = "Amplifier";
-              entity = "media_player.denon";
-            }
-            {
-              type = "custom:mini-media-player";
-              title = "Spotify Snapcast";
-              #entity = "media_player.spotify_andir0815";
-              entity = "media_player.snapcast_client_crappy";
-              hide = {
-                power = true;
-                icon = true;
-                source = true;
-              };
-              speaker_group = {
-                platform = "snapcast";
-                entities = [
-                  {
-                    entity_id = "media_player.snapcast_client_crappy";
-                    name = "Crappy";
-                  }
-                ];
-              };
-            }
-            {
-              type = "custom:mini-media-player";
-              title = "Kodi";
-              entity = "media_player.crappy";
-              hide = {
-                power = true;
-                source = true;
-              };
-            }
-          ];
+          cards =
+            [
+              {
+                type = "custom:mini-media-player";
+                name = "Spotify";
+                entity = "media_player.spotify_andir0815";
+              }
+              {
+                type = "custom:mini-media-player";
+                name = "Amplifier";
+                entity = "media_player.denon";
+              }
+              {
+                type = "custom:mini-media-player";
+                name = "Kodi";
+                entity = "media_player.crappy";
+                hide = {
+                  power = true;
+                  source = true;
+                };
+              }
+              {
+                type = "vertical-stack";
+                title = "Snapcast Devices";
+                cards =
+                  let
+                    snapcast_devices = {
+                      HDMI = "media_player.snapcast_client_hdmi";
+                      "Workstation" = "media_player.snapcast_client_wrt";
+                      "BT Speaker" = "media_player.snapcast_client_bt_speaker";
+                    };
+                  in
+                  lib.mapAttrsToList
+                    (name: entity: {
+                      inherit name entity;
+                      type = "custom:mini-media-player";
+                      hide = {
+                        power = true;
+                      };
+                    })
+                    snapcast_devices;
+              }
+            ];
         }
         {
           title = "Tomatoes";
@@ -263,6 +270,7 @@
           entities = {
             "light.living_room_lights".state = "off";
             "light.hallway_lamp".state = "off";
+            "light.bedroom_lights".state = "off";
             "media_player.denon".state = "off";
           };
         }
@@ -275,14 +283,6 @@
               state = "playing";
               source = "GAME2";
             };
-          };
-        }
-        {
-          name = "Sleep";
-          entities = {
-            "light.living_room_lights".state = "off";
-            "light.hallway_lamp".state = "off";
-            "media_player.denon".state = "off";
           };
         }
       ];
@@ -345,6 +345,13 @@
             "light.0x7cb03eaa00ae0d59"
           ];
         }
+        {
+          platform = "group";
+          name = "Bedroom Lights";
+          entities = [
+            "light.0x7cb03eaa0a00bab7"
+          ];
+        }
       ];
 
       lovelace = {
@@ -394,7 +401,23 @@
             }
           ];
         };
-
+        "Turn off the lights off when I leave the house" = {
+          trigger = [
+            {
+              platform = "zone";
+              event = "leave";
+              zone = "zone.home";
+              entity_id = "device_tracker.pixel_4";
+            }
+          ];
+          condition = [ ];
+          action = [
+            {
+              service = "light.turn_off";
+              target.entity_id = "all";
+            }
+          ];
+        };
         "Turn off the music when I leave the house" = {
           trigger = [
             {
@@ -412,6 +435,55 @@
             }
           ];
         };
+        "Turn the light on when it gets dark or when I get home while it is dark" =
+          let
+            # living room dining area
+            light_sensor = "sensor.0x001788010b09f8b9_illuminance_lux";
+          in
+          {
+            trigger = [
+              {
+                platform = "numeric_state";
+                entity_id = light_sensor;
+                below = 10;
+              }
+              {
+                platform = "zone";
+                event = "enter";
+                zone = "zone.home";
+                entity_id = "device_tracker.pixel_4";
+              }
+            ];
+            condition = [
+              {
+                condition = "and";
+                conditions = [
+                  {
+                    condition = "zone";
+                    entity_id = "device_tracker.pixel_4";
+                    zone = "zone.home";
+                  }
+                  {
+                    # between 10:00 and 8pm
+                    condition = "time";
+                    after = "10:00:00";
+                    before = "22:00:00";
+                  }
+                  {
+                    condition = "numeric_state";
+                    entity_id = light_sensor;
+                    below = 10;
+                  }
+                ];
+              }
+            ];
+            action = [
+              {
+                service = "scene.turn_on";
+                target.entity_id = "scene.ambient";
+              }
+            ];
+          };
       };
 
       spotify = {
@@ -434,10 +506,13 @@
               # TZ Rhein-Main
               station = "3024456";
               time_offset = 5;
-              destinations = [
-                "Darmstadt Luisenplatz"
-                "Darmstadt-Kranichstein Bordsdorffstrasse"
-              ];
+              direction = "Darmstadt Luisenplatz";
+            }
+            {
+              # TZ Rhein-Main
+              station = "3024456";
+              time_offset = 5;
+              direction = "Darmstadt-Kranichstein Bordsdorffstrasse";
             }
           ];
         }
@@ -448,11 +523,17 @@
               # DA Hbf
               station = "3004734";
               time_offset = 5;
-              destinations = [
-                "Darmstadt Luisenplatz"
-                "Darmstadt-Kranichstein Bordsdorffstrasse"
-                "Weinheim"
-              ];
+              direction = "Darmstadt Luisenplatz";
+            }
+            {
+              station = "3004734";
+              time_offset = 5;
+              direction = "Darmstadt-Kranichstein Bordsdorffstrasse";
+            }
+            {
+              station = "3004734";
+              time_offset = 5;
+              direction = "Weinheim";
             }
           ];
         }

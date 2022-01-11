@@ -76,4 +76,10 @@ in
     config = ./servers/nixos-dev;
     system = "x86_64-linux";
   };
+
+  omicron = mkMachine {
+    name = "omicron";
+    config = ./servers/omicron;
+    system = "x86_64-linux";
+  };
 }

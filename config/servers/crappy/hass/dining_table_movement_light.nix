@@ -126,17 +126,33 @@ let
       };
     };
 in
-{
-  services.home-assistant = mkNightMotionLight rec {
-    name = "dining_table_motion_sensor_when_dark";
+lib.mkMerge [
+  {
+    services.home-assistant = mkNightMotionLight rec {
+      name = "dining_table_motion_sensor_when_dark";
 
-    occupancy_sensor = "binary_sensor.0x001788010b09f8b9_occupancy";
-    illuminance_sensor = "sensor.0x001788010b09f8b9_illuminance_lux";
-    light = "light.living_room_dining_lamp";
+      occupancy_sensor = "binary_sensor.0x001788010b09f8b9_occupancy";
+      illuminance_sensor = "sensor.0x001788010b09f8b9_illuminance_lux";
+      light = "light.living_room_dining_lamp";
 
-    timer_name = "${name}_timer";
-    cooloff = "00:00:05";
+      timer_name = "${name}_timer";
+      cooloff = "00:00:25";
 
-    elevation_level = 4;
-  };
-}
+      elevation_level = 4;
+    };
+  }
+  {
+    services.home-assistant = mkNightMotionLight rec {
+      name = "hallway_motion_sensor_when_dark";
+
+      occupancy_sensor = "binary_sensor.0x001788010b095fd9_occupancy";
+      illuminance_sensor = "sensor.0x001788010b095fd9_illuminance_lux";
+      light = "light.hallway_lamp";
+
+      timer_name = "${name}_timer";
+      cooloff = "00:00:25";
+
+      elevation_level = 4;
+    };
+  }
+]

@@ -37,6 +37,57 @@
   boot.kernel.sysctl."net.ipv6.default.forwarding" = 1;
   boot.kernel.sysctl."net.ipv6.conf.all.forwarding" = 1;
 
+  h4ck.dn42 = {
+    enable = true;
+    bgp = {
+      asn = 4242423991;
+      staticRoutes = {
+        ipv4 = [
+          "172.20.24.0/23"
+          #"172.20.25.0/25"
+          "172.20.199.0/24"
+        ];
+        ipv6 = [
+          "fd42:4242::/40"
+          "fd21:a07e:735e::/48"
+        ];
+      };
+    };
+    peers = {
+      bertha = {
+        interfaceName = "wg-bertha";
+        tunnelType = null;
+        bgp = {
+          asn = 4242423991;
+          ipv4.gateway_recursive = true;
+          #ipv4.next_hop_address = "172.20.25.2";
+          ipv4.extended_next_hop = true;
+        };
+        addresses = {
+          ipv6.remote_address = "fe80::1";
+          ipv6.local_address = "fe80::12";
+          ipv6.prefix_length = 64;
+        };
+      };
+      iota = {
+        interfaceName = "wg-iota";
+        tunnelType = null;
+        bgp = {
+          asn = 4242423991;
+          ipv4.gateway_recursive = true;
+          #ipv4.next_hop_address = "172.20.25.2";
+          ipv4.extended_next_hop = true;
+        };
+        addresses = {
+          ipv6.remote_address = "fe80::3";
+          ipv6.local_address = "fe80::12";
+          ipv6.prefix_length = 64;
+        };
+      };
+
+    };
+  };
+
   h4ck.wireguardBackbone = {
     addresses = [
       "fe80::12/64"
@@ -57,27 +108,42 @@
       };
 
       haos = {
-        localAddresses = [ "172.20.25.12" ];
-        remoteAddresses = [ "172.20.25.50" ];
+        localAddresses = [ "172.20.25.12/32" ];
+        remoteAddresses = [ "172.20.25.50/32" "192.168.2.123/32" ];
         localPort = 42255;
         mtu = 1400;
         babel = false;
-        remotePublicKey = "WFXMh8V3roRkY9OmLcseVb20/NcjqWR+LKvAZV6th2c=";
+        remotePublicKey = "B92lDGh2rMnFKDR1OeyjbvyQvbPtogDwRG/ACyJX8QY=";
         remotePort = 42255;
       };
 
       pixel4 = {
         localPort = 42256;
         localAddresses = [
-          "172.20.25.12"
+          "172.20.25.12/32"
           "fd21:a07e:735e:0f01::1/64"
         ];
         remoteAddresses = [
-          "172.20.25.51"
+          "172.20.25.51/32"
           "fd21:a07e:735e:0f01::2/64"
         ];
         babel = false;
         remotePublicKey = "66r6LlBeU79xxzNKH1T1QSBpiYTXedSUpzN4Zbye3jM=";
+        mtu = 1400;
+      };
+
+      gamma = {
+        localPort = 42257;
+        localAddresses = [
+          "172.20.25.12/32"
+          "fd21:a07e:735e:0f02::1/64"
+        ];
+        remoteAddresses = [
+          "172.20.25.52/32"
+          "fd21:a07e:735e:0f02::2/64"
+        ];
+        babel = false;
+        remotePublicKey = "FtSoOFYtUgO+R7xHBs3OkBV0aRrR70ddxCrN4AYEty0=";
         mtu = 1400;
       };
     };

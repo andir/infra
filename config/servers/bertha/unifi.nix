@@ -2,6 +2,7 @@
 {
   services.unifi = {
     enable = true;
+    mongodbPackage = pkgs.mongodb-4_2;
     unifiPackage = pkgs.unifiStable.overrideAttrs (
       _: rec {
         version = "6.5.54";
