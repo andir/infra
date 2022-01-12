@@ -80,7 +80,7 @@
 
   c3schedule = {
     # only enabled during events
-    enable = true;
+    enable = false;
     config = {
       core = {
         host = "guybrush.hackint.org";
