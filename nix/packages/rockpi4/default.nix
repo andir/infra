@@ -1,4 +1,4 @@
-{ lib, ubootRockPi4, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch }:
+{ lib, ubootRockPi4, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch, jdk11_headless }:
 let
   self = {
     uboot =
@@ -7,23 +7,49 @@ let
         # assert that u-boot is at least version 2020.10
       in
       assert (lib.versionAtLeast drv.version "2020.10"); drv;
-
     mpp = callPackage ./mpp.nix { };
 
-    ffmpeg = ffmpeg.overrideAttrs ({ buildInputs, ... }: {
+    kodi = callPackage ./kodi {
+      jre_headless = jdk11_headless;
+      waylandSupport = true;
+    };
+
+    ffmpeg = ffmpeg.overrideAttrs ({ buildInputs, patches ? [ ], ... }: {
+      patches = patches ++ [
+        ./ffmpeg-4.3-v4l.patch
+        #(fetchpatch {
+        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/4888409c3ad97630a270543b56822aa318871fa8/packages/multimedia/ffmpeg/patches/v4l2-request/ffmpeg-001-v4l2-request.patch";
+        #  sha256 = "1rqam7jl6k0swn87rvpk9k08bwvvxlp5ydkang71bj6m4gg9yffa";
+        #})
+
+        #(fetchpatch {
+        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/8a018bd987e70aed2c95792702f9bbb894dc5df2/packages/multimedia/ffmpeg/patches/v4l2-drmprime/ffmpeg-001-v4l2-drmprime.patch";
+        #  sha256 = "0z0h8nqpmk17vg98krw9bs8226fhb5phx7iavq0sc9sfys9wg5lg";
+        #})
+
+        #(fetchpatch {
+        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/4888409c3ad97630a270543b56822aa318871fa8/packages/multimedia/ffmpeg/patches/libreelec/ffmpeg-001-libreelec.patch";
+        #  sha256 = "0vmd24lidvwwp4akphvvnkmawdsmrqqc72vzdqvi8parzzsf7rx9";
+        #})
+        #(fetchpatch {
+        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/4888409c3ad97630a270543b56822aa318871fa8/packages/multimedia/ffmpeg/patches/rpi/ffmpeg-001-rpi.patch";
+        #  sha256 = "0bgrw6wkd0ywfzzh54vb6ac53nb71vdgqsphbqkdpljswzl5avl9";
+        #})
+
+      ];
       buildInputs = buildInputs ++ [
         libv4l
         udev
       ];
       NIX_LDFLAGS = "-L${udev}/lib -ludev";
       preConfigure = ''
-        configureFlags="$configureFlags --enable-v4l2-request --enable-libudev"
+        configureFlags="$configureFlags --enable-v4l2-request --enable-libudev --enable-libdrm --enable-v4l2_m2m --enable-hwaccels"
       '';
       src = fetchFromGitHub {
-        owner = "Kwiboo";
+        owner = "xbmc";
         repo = "FFmpeg";
-        rev = "88ed0434a2030b9b3332c5134dc7e6d979054b45";
-        sha256 = "1liyfmpyf02bdrpcz1511dliqwy9n7m2vd0d6h42lhmpz8kgcc88";
+        rev = "4.3.2-Matrix-19.1";
+        sha256 = "0pxxf5bbap4g4v64ayimd78qz6p7d2qks3lfsqni71y50fis24wz";
       };
     });
 

@@ -52,6 +52,11 @@
               entity = "light.living_room_dining_lamp";
             }
             {
+              title = "Work Desk Lamp";
+              type = "light";
+              entity = "light.living_room_work_desk_lamp";
+            }
+            {
               type = "light";
               entity = "light.living_room_lights";
             }
@@ -331,11 +336,19 @@
         }
         {
           platform = "group";
+          name = "Living Room Work Desk Lamp";
+          entities = [
+            "light.0x7cb03eaa0a00a84b"
+          ];
+        }
+        {
+          platform = "group";
           name = "Living Room Lights";
           entities = [
             "light.living_room_floor_lamp"
             "light.living_room_ceiling_lamp"
             "light.living_room_dining_lamp"
+            "light.living_room_work_desk_lamp"
           ];
         }
         {

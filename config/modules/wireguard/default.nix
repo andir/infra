@@ -118,12 +118,12 @@ in
       '';
     in
     lib.mkIf (cfg.peers != { }) {
-      environment.systemPackages = [ pkgs.wireguard check-kernel-config pkgs.tcpdump ];
+      environment.systemPackages = [ pkgs.wireguard-tools check-kernel-config pkgs.tcpdump ];
       systemd.tmpfiles.rules = [
         "d ${config.h4ck.wireguardBackbone.dataDir} 700 systemd-network systemd-network - -"
       ];
       systemd.services."wireguardBackbone-generate-keys" = {
-        path = [ pkgs.wireguard ];
+        path = [ pkgs.wireguard-tools ];
         after = [ "systemd-tmpfiles-setup.service" ];
         before = [ "network.target" ];
         partOf = [ "network-pre.target" ];

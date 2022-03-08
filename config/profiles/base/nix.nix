@@ -1,6 +1,7 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 {
   nix = {
+    package = pkgs.nix_2_3;
     autoOptimiseStore = lib.mkDefault true;
     gc = {
       automatic = lib.mkDefault true;

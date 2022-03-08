@@ -62,7 +62,7 @@ in
   config = mkIf cfg.enable {
 
     # ensure we have a few sane network debugging tools available
-    environment.systemPackages = with pkgs; [ tcpdump dnstracer nmap telnet ];
+    environment.systemPackages = with pkgs; [ tcpdump dnstracer nmap ];
     programs.mtr.enable = true;
 
     # Can not use this as it pulls in a bunch of garbage rules

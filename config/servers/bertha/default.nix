@@ -242,6 +242,9 @@ in
         subnetId = "42";
         v4Addresses = [
           { address = "10.250.42.1"; prefixLength = 24; }
+
+          # Cudy X6 TFTP recovery
+          { address = "192.168.1.88"; prefixLength = 24; }
         ];
         v6Addresses = [
           { address = "fd21:a07e:735e:ff42::"; prefixLength = 64; }
@@ -330,6 +333,10 @@ in
           udp sport bootpc udp dport bootps accept comment "DHCP clients"
           udp dport { domain, domain-s } accept
           tcp dport { domain, domain-s } accept
+
+          # TFTP
+          tcp dport 69 accept;
+          udp dport 69 accept;
         }
 
         chain iot_input {
@@ -483,7 +490,7 @@ in
     };
   users.users.root.initialPassword = "password";
 
-  environment.systemPackages = [ pkgs.ldns pkgs.telnet pkgs.ethtool ];
+  environment.systemPackages = [ pkgs.ldns pkgs.inetutils pkgs.ethtool ];
 
 
   h4ck.wireguardBackbone = {
@@ -497,6 +504,7 @@ in
       ];
       remoteAddresses = [
         "172.20.25.42/32"
+        "fd21:a07e:735e:ffff::42/128"
       ];
     };
   };
@@ -624,4 +632,26 @@ in
       };
     };
   };
+
+  systemd.services.cudy-x6-tftp-recovery =
+    let
+      firmware = pkgs.fetchurl {
+        url = "https://s.rammhold.de/openwrt-ramips-mt7621-cudy-x6-flash.bin";
+        sha256 = "0wip8cd1gal1880c9a3b17mghp22iwfrfbpgp1yjsfkngaqr0qfg";
+      };
+
+    in
+    {
+      after = [ "network.target" ];
+      wantedBy = [ "multi-user.target" ];
+      path = [
+        pkgs.atftp
+      ];
+      script = ''
+        cd $RUNTIME_DIRECTORY
+        cp -rv ${firmware} recovery.bin
+        exec atftpd -v 2 -m 2 --daemon --no-fork --bind-address 192.168.1.88 .
+      '';
+      serviceConfig.RuntimeDirectory = "cudy-x6-firmware-dir";
+    };
 }

@@ -2,14 +2,14 @@
 {
   services.unifi = {
     enable = true;
-    mongodbPackage = pkgs.mongodb-4_2;
+    #mongodbPackage = pkgs.mongodb-4_2;
     unifiPackage = pkgs.unifiStable.overrideAttrs (
       _: rec {
-        version = "6.5.54";
-        src = pkgs.fetchurl {
-          url = "https://dl.ubnt.com/unifi/${version}/unifi_sysvinit_all.deb";
-          sha256 = "sha256-M2gYqKZi0czFgfWx0tTW43b+aUVqS6Mg+misRB9/Fes=";
-        };
+        #   version = "6.5.54";
+        #   src = pkgs.fetchurl {
+        #     url = "https://dl.ubnt.com/unifi/${version}/unifi_sysvinit_all.deb";
+        #     sha256 = "sha256-M2gYqKZi0czFgfWx0tTW43b+aUVqS6Mg+misRB9/Fes=";
+        #   };
       }
     );
   };

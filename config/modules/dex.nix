@@ -68,6 +68,11 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    users.users.dex = {
+      isSystemUser = true;
+      group = "dex";
+    };
+    users.groups.dex = { };
     systemd.services.dex =
       let
         configAttr = {
@@ -90,8 +95,6 @@ in
         path = [
           cfg.package
         ];
-        preStart = ''
-      '';
         wantedBy = [ "multi-user.target" ];
         script = "dex serve ${configFile}";
         serviceConfig = {
@@ -102,7 +105,6 @@ in
               chown dex /run/dex/config.yml
             '')}"
           ];
-          DynamicUser = true;
           RuntimeDirectory = "dex";
           User = "dex";
           Group = "dex";

@@ -1,0 +1,39 @@
+From f7f7c38d6cd31afdb8e441f9c8086f8fc4f136e0 Mon Sep 17 00:00:00 2001
+From: Florian Klink <flokli@flokli.de>
+Date: Sat, 11 Jul 2020 20:37:45 +0200
+Subject: [PATCH] run darktable with a temporary configdir
+
+Invoke darktable with --configdir pointing to a separate temporary
+directory for each conversion. This allows to convert without locks, and
+isolates darktable from the user configuration.
+---
+ internal/photoprism/convert.go | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/internal/photoprism/convert.go b/internal/photoprism/convert.go
+index 4ce4ea8f..6dff9000 100644
+--- a/internal/photoprism/convert.go
++++ b/internal/photoprism/convert.go
+@@ -111,13 +111,15 @@ func (c *Convert) ConvertCommand(mf *MediaFile, jpegName string, xmpName string)
+ 		if c.conf.SipsBin() != "" {
+ 			result = exec.Command(c.conf.SipsBin(), "-s", "format", "jpeg", "--out", jpegName, mf.FileName())
+ 		} else if c.conf.DarktableBin() != "" {
+-			// Only one instance of darktable-cli allowed due to locking
+-			useMutex = true
+-
++			tmpdir, err := ioutil.TempDir("", "darktable")
++			if err != nil {
++				return nil, useMutex, fmt.Errorf("convert: unable to create darktable temp directory (%s)", err)
++			}
++			defer os.RemoveAll(tmpdir)
+ 			if xmpName != "" {
+-				result = exec.Command(c.conf.DarktableBin(), mf.FileName(), xmpName, jpegName)
++				result = exec.Command(c.conf.DarktableBin(), "--configdir", tmpdir, mf.FileName(), xmpName, jpegName)
+ 			} else {
+-				result = exec.Command(c.conf.DarktableBin(), mf.FileName(), jpegName)
++				result = exec.Command(c.conf.DarktableBin(), "--configdir", tmpdir, mf.FileName(), jpegName)
+ 			}
+ 		} else {
+ 			return nil, useMutex, fmt.Errorf("convert: no raw to jpeg converter installed (%s)", mf.Base(c.conf.Settings().Index.Group))
+-- 
+2.27.0

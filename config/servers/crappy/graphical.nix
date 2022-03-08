@@ -3,7 +3,7 @@
   environment.systemPackages = with pkgs; [
     ate
     firefox
-    (kodi-wayland.withPackages (p: with p; [
+    (pkgs.rockpi4.kodi.withPackages (p: with p; [
       youtube
       netflix
       pvr-iptvsimple
