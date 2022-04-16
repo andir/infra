@@ -5,7 +5,7 @@ in
 {
   options.h4ck.blackbox_exporter = {
     config = lib.mkOption {
-      options = lib.types.nullOr lib.types.attrs;
+      type = lib.types.nullOr lib.types.attrs;
       default = null;
     };
   };

@@ -5,12 +5,12 @@
 , fetchurl
 , fetchzip
 , runCommand
-, buildGo116Module
+, buildGo118Module
 , libtensorflow-bin
 , nodejs-14_x
 , callPackage
 }:
-buildGo116Module {
+buildGo118Module {
   name = "photoprism-go";
   inherit src;
 
@@ -29,13 +29,16 @@ buildGo116Module {
 
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
-    sed -i 's/zip.Deflate/zip.Store/g' internal/api/zip.go
   '';
 
-  vendorSha256 = "1jh6iy3mlm7m2ki3wajm5anv5j4hgcq1nl5spf5nmh847b775lh5";
+  vendorSha256 = "0zx8pkbkr0a1ccnngybj63xsn7w2qw3ynfbsijdgaai5h5i56ih6";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";
+
+  postInstall = ''
+    $out/bin/photoprism --help 
+  '';
 
 
   passthru = rec {

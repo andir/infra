@@ -116,8 +116,9 @@ in
             #ipv6prefixdelegation = "dhcpv6";
           };
           linkConfig = {
-            RequiredForOnline = "routable";
+            RequiredForOnline = "yes";
           };
+
           matchConfig = {
             Name = name;
           };
@@ -157,7 +158,6 @@ in
                 Type = "blackhole";
               };
             }
-
           ];
         };
         mkClientIfConfig = conf:
@@ -183,6 +183,7 @@ in
                 DHCPv6PrefixDelegation = "yes";
                 IPv6SendRA = true;
               };
+              linkConfig.RequiredForOnline = false;
 
               dhcpServerConfig = {
                 PoolOffset = 10;

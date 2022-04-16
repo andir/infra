@@ -166,6 +166,7 @@ in
         IPv6AcceptRA = false;
         EmitLLDP = true;
       };
+      linkConfig.RequiredForOnline = false;
     };
     "00-bond0-1" = {
       matchConfig = {
@@ -176,6 +177,7 @@ in
         DHCP = "no";
         IPv6AcceptRA = false;
       };
+      linkConfig.RequiredForOnline = false;
     };
     "00-bond0-2" = {
       matchConfig = {
@@ -185,10 +187,14 @@ in
         Bond = "internal";
         DHCP = "no";
         IPv6AcceptRA = false;
+        #RequiredForOnline = "false";
+        #ActivationPolicy = "always-up";
       };
+      linkConfig.RequiredForOnline = false;
     };
     "00-oldlan" = {
       #      networkConfig.DHCPServer = false;
+      linkConfig.RequiredForOnline = false;
     };
     # "00-enp3s0" = {
     #   matchConfig = {
@@ -260,7 +266,6 @@ in
           { address = "fd21:a07e:735e:ff43::"; prefixLength = 64; }
         ];
       }
-
     ];
   };
 
@@ -566,7 +571,7 @@ in
         wireguardConfig = {
           localPort = 43011;
           remotePort = 43011;
-          remoteEndpoint = "core1.darmstadt.ccc.de";
+          remoteEndpoint = "2001:41" + "b8:83f:4242::c602"; # "core1.darmstadt.ccc.de";
           remotePublicKey = "iB8P2uuKGISflakJiHMGuBR7zKK44qx+ioqeBN0sEnk=";
         };
         bgp = {

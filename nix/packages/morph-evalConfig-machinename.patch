@@ -1,4 +1,4 @@
-From 5e1798eeb7f2815f1996899c5ac69876011b90e5 Mon Sep 17 00:00:00 2001
+From d5eb6c0e79a2bc3b563ebefa0816c14a3c9e0bdd Mon Sep 17 00:00:00 2001
 From: Andreas Rammhold <andreas@rammhold.de>
 Date: Sat, 23 May 2020 20:53:36 +0200
 Subject: [PATCH] evalConfig: pass machine name as argument and return function
@@ -11,7 +11,7 @@ a specific version.
  1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/data/eval-machines.nix b/data/eval-machines.nix
-index a4bcda6..6630dc3 100644
+index bc06d2b..0e1aec1 100644
 --- a/data/eval-machines.nix
 +++ b/data/eval-machines.nix
 @@ -5,7 +5,7 @@ let
@@ -23,24 +23,24 @@ index a4bcda6..6630dc3 100644
    runCommand   = network.network.runCommand or nwPkgs.runCommand or ((import <nixpkgs> {}).runCommand);
  in
    with lib;
-@@ -42,7 +42,7 @@ in rec {
+@@ -52,7 +52,7 @@ in rec {
    uncheckedNodes =
      listToAttrs (map (machineName:
        { name = machineName;
 -        value = import evalConfig {
 +        value = evalConfig machineName {
-           modules = modules machineName;
-           extraArgs = { nodes = uncheckedNodes; name = machineName; };
-           check = false;
-@@ -54,7 +54,7 @@ in rec {
+           modules = modules {
+             inherit machineName;
+             check = false;
+@@ -66,7 +66,7 @@ in rec {
    nodes =
      listToAttrs (map (machineName:
        { name = machineName;
 -        value = import evalConfig {
 +        value = evalConfig machineName {
-           modules = modules machineName;
-           extraArgs = { nodes = uncheckedNodes ; name = machineName; };
-         };
+           modules = modules {
+             inherit machineName;
+             check = true;
 -- 
-2.31.1
+2.35.1
 

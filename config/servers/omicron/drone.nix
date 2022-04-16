@@ -94,6 +94,29 @@ in
     '';
   };
 
+  # systemd.services.drone-runner-exec = {
+  #   wantedBy = [ "multi-user.target" ];
+  #   path = [ pkgs.drone-runner-exec ];
+  #   serviceConfig = {
+  #     EnvironmentFile = [
+  #       "/var/lib/secrets/drone-runner-exec"
+  #     ];
+  #     Environment = [
+  #       "DRONE_RPC_PROTO=https"
+  #       "DRONE_RPC_HOST=drone.rammhold.de"
+  #       "DRONE_RUNNER_CAPACITY=2"
+  #       "DRONE_RUNNER_NAME=omicron"
+  #     ];
+  #     User = "drone-runner-exec";
+  #     Group = "drone-runner-exec";
+  #     RuntimeDirectory = "drone-runner-exec";
+  #   };
+  #   script = ''
+  #     exec drone-runner-exec
+  #   '';
+
+  # };
+
   services.nginx.virtualHosts."drone.rammhold.de" = {
     enableACME = true;
     forceSSL = true;

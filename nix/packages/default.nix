@@ -99,6 +99,13 @@ self: super: {
   photoprism = self.callPackage ./photoprism {
     src = sources.photoprism;
     ranz2nix = sources.ranz2nix;
+    buildGo118Module =
+      let
+        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {
+          inherit (self.darwin_sdk.frameworks) Security Foundation;
+        };
+      in
+      self.callPackage (unstable.path + "/pkgs/development/go-modules/generic") { go = go_1_18; };
   };
 
   fping_exporter = self.callPackage ./fping-exporter.nix { };
@@ -117,7 +124,7 @@ self: super: {
     };
   };
 
-  dendrite = unstable.buildGoModule {
+  dendrite = unstable.buildGo119Module {
     name = "dendrite";
 
     src = sources.dendrite;
@@ -130,13 +137,13 @@ self: super: {
   };
 
 
-  dex = self.buildGoModule {
+  dex = unstable.buildGo118Module {
     name = "dex";
     src = sources.dex;
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "144gl7vgwn6qncpv1qqfb3hfyg5nrxkn10472jh45qg8kr5izh48";
+    vendorSha256 = "0kf2yf90ymmk766apxc64rs3mk710f8m1fwafsb7sn17kfaxa5jx";
   };
 
   matrix-static = unstable.buildGoModule {

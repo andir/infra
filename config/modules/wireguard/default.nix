@@ -239,6 +239,8 @@ in
                       #                  IPv6AcceptRA = false;
                       LinkLocalAddressing = "ipv6";
                     };
+                    linkConfig.RequiredForOnline = false;
+
                     addresses =
                       let
                         peerAddresses = map
