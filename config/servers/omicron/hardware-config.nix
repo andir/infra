@@ -67,6 +67,37 @@
       fsType = "vfat";
     };
 
+  fileSystems."/tank" = {
+    device = "tank";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/tank/backups" = {
+    device = "tank/backups";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/tank/backups/zrepl" = {
+    device = "tank/backups/zrepl";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/tank/gitea" = {
+    device = "tank/gitea";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+  fileSystems."/tank/drone" = {
+    device = "tank/drone";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+
   swapDevices = [ ];
 
   networking.hostId = "291b1e74";
