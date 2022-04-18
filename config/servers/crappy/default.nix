@@ -41,9 +41,7 @@
     enable = true;
     systemWide = true;
     package = pkgs.pulseaudioFull;
-    extraModules = [
-      pkgs.pulseaudio-modules-bt
-    ];
+    extraModules = [ ];
     zeroconf.publish.enable = true;
     tcp = {
       enable = true;
