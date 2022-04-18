@@ -621,7 +621,7 @@ in
         wireguardConfig = {
           localPort = 42018;
           remoteEndpoint = null;
-          remotePublicKey = "Fq5x85Drr0f/3EIXMyANPmu3dZMlTAWebjJ1cI91R3A=";
+          remotePublicKey = "Fqf/ICfbCFVWNg3sE1LNB066dF49IKJ7XOr67q0TsjU=";
         };
         bgp = {
           asn = 4242422100;
