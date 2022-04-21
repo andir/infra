@@ -13,6 +13,9 @@
         proxyPass = "https://[fd21:a07e:735e:ff01:ae1f:6bff:fe45:be15]:9001";
         proxyWebsockets = true;
       };
+      locations."/dn42roa/" = {
+        alias = pkgs.dn42-roa + "/";
+      };
     };
   };
 }

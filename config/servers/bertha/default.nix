@@ -578,6 +578,9 @@ in
           asn = 4242420101;
           local_pref = 100;
           multi_protocol = false;
+          export_additional_asns = [
+            4242422100
+          ];
         };
         addresses = {
           ipv4 = {
@@ -615,7 +618,7 @@ in
         };
       };
 
-      flokli_ws = {
+      flokli = {
         tunnelType = "wireguard";
         mtu = 1500;
         wireguardConfig = {
@@ -626,6 +629,10 @@ in
         bgp = {
           asn = 4242422100;
           local_pref = 100;
+          announce = "all";
+          ipv6.extended_next_hop = true;
+          ipv4.extended_next_hop = true;
+          ipv4.gateway_recursive = false;
         };
         addresses = {
           ipv6 = {

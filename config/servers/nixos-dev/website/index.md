@@ -29,7 +29,7 @@ title: NixOS.dev
   Logs from the NixOS Matrix rooms:
    <!-- curl -H 'Authorization: Bearer syt_...'  https://matrix.kack.it/_matrix/client/unstable/org.matrix.msc2946/rooms/!MKvhXlSTLGJUXpYuWF%3Anixos.org/spaces -->
 
-   * [NixOS](https://logs.nixos.dev/room/!MKvhXlSTLGJUXpYuWF:nixos.org)
+   * [Colmena](https://logs.nixos.dev/room/!UKDpaKNNsBpOPfLWfX:zhaofeng.li/)
    * [Nix Deployments](https://logs.nixos.dev/room/!BgJZHVOYkwVcEKLAyM:nixos.org)
    * [NixOS Systemd](https://logs.nixos.dev/room/!DBFhtjpqmJNENpLDOv:nixos.org)
    * [Nix Matrix Discussion](https://logs.nixos.dev/room/!GsmxjHfeAYLsTEQmjS:nixos.org)

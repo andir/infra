@@ -4,9 +4,14 @@ let
     inherit system config; overlays =
     (import ../overlays.nix { inherit system config; });
   };
+
 in
 self: super: {
   inherit sources unstable;
+  nativePkgs = import self.path {
+    system = builtins.currentSystem; # purposely the system that drives the eval/build!
+    overlays = (import ../overlays.nix { inherit config; system = builtins.currentSystem; });
+  };
 
   ate = self.callPackage sources.ate { };
 
@@ -58,19 +63,23 @@ self: super: {
     }
   );
 
-  bird2 = super.bird2.overrideAttrs (
+  bird = (if super.bird.version == "1.6.8" then super.bird2 else super.bird).overrideAttrs (
     { patches ? [ ], configureFlags ? [ ], nativeBuildInputs ? [ ], ... }: {
 
       #configureFlags = configureFlags ++ [ "--enable-debug" ];
-      nativeBuildInputs = nativeBuildInputs ++ [ super.autoreconfHook ];
-      src = super.fetchgit {
+      nativeBuildInputs = nativeBuildInputs ++ [ self.autoreconfHook ];
+      src = self.fetchgit {
         url = "https://git.sr.ht/~andir/bird";
-        rev = "01dba342cdb52bed4b244eb304269609dae3a423";
-        sha256 = "0hhx7zhri67sw83vwvq0zkhvl56h9m7spjw69lfgg087p3acy7xd";
+        rev = "12e1520e493e81b64d98ec63c4497d8b3f6dc492";
+        sha256 = "13i3mmyhlh81sm3b2hf0f1w5r0rm9cvfvmnsd4l2i7l7dfdlxias";
       };
-      patches = patches ++ [ ./bird-next-hop-logging.patch ];
+      # we have to remove a patch that nixpkgs fetches but that already is in our tree
+      patches = builtins.filter (patch: builtins.typeOf patch == "path") (patches ++ [
+      ]);
     }
   );
+
+  bird2 = self.bird;
 
   dn42-regparse = self.callPackage sources.dn42-regparse { };
   dn42-roa =

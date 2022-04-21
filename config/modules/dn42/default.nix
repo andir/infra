@@ -90,6 +90,7 @@ in
                       import_reject = mkOption { type = types.bool; default = false; };
                       export_reject = mkOption { type = types.bool; default = false; };
                       multi_protocol = mkOption { type = types.bool; default = true; };
+                      export_additional_asns = mkOption { type = types.listOf types.int; default = [ ]; };
                       ipv6 = mkOption {
                         default = { };
                         type = types.submodule {
@@ -417,6 +418,17 @@ in
 
                     ${optionalString (peer.bgp.asn != cfg.bgp.asn && peer.bgp.announce == "own") ''
                     if source != RTS_STATIC && delete(bgp_path, [${toString cfg.bgp.asn}]).len > 0 then {
+                        ${optionalString (peer.bgp.export_additional_asns != []) ''
+                          # export routes for other ASNs that get partial transit
+                          if source = RTS_BGP && (
+                            ${concatMapStringsSep "||" (asn: "bgp_path.first = ${toString asn}") peer.bgp.export_additional_asns}
+                          ) then {
+                            ${lib.optionalString cfg.enableDebugLogging ''
+                            printn "Propagating route net: ", net, " source: ", source, " path: ", bgp_path, " for external asn ", bgp_path.first;
+                            ''}
+                            accept;
+                          }
+                        ''}
                     ${lib.optionalString cfg.enableDebugLogging ''
                       printn "Only propagating own routes. net: ", net, " source: ", source, " path: ", bgp_path, " deleted path: ", delete(bgp_path, [${toString cfg.bgp.asn}]);
                     ''}

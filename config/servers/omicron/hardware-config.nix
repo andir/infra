@@ -97,6 +97,11 @@
     options = [ "zfsutil" ];
   };
 
+  fileSystems."/tank/vaultwarden" = {
+    device = "tank/vaultwarden";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
 
   swapDevices = [ ];
 

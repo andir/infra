@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   imports = [
     ../../profiles/server.nix
@@ -5,6 +6,7 @@
     ./network.nix
     ./gitea.nix
     ./drone.nix
+    ./vaultwarden.nix
   ];
 
   deployment = {
@@ -37,5 +39,12 @@
   nix.trustedUsers = [ "hydra" ];
 
   system.stateVersion = "21.11";
-}
 
+
+  services.nginx.virtualHosts.${"blueagate" + ".cy" + "sec.de"} = {
+    enableACME = true;
+    forceSSL = true;
+    default = true;
+    locations."/".root = pkgs.runCommand "empty" { } "mkdir $out";
+  };
+}
