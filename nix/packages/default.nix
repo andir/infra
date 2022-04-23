@@ -70,8 +70,10 @@ self: super: {
       nativeBuildInputs = nativeBuildInputs ++ [ self.autoreconfHook ];
       src = self.fetchgit {
         url = "https://git.sr.ht/~andir/bird";
-        rev = "12e1520e493e81b64d98ec63c4497d8b3f6dc492";
-        sha256 = "13i3mmyhlh81sm3b2hf0f1w5r0rm9cvfvmnsd4l2i7l7dfdlxias";
+        rev = "8a6cbd08ad9ad5804cddde0df21bf007edcdb479";
+        sha256 = "1k8py3agd8kzpvq7lv6b402ahj95h91961vll0353b3gckg1l91m";
+        #rev = "12e1520e493e81b64d98ec63c4497d8b3f6dc492";
+        #sha256 = "13i3mmyhlh81sm3b2hf0f1w5r0rm9cvfvmnsd4l2i7l7dfdlxias";
       };
       # we have to remove a patch that nixpkgs fetches but that already is in our tree
       patches = builtins.filter (patch: builtins.typeOf patch == "path") (patches ++ [

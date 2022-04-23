@@ -164,7 +164,30 @@ in
           ipv6.prefix_length = 64;
         };
       };
-
+      flokli = {
+        tunnelType = "wireguard";
+        mtu = 1420;
+        wireguardConfig = {
+          localPort = 42018;
+          remoteEndpoint = null;
+          remotePublicKey = "CH/IzXS1DdX52RpiD5Qo71W3soubTH6kIqJqdYID7R0=";
+        };
+        bgp = {
+          asn = 4242422100;
+          local_pref = 100;
+          announce = "all";
+          ipv6.extended_next_hop = true;
+          ipv4.extended_next_hop = true;
+          ipv4.gateway_recursive = false;
+        };
+        addresses = {
+          ipv6 = {
+            local_address = "fe80::1";
+            remote_address = "fe80::2";
+            prefix_length = 64;
+          };
+        };
+      };
 
       cloudfiles_at = {
         tunnelType = "wireguard";
@@ -294,6 +317,9 @@ in
           asn = 4242420101;
           local_pref = 100;
           multi_protocol = false;
+          export_additional_asns = [
+            4242422100
+          ];
         };
 
         addresses = {

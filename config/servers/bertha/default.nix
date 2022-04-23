@@ -56,6 +56,12 @@ in
     ./streetmerchant.nix
   ];
 
+
+  fileSystems."/" = {
+    device = "/dev/disk/by-uuid/662313c7-5fa6-460f-80a8-c3aaa26fad80";
+    fsType = "ext4";
+  };
+
   h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
   h4ck.wireguardBackbone = {
     addresses = [
@@ -620,7 +626,7 @@ in
 
       flokli = {
         tunnelType = "wireguard";
-        mtu = 1500;
+        mtu = 1420;
         wireguardConfig = {
           localPort = 42018;
           remoteEndpoint = null;

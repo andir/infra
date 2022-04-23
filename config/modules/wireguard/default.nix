@@ -169,7 +169,7 @@ in
             protocol babel wg_backbone {
               randomize router id yes;
               interface ${lib.concatMapStringsSep ", " (iface: "\"${iface}\"") babelInterfaces} {
-                type wired;
+                type tunnel;
               };
               ipv4 {
                 table master4;

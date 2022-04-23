@@ -96,11 +96,6 @@ in
     # allow everyone to access the resolver, filtering will be done in the firewall
     services.unbound.settings.server.access-control = lib.mkForce (map (x: "${x} allow") [ "::1/128" "127.0.0.0/8" "::/0" "0.0.0.0/0" ]);
 
-    fileSystems."/" = {
-      device = "/dev/disk/by-uuid/662313c7-5fa6-460f-80a8-c3aaa26fad80";
-      fsType = "ext4";
-    };
-
     systemd.services."systemd-networkd".environment.SYSTEMD_LOG_LEVEL = "debug";
 
     systemd.network =
