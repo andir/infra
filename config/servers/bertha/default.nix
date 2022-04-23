@@ -217,7 +217,7 @@ in
   router = {
     enable = true;
     enableAvahiReflector = true;
-    upstreamInterfaces = [ "uplink" ];
+    upstreamInterfaces = [{ interface = "uplink"; }];
     downstreamInterfaces = [
       {
         interface = "lan";

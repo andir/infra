@@ -14,6 +14,22 @@ let
     };
   };
 
+  upstreamInterfaceOptions = types.submodule {
+    options = {
+      interface = mkOption {
+        type = types.str;
+      };
+      ipv6PrefixDelegationHint = mkOption {
+        type = types.str;
+        default = "::/48";
+      };
+      blackholeRFC1918ish = mkOption {
+        type = types.bool;
+        default = true;
+      };
+    };
+  };
+
   downstreamInterfaceOptions = types.submodule {
     options = {
       interface = mkOption {
@@ -50,7 +66,7 @@ in
 
     upstreamInterfaces = mkOption {
       description = "upstream interfaces";
-      type = types.listOf types.str;
+      type = types.listOf upstreamInterfaceOptions;
     };
 
     downstreamInterfaces = mkOption {
@@ -100,10 +116,10 @@ in
 
     systemd.network =
       let
-        mkUpstreamIfConfig = name: nameValuePair "00-${name}" {
+        mkUpstreamIfConfig = conf: nameValuePair "00-${conf.interface}" {
           enable = true;
           networkConfig = {
-            Description = "upstream network config for ${name}";
+            Description = "upstream network config for ${conf.interface}";
             IPv6AcceptRA = true;
             #ipmasquerade = true; # fixme: hows does that work on the inside?
             #ipforward = "yes";
@@ -115,45 +131,46 @@ in
           };
 
           matchConfig = {
-            Name = name;
+            Name = conf.interface;
           };
           dhcpV4Config = {
             UseDNS = false;
             UseRoutes = true;
           };
           dhcpV6Config = {
-            PrefixDelegationHint = "::/48";
+            PrefixDelegationHint = conf.ipv6PrefixDelegationHint;
           };
           ipv6PrefixDelegationConfig = {
             Managed = true;
             OtherInformation = true;
           };
-          routes = [
-            {
-              routeConfig = {
-                Destination = "fd00::/8";
-                Type = "blackhole";
-              };
-            }
-            {
-              routeConfig = {
-                Destination = "10.0.0.0/8";
-                Type = "blackhole";
-              };
-            }
-            {
-              routeConfig = {
-                Destination = "172.16.0.0/12";
-                Type = "blackhole";
-              };
-            }
-            {
-              routeConfig = {
-                Destination = "192.168.0.0/16";
-                Type = "blackhole";
-              };
-            }
-          ];
+          routes =
+            if conf.blackholeRFC1918ish then [
+              {
+                routeConfig = {
+                  Destination = "fd00::/8";
+                  Type = "blackhole";
+                };
+              }
+              {
+                routeConfig = {
+                  Destination = "10.0.0.0/8";
+                  Type = "blackhole";
+                };
+              }
+              {
+                routeConfig = {
+                  Destination = "172.16.0.0/12";
+                  Type = "blackhole";
+                };
+              }
+              {
+                routeConfig = {
+                  Destination = "192.168.0.0/16";
+                  Type = "blackhole";
+                };
+              }
+            ] else [ ];
         };
         mkClientIfConfig = conf:
           let
