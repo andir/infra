@@ -334,6 +334,9 @@ self: super: {
     reproducibleBuild = false;
     self = self.fastPython3;
     pythonAttr = "fastPython3";
+    packageOverrides = (pyself: pysuper: {
+      ijson = pysuper.ijson.overrideAttrs (_: { buildInputs = [ self.yajl ]; doCheck = true; });
+    });
   };
 
   matrix-synapse = (super.matrix-synapse.override {
