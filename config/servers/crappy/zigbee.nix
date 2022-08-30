@@ -61,6 +61,8 @@
         "0x7cb03eaa0a00bab7".friendly_name = "Bedroom Lamp";
 
         "0x7cb03eaa0a00a84b".friendly_name = "Work Desk Light";
+
+        "0x50325ffffe739d21".friendly_name = "Work Desk Switch";
       };
 
       frontend = {

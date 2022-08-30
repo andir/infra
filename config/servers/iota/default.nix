@@ -57,7 +57,7 @@ in
   };
 
   services.gitlab-runner = {
-    enable = true;
+    enable = false;
     package = pkgs.unstable.gitlab-runner;
     services = {
       # runner for building in docker via host's nix-daemon
@@ -349,7 +349,7 @@ in
     device = "/persist/postgresql/postgresql";
   };
   services.nixos-security-tracker = {
-    enable = true;
+    enable = false;
     virtualHost = "iota.h4ck.space";
     database = "postgresql";
     #githubEventsSharedSecretFile = "/var/lib/nixos-security-tracker/github-events-secret";
@@ -371,7 +371,7 @@ in
   #   };
   # };
 
-  systemd.tmpfiles.rules = [ "d /var/backups/nixos-security-tracker 0700 postgres - - -" ];
+  systemd.tmpfiles.rules = lib.mkIf config.services.nixos-security-tracker.enable ([ "d /var/backups/nixos-security-tracker 0700 postgres - - -" ]);
 
   systemd.services.tmate = lib.mkIf false {
     # FIXME: This is currently complaining about not running as root while

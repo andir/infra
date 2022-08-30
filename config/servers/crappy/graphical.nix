@@ -3,22 +3,33 @@
   environment.systemPackages = with pkgs; [
     ate
     firefox
-    (pkgs.rockpi4.kodi.withPackages (p: with p; [
-      youtube
-      netflix
-      pvr-iptvsimple
-      a4ksubtitles
-      (p.buildKodiAddon {
-        pname = "plugin.video.media-ccc-de";
-        version = "git+" + pkgs.sources."plugin.video.media-ccc-de".revision;
-        namespace = "plugin.video.media-ccc-de";
-        src = sources."plugin.video.media-ccc-de";
-        propagatedBuildInputs = with p; [
-          requests
-          routing
-        ];
+    (
+      ((pkgs.kodi.withPackages (p: with p; [
+        youtube
+        netflix
+        pvr-iptvsimple
+        a4ksubtitles
+        (p.buildKodiAddon {
+          pname = "plugin.video.media-ccc-de";
+          version = "git+" + pkgs.sources."plugin.video.media-ccc-de".revision;
+          namespace = "plugin.video.media-ccc-de";
+          src = sources."plugin.video.media-ccc-de";
+          propagatedBuildInputs = with p; [
+            requests
+            routing
+          ];
+        })
+      ])).override {
+        kodi = (pkgs.kodi.override { waylandSupport = true; }).overrideAttrs ({ patches ? [ ], ... }: {
+          patches = patches ++ [
+            (pkgs.fetchpatch {
+              url = "https://github.com/xbmc/xbmc/pull/20632/commits/81a2fb65100b88c31bb0168acc0c3b7bab09475a.patch";
+              sha256 = "09xjxlz6gcp8z68802fh1sm1dmrgzcwddwfvrwwl7xqjjvqmar80";
+            })
+          ];
+        });
       })
-    ]))
+    )
   ];
 
   networking.firewall.extraStopCommands = ''

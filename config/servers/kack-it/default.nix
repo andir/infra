@@ -7,11 +7,11 @@
     ./dns.nix
     ./blog.nix
     ./static.nix
-    ./nixos-cloud.nix
     ./dendrite.nix
     ./synapse.nix
     ./calibre-web.nix
     ./cgit.nix
+    ./cache.nix
   ];
 
   deployment = {
@@ -155,7 +155,7 @@
   };
 
   services.grocy = {
-    enable = true;
+    enable = false;
     nginx.enableSSL = true;
     hostName = "grocy.rammhold.de";
     settings = {
@@ -163,6 +163,18 @@
       culture = "de";
       calendar.firstDayOfWeek = 1;
     };
+  };
+
+  systemd.services.dotagsi = {
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.DynamicUser = true;
+    script = "${pkgs.dotagsi}/bin/dotagsi -p 44444 https://dota.kack.it";
+  };
+
+  services.nginx.virtualHosts."dota.kack.it" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."/".proxyPass = "http://127.0.0.1:44444";
   };
 
   system.stateVersion = "19.03";

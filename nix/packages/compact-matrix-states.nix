@@ -14,6 +14,8 @@ writeShellScriptBin "compact-matrix-states" ''
     echo "Compacting $room_id"
     synapse-compress-state -t -o state-compressor.sql \
       -p "host=/run/postgresql/ user=${username} dbname=${database_name}" \
+      -m 100 \
+      -s 1500 \
       -r "$room_id"
     psql ${database_name} < state-compressor.sql
     ls -la state-compressor.sql

@@ -30,8 +30,7 @@ buildGo118Module {
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
   '';
-
-  vendorSha256 = "0zx8pkbkr0a1ccnngybj63xsn7w2qw3ynfbsijdgaai5h5i56ih6";
+  vendorSha256 = "1y8vbj4nkm99qdpdm2pj25wb65416jm4cwqsp0hrjpfis1b105pl";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";

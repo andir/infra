@@ -47,7 +47,6 @@ rec {
       ];
       buildCommands = [
         "npm run build"
-        "npm run babel"
       ];
       installPhase = ''
         mkdir $out

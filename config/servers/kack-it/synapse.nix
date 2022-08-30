@@ -96,100 +96,110 @@
 
   services.matrix-synapse = {
     enable = true;
-    server_name = "kack.it";
-    public_baseurl = "https://matrix.kack.it";
-    database_type = "psycopg2";
-    database_args = {
-      user = "matrix-synapse";
-      database = "matrix-synapse";
-      cp_min = 5;
-      cp_max = 10;
-    };
-    report_stats = true;
-    enable_metrics = true;
-    listeners = [
-      {
-        type = "metrics";
-        port = 9148;
-        bind_address = "127.0.0.1";
-        resources = [ ];
-        tls = false;
-      }
-      {
-        bind_address = "::1";
-        port = 8448;
-        resources = [
-          {
-            compress = false;
-            names = [
-              "client"
-            ];
-          }
-          {
-            compress = false;
-            names = [
-              "federation"
-            ];
-          }
-        ];
-        tls = false;
-        type = "http";
-        x_forwarded = true;
-      }
-    ];
 
-    servers = {
-      "matrix.org" = {
-        "ed25519:auto" = "Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw";
+    settings = {
+
+      server_name = "kack.it";
+      public_baseurl = "https://matrix.kack.it";
+      report_stats = true;
+      enable_metrics = true;
+      database.name = "psycopg2";
+      database.args = {
+        user = "matrix-synapse";
+        database = "matrix-synapse";
+        cp_min = 5;
+        cp_max = 10;
       };
-      # "kack.it" = {
-      # };
+
+
+      trusted_key_servers = [
+        {
+          server_name = "matrix.org";
+          verify_keys = {
+            "ed25519:auto" = "Noi6WqcDj0QmPxCNQqgezwTlBKrfqehY1u2FyWP9uYw";
+          };
+          # "kack.it" = {
+          # };
+        }
+      ];
+      listeners = [
+        {
+          type = "metrics";
+          port = 9148;
+          bind_addresses = [ "127.0.0.1" ];
+          resources = [ ];
+          tls = false;
+        }
+        {
+          bind_addresses = [ "::1" ];
+          port = 8448;
+          resources = [
+            {
+              compress = false;
+              names = [
+                "client"
+              ];
+            }
+            {
+              compress = false;
+              names = [
+                "federation"
+              ];
+            }
+          ];
+          tls = false;
+          type = "http";
+          x_forwarded = true;
+        }
+      ];
+
+
+
+      redaction_retention_period = 1;
+      rc_messages_per_second = 10;
+      rc_message_burst_count = 15;
+      key_refresh_interval = "1h"; # for initial setup so we can invalidate the key earlier
+      max_upload_size = "10M";
+      url_preview_enabled = false;
+      dynamic_thumbnails = true; # might be a nicer user experience?
+      allow_guest_access = false;
+      enable_registration = false; # for admin purposes
+      log_config = pkgs.writeText "config.yaml" ''
+        version: 1
+
+        formatters:
+          journal_fmt:
+            format: '%(name)s: [%(request)s] %(message)s'
+
+        filters:
+          context:
+            (): synapse.util.logcontext.LoggingContextFilter
+            request: ""
+
+        handlers:
+          journal:
+            class: systemd.journal.JournalHandler
+            formatter: journal_fmt
+            filters: [context]
+            SYSLOG_IDENTIFIER: synapse
+
+        disable_existing_loggers: True
+
+        loggers:
+          synapse:
+            level: WARN
+          synapse.storage.SQL:
+            level: WARN
+
+        root:
+          level: WARN
+          handlers: [journal]
+      '';
     };
-
-    redaction_retention_period = 1;
-    rc_messages_per_second = "10";
-    rc_message_burst_count = "15";
-    key_refresh_interval = "1h"; # for initial setup so we can invalidate the key earlier
-    max_upload_size = "10M";
-    url_preview_enabled = false;
-    dynamic_thumbnails = true; # might be a nicer user experience?
-    allow_guest_access = false;
-    enable_registration = false; # for admin purposes
-    logConfig = ''
-      version: 1
-
-      formatters:
-        journal_fmt:
-          format: '%(name)s: [%(request)s] %(message)s'
-
-      filters:
-        context:
-          (): synapse.util.logcontext.LoggingContextFilter
-          request: ""
-
-      handlers:
-        journal:
-          class: systemd.journal.JournalHandler
-          formatter: journal_fmt
-          filters: [context]
-          SYSLOG_IDENTIFIER: synapse
-
-      disable_existing_loggers: True
-
-      loggers:
-        synapse:
-          level: WARN
-        synapse.storage.SQL:
-          level: WARN
-
-      root:
-        level: WARN
-        handlers: [journal]
-    '';
     extraConfigFiles = [
       (pkgs.writeText "misc.yml" (builtins.toJSON ({
         #session_lifetime = "24h"; # disabled to allow guest accounts
-        experimental_features = { spaces_enabled = true; };
+        # experimental_features = { spaces_enabled = true; };
       })))
       (pkgs.writeText "retention.yml" (builtins.toJSON ({
         retention = {

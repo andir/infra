@@ -146,9 +146,9 @@ let
   ffmpeg = stdenv.mkDerivation rec {
     pname = "kodi-ffmpeg";
     version = "4.3.2";
-    patches = [
-      ./ffmpeg-4.3-v4l.patch
-    ];
+    #patches = [
+    #  ./ffmpeg-4.3-v4l.patch
+    #];
     src = fetchFromGitHub {
       owner = "xbmc";
       repo = "FFmpeg";

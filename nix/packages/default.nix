@@ -110,13 +110,13 @@ self: super: {
   photoprism = self.callPackage ./photoprism {
     src = sources.photoprism;
     ranz2nix = sources.ranz2nix;
-    buildGo118Module =
-      let
-        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {
-          inherit (self.darwin_sdk.frameworks) Security Foundation;
-        };
-      in
-      self.callPackage (unstable.path + "/pkgs/development/go-modules/generic") { go = go_1_18; };
+    #    buildGo118Module = self.bui
+    ##      let
+    ##        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {
+    ##          inherit (self.darwin_sdk.frameworks) Security Foundation;
+    ##        };
+    ##      in
+    #      self.callPackage (unstable.path + "/pkgs/development/go-modules/generic") { go = self.go_1_18; };
   };
 
   fping_exporter = self.callPackage ./fping-exporter.nix { };
@@ -154,7 +154,7 @@ self: super: {
 
     subPackages = [ "cmd/dex" ];
 
-    vendorSha256 = "0kf2yf90ymmk766apxc64rs3mk710f8m1fwafsb7sn17kfaxa5jx";
+    vendorSha256 = "1gaqfys19qkck67p3ypwz222m919l71zgq5varnqxkvbj6m4bf66";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -261,11 +261,11 @@ self: super: {
     src = sources.zigbee2mqtt;
     nodejs = self.nodejs-14_x;
     node_modules_attrs = {
-      packageLockJson = src + "/npm-shrinkwrap.json";
+      packageLockJson = src + "/package-lock.json";
       nativeBuildInputs = [ self.python3 self.nukeReferences ];
-      preBuild = ''
-        mv package-lock.json npm-shrinkwrap.json
-      '';
+      #preBuild = ''
+      #  mv package-lock.json npm-shrinkwrap.json
+      #'';
       postBuild = ''
         find . -type f -iname "package.json" -exec nuke-refs {} \;
       '';
@@ -304,18 +304,6 @@ self: super: {
   });
 
 
-  # remove requirement to pass a password to synadm when modifying user
-  matrix-synapse-tools = super.matrix-synapse-tools // {
-    synadm = super.matrix-synapse-tools.synadm.overrideAttrs ({ patches ? [ ], ... }: {
-      patches = patches ++ [
-        (super.fetchpatch {
-          url = https://github.com/JOJ0/synadm/commit/8e23f01aa04bf9ab389094f83df35794e94652bd.patch;
-          sha256 = "0gs0xf5jfn5qh4xiq0s738ilc9ng21y0n4d7a6daighamdsx9ka4";
-        })
-      ];
-    });
-  };
-
   nixos-dev-website = super.runCommandNoCC "nixos.dev-website"
     {
       nativeBuildInputs = [ self.pandoc ];
@@ -341,6 +329,8 @@ self: super: {
 
   matrix-synapse = (super.matrix-synapse.override {
     python3 = self.fastPython3;
+  }).overrideAttrs ({ patches ? [ ], ... }: {
+    patches = patches ++ [ ../../matrix-logging.patch ];
   });
 
   compact-matrix-states = self.callPackage ./compact-matrix-states.nix { };
@@ -429,4 +419,11 @@ self: super: {
     propagatedBuildInputs = [ self.mopidy self.python3Packages.uritools ];
     doCheck = false; # requires network access :(
   };
+
+
+  # when doing cross/binfmt builds just use native fonts as I don't
+  # have time to watch it compress PNGs anymore..
+  noto-fonts-emoji = if self.system == builtins.currentSystem then super.noto-fonts-emoji else self.nativePkgs.noto-fonts-emoji;
+
+  dotagsi = self.callPackage sources.dotagsi { };
 }

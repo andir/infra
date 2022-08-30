@@ -497,6 +497,38 @@
               }
             ];
           };
+        "Work Desk Switch Living room lights ON" = {
+          trigger = [
+            {
+              platform = "state";
+              entity_id = "switch.0x50325ffffe739d21";
+              to = "on";
+              from = "off";
+            }
+          ];
+          action = [
+            {
+              service = "light.turn_on";
+              target.entity_id = "light.living_room_lights";
+            }
+          ];
+        };
+        "Work Desk Switch Living room lights OFF" = {
+          trigger = [
+            {
+              platform = "state";
+              entity_id = "switch.0x50325ffffe739d21";
+              to = "off";
+              from = "on";
+            }
+          ];
+          action = [
+            {
+              service = "light.turn_off";
+              target.entity_id = "light.living_room_lights";
+            }
+          ];
+        };
       };
 
       spotify = {

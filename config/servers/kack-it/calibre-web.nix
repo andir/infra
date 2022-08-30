@@ -1,6 +1,10 @@
+{ config, lib, ... }:
+let
+  enable = false;
+in
 {
   services.calibre-web = {
-    enable = true;
+    enable = enable;
     listen = {
       ip = "::1";
       port = 8083;
@@ -11,9 +15,9 @@
     options.calibreLibrary = "/var/lib/calibre-web/books";
   };
 
-  h4ck.backup.paths = [ "/var/lib/calibre-web" ];
+  h4ck.backup.paths = lib.mkIf enable [ "/var/lib/calibre-web" ];
 
-  services.nginx.virtualHosts."books.kack.it" = {
+  services.nginx.virtualHosts."books.kack.it" = lib.mkIf enable {
     forceSSL = true;
     enableACME = true;
     locations."/" = {
