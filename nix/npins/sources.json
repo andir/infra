@@ -331,13 +331,13 @@
       "type": "Git",
       "repository": {
         "type": "GitHub",
-        "owner": "tweag",
+        "owner": "nix-community",
         "repo": "npmlock2nix"
       },
       "branch": "master",
-      "revision": "5c4f247688fc91d665df65f71c81e0726621aaa8",
-      "url": "https://github.com/tweag/npmlock2nix/archive/5c4f247688fc91d665df65f71c81e0726621aaa8.tar.gz",
-      "hash": "1zkrcph1vqgl0q7yi9cg0ghq1mmvhy8rlc6xvyww56i3j87cg5gn"
+      "revision": "330f8d574ab58cb6413141aa62bab3330871a365",
+      "url": "https://github.com/nix-community/npmlock2nix/archive/330f8d574ab58cb6413141aa62bab3330871a365.tar.gz",
+      "hash": "118qz5idib8vxvx575xd2dv1jmc7mpj2lz2zwgc8qihpxksg533h"
     },
     "photoprism": {
       "type": "Git",
@@ -385,18 +385,6 @@
       "revision": "af24b4e24622845088abf53c84f23ffa0c9c3437",
       "url": null,
       "hash": "18z5ww9lp2r93bq2pkzn0knhyc392szqv166yx8r4qv4y4is3b38"
-    },
-    "ranz2nix": {
-      "type": "Git",
-      "repository": {
-        "type": "GitHub",
-        "owner": "andir",
-        "repo": "ranz2nix"
-      },
-      "branch": "master",
-      "revision": "637276c3110716d2a798e737fe62e54b37190d50",
-      "url": "https://github.com/andir/ranz2nix/archive/637276c3110716d2a798e737fe62e54b37190d50.tar.gz",
-      "hash": "0jaxw74srgabzz5sawy6nv27rpghmwxw53m5csnrhgy39a9yaki4"
     },
     "streetmerchant": {
       "type": "Git",

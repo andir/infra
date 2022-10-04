@@ -109,7 +109,7 @@ self: super: {
 
   photoprism = self.callPackage ./photoprism {
     src = sources.photoprism;
-    ranz2nix = sources.ranz2nix;
+    npmlock2nix = (import sources.npmlock2nix { pkgs = unstable; });
     #    buildGo118Module = self.bui
     ##      let
     ##        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {

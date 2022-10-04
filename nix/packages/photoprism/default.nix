@@ -1,5 +1,5 @@
 { src
-, ranz2nix
+, npmlock2nix
 , coreutils
 , stdenv
 , fetchurl
@@ -11,7 +11,7 @@
 , callPackage
 }:
 buildGo118Module {
-  name = "photoprism-go";
+  name = "photoprism";
   inherit src;
 
   subPackages = [ "cmd/photoprism" ];
@@ -30,7 +30,7 @@ buildGo118Module {
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
   '';
-  vendorSha256 = "1y8vbj4nkm99qdpdm2pj25wb65416jm4cwqsp0hrjpfis1b105pl";
+  vendorSha256 = "1cvwhgqy49pxxypywg9gnjvisnb0dqjmzpi1nywh9afj13aivmvq";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";
@@ -41,50 +41,15 @@ buildGo118Module {
 
 
   passthru = rec {
-
-    frontend =
-      let
-        noderanz = callPackage ranz2nix {
-          nodejs = nodejs-14_x;
-          sourcePath = src + "/frontend";
-          packageOverride = name: spec:
-            if name == "minimist" && spec ? resolved && spec.resolved == "" && spec.version == "1.2.0" then {
-              resolved = "file://" + (
-                toString (
-                  fetchurl {
-                    url = "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz";
-                    sha256 = "0w7jll4vlqphxgk9qjbdjh3ni18lkrlfaqgsm7p14xl3f7ghn3gc";
-                  }
-                )
-              );
-            } else { };
-        };
-        node_modules = noderanz.patchedBuild;
-      in
-      stdenv.mkDerivation {
-        name = "photoprism-frontend";
-        nativeBuildInputs = [ nodejs-14_x ];
-
-        inherit src;
-
-        sourceRoot = "source/frontend";
-
-        postUnpack = ''
-          chmod -R +rw .
-        '';
-
-        NODE_ENV = "production";
-
-        buildPhase = ''
-          export HOME=$(mktemp -d)
-          ln -sf ${node_modules}/node_modules node_modules
-          ln -sf ${node_modules.lockFile} package-lock.json
-          npm run build
-        '';
-        installPhase = ''
-          cp -rv ../assets/static/build $out
-        '';
-      };
+    frontend = npmlock2nix.v2.build {
+      src = src + "/frontend";
+      buildCommands = [
+        "HOME=$(mktemp -d) npm run build"
+      ];
+      installPhase = ''
+        cp -rv ../assets/static/build $out
+      '';
+    };
 
     assets =
       let
