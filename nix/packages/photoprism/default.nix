@@ -11,7 +11,7 @@
 , callPackage
 }:
 buildGo118Module {
-  name = "photoprism-go";
+  name = "photoprism";
   inherit src;
 
   subPackages = [ "cmd/photoprism" ];
@@ -30,7 +30,7 @@ buildGo118Module {
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
   '';
-  vendorSha256 = "1y8vbj4nkm99qdpdm2pj25wb65416jm4cwqsp0hrjpfis1b105pl";
+  vendorSha256 = "1cvwhgqy49pxxypywg9gnjvisnb0dqjmzpi1nywh9afj13aivmvq";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";
