@@ -7,6 +7,7 @@
     ./gitea.nix
     ./drone.nix
     ./vaultwarden.nix
+    ./backups.nix
   ];
 
   deployment = {
@@ -37,6 +38,15 @@
   };
   users.groups.hydra = { };
   nix.trustedUsers = [ "hydra" ];
+
+  users.users.ana = {
+    isNormalUser = true;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJ66kAZEp/oC+rurNhfGHvQZVh0zBI6ZwVLuc5KiQrwY"
+    ];
+    group = "users";
+    packages = [ pkgs.borgbackup ];
+  };
 
   system.stateVersion = "21.11";
 

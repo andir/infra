@@ -194,6 +194,8 @@ in
         "net.ipv6.all.default.forwarding" = 1;
       } // (
         listToAttrs (map (iface: nameValuePair "net.ipv4.conf.${iface}.forwarding" 1) interfaceNames)
+      ) // (
+        listToAttrs (map (iface: nameValuePair "net.ipv4.conf.${iface}.rp_filter" 0) interfaceNames)
       );
       networking.firewall = {
         checkReversePath = false;

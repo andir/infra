@@ -7,7 +7,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
-matrix-nio = "^0.19"
+matrix-nio = "^0.20"
 
 [tool.poetry.dev-dependencies]
 

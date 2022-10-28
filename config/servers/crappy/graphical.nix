@@ -22,10 +22,10 @@
       ])).override {
         kodi = (pkgs.kodi.override { waylandSupport = true; }).overrideAttrs ({ patches ? [ ], ... }: {
           patches = patches ++ [
-            (pkgs.fetchpatch {
-              url = "https://github.com/xbmc/xbmc/pull/20632/commits/81a2fb65100b88c31bb0168acc0c3b7bab09475a.patch";
-              sha256 = "09xjxlz6gcp8z68802fh1sm1dmrgzcwddwfvrwwl7xqjjvqmar80";
-            })
+            #(pkgs.fetchpatch {
+            #  url = "https://github.com/xbmc/xbmc/pull/20632/commits/3f02f813997d19d15917fb4eb3387c60a3696837.patch";
+            #  sha256 = "0f8f3245f3jg5ghvfyjhbvjvv3xz8gnbmhzwwvvdd55m3yz19m94";
+            #})
           ];
         });
       })

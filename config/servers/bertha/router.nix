@@ -192,7 +192,7 @@ in
 
               networkConfig = {
                 DHCPServer = mkDefault true;
-                DHCPv6PrefixDelegation = "yes";
+                DHCPPrefixDelegation = "yes";
                 IPv6SendRA = true;
               };
               linkConfig.RequiredForOnline = false;

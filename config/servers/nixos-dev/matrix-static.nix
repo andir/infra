@@ -10,11 +10,18 @@
     enableACME = true;
     forceSSL = true;
     locations."/" = {
+      root = "/var/lib/logs-static-index/";
+      extraConfig = ''
+        try_files $uri $uri/ @proxy;
+      '';
+    };
+    locations."@proxy" = {
       proxyPass = "http://[::1]:8000";
       extraConfig = ''
         proxy_set_header Host $host;
         proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header X-Forwarded-Proto $scheme;'';
+        proxy_set_header X-Forwarded-Proto $scheme;
+      '';
     };
   };
 }

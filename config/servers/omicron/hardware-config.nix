@@ -85,6 +85,13 @@
     options = [ "zfsutil" ];
   };
 
+  fileSystems."/tank/backups/ana" = {
+    device = "tank/backups/ana";
+    fsType = "zfs";
+    options = [ "zfsutil" ];
+  };
+
+
   fileSystems."/tank/gitea" = {
     device = "tank/gitea";
     fsType = "zfs";

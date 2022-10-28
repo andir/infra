@@ -3,7 +3,18 @@
   systemd.tmpfiles.rules = [
     "d /var/lib/s.rammhold.de 750 andi nginx -"
     "d /var/lib/s.h4ck.space 750 andi nginx -"
+    "d /var/lib/dsm.kack.it 750 dsm nginx -"
   ];
+
+  users.groups.dsm = { };
+  users.users.dsm = {
+    group = "dsm";
+    isSystemUser = true;
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHMDzz4p6UPfKLY5/zaLqGG/CQ+jMgRIEH4H8Iw0Igba"
+    ];
+    useDefaultShell = true;
+  };
 
   security.acme = {
     certs."s.rammhold.de" = {
@@ -47,6 +58,11 @@
       enableACME = true;
       forceSSL = true;
       root = "/var/lib/s.h4ck.space";
+    };
+    virtualHosts."dsm.kack.it" = {
+      enableACME = true;
+      forceSSL = true;
+      root = "/var/lib/dsm.kack.it";
     };
 
     virtualHosts."goerigk.rammhold.de" = {

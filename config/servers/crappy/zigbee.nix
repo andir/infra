@@ -36,11 +36,12 @@
 
       devices = {
         "0x00158d000588cc10".friendly_name = "0x00158d000588cc10";
-        "0x00158d00057f9d18".friendly_name = "0x00158d00057f9d18";
+        "0x00158d00057f9d18".friendly_name = "0x00158d00057f9d18"; # living room
         "0x00158d00056a19b8".friendly_name = "0x00158d00056a19b8";
         "0x04cf8cdf3c8240ce".friendly_name = "0x04cf8cdf3c8240ce";
         "0x00158d00058a6475".friendly_name = "0x00158d00058a6475";
-        "0x00158d000588ceb6".friendly_name = "0x00158d000588ceb6";
+        "0x00158d000588ceb6".friendly_name = "0x00158d000588ceb6"; # kitchen?
+        "0xcc86ecfffe8742bc".friendly_name = "Dyson Charging Switch";
 
         "0x001788010b9c608f".friendly_name = "Living Room Ceiling 1";
         "0x001788010b9974a3".friendly_name = "Living Room Ceiling 2";

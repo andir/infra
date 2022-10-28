@@ -3,7 +3,7 @@
   services.unifi = {
     enable = true;
     #mongodbPackage = pkgs.mongodb-4_2;
-    unifiPackage = pkgs.unifiStable.overrideAttrs (
+    unifiPackage = pkgs.unifi.overrideAttrs (
       _: rec {
         #   version = "6.5.54";
         #   src = pkgs.fetchurl {
@@ -20,28 +20,31 @@
 
   services.nginx = {
     # disabled since unifi seems to request logins for unknown reason..
-    #enable = true;
-    #virtualHosts."unifi.epsilon.rammhold.de" = {
-    #  locations."/" = {
-    #    proxyPass = "https://localhost:8443";
-    #    proxyWebsockets = true;
-    #    extraConfig = let
-    #      networks = lib.flatten (
-    #        map (
-    #          iface:
-    #            (
-    #              map
-    #                (addr: addr.address + "/${toString addr.prefixLength}")
-    #                (iface.v4Addresses ++ iface.v6Addresses)
-    #            )
-    #        ) config.router.downstreamInterfaces
-    #      );
-    #    in
-    #      ''
-    #        ${lib.concatMapStringsSep "\n" (addr: "allow ${addr};") networks}
-    #        deny   all;
-    #      '';
-    #  };
-    #};
+    enable = true;
+    virtualHosts."unifi.epsilon.rammhold.de" = {
+      locations."/" = {
+        proxyPass = "https://localhost:8443";
+        proxyWebsockets = true;
+        extraConfig =
+          let
+            networks = lib.flatten (
+              map
+                (
+                  iface:
+                  (
+                    map
+                      (addr: addr.address + "/${toString addr.prefixLength}")
+                      (iface.v4Addresses ++ iface.v6Addresses)
+                  )
+                )
+                config.router.downstreamInterfaces
+            );
+          in
+          ''
+            ${lib.concatMapStringsSep "\n" (addr: "allow ${addr};") networks}
+            deny   all;
+          '';
+      };
+    };
   };
 }

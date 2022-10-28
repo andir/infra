@@ -5,32 +5,25 @@
 , fetchurl
 , fetchzip
 , runCommand
-, buildGo118Module
-, libtensorflow-bin
+, buildGo119Module
+, my-libtensorflow-bin
 , nodejs-14_x
 , callPackage
 }:
-buildGo118Module {
+buildGo119Module {
   name = "photoprism-go";
   inherit src;
 
   subPackages = [ "cmd/photoprism" ];
 
   buildInputs = [
-    (libtensorflow-bin.overrideAttrs (oA: {
-      # 21.05 does not have libtensorflow-bin 1.x anymore & photoprism isn't compatible with tensorflow 2.x yet
-      # https://github.com/photoprism/photoprism/issues/222
-      src = fetchurl {
-        url = "https://storage.googleapis.com/tensorflow/libtensorflow/libtensorflow-cpu-linux-x86_64-1.14.0.tar.gz";
-        sha256 = "04bi3ijq4sbb8c5vk964zlv0j9mrjnzzxd9q9knq3h273nc1a36k";
-      };
-    }))
+    my-libtensorflow-bin
   ];
 
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
   '';
-  vendorSha256 = "1y8vbj4nkm99qdpdm2pj25wb65416jm4cwqsp0hrjpfis1b105pl";
+  vendorSha256 = "1cwypg3mp9bilc2m0zxj5rsk066y713c8x1kkz5830y6303rymf7";
 
   # https://github.com/mattn/go-sqlite3/issues/803
   CGO_CFLAGS = "-Wno-return-local-addr";

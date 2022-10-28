@@ -17,6 +17,7 @@
         "rmvtransport"
         "denonavr"
         "kodi"
+        "xiaomi_miio"
       ];
     }).overrideAttrs (_: {
       doInstallCheck = false;
@@ -77,6 +78,11 @@
               entity = "light.bedroom_lights";
             }
             {
+              title = "Charge Dyson";
+              type = "button";
+              entity = "switch.dyson_charging_switch";
+            }
+            {
               name = "Ambient";
               type = "button";
               show_state = false;
@@ -109,6 +115,18 @@
                 service = "scene.turn_on";
                 service_data = {
                   entity_id = "scene.tv";
+                };
+              };
+            }
+            {
+              name = "Spotify";
+              type = "button";
+              show_state = false;
+              tap_action = {
+                action = "call-service";
+                service = "scene.spotify";
+                service_data = {
+                  entity_id = "scene.spotify";
                 };
               };
             }
@@ -290,6 +308,15 @@
             };
           };
         }
+        {
+          name = "Spotify";
+          entities = {
+            "media_player.denon" = {
+              state = "playing";
+              source = "GAME2";
+            };
+          };
+        }
       ];
 
       group = {
@@ -302,7 +329,7 @@
         my_devices = {
           name = "My Devices";
           entities = [
-            "device_tracker.pixel_4"
+            "device_tracker.iphone"
           ];
         };
       };
@@ -531,10 +558,10 @@
         };
       };
 
-      spotify = {
-        client_id = "!secret spotify_client_id";
-        client_secret = "!secret spotify_client_secret";
-      };
+      # spotify = {
+      #   client_id = "!secret spotify_client_id";
+      #   client_secret = "!secret spotify_client_secret";
+      # };
 
       device_sun_light_trigger = {
         light_group = "light.living_room_lights";

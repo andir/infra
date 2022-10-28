@@ -256,7 +256,7 @@ in
           { address = "10.250.42.1"; prefixLength = 24; }
 
           # Cudy X6 TFTP recovery
-          { address = "192.168.1.88"; prefixLength = 24; }
+          # { address = "192.168.1.88"; prefixLength = 24; }
         ];
         v6Addresses = [
           { address = "fd21:a07e:735e:ff42::"; prefixLength = 64; }
@@ -651,25 +651,25 @@ in
     };
   };
 
-  systemd.services.cudy-x6-tftp-recovery =
-    let
-      firmware = pkgs.fetchurl {
-        url = "https://s.rammhold.de/openwrt-ramips-mt7621-cudy-x6-flash.bin";
-        sha256 = "0wip8cd1gal1880c9a3b17mghp22iwfrfbpgp1yjsfkngaqr0qfg";
-      };
+  #systemd.services.cudy-x6-tftp-recovery =
+  #  let
+  #    firmware = pkgs.fetchurl {
+  #      url = "https://s.rammhold.de/openwrt-ramips-mt7621-cudy-x6-flash.bin";
+  #      sha256 = "0wip8cd1gal1880c9a3b17mghp22iwfrfbpgp1yjsfkngaqr0qfg";
+  #    };
 
-    in
-    {
-      after = [ "network.target" ];
-      wantedBy = [ "multi-user.target" ];
-      path = [
-        pkgs.atftp
-      ];
-      script = ''
-        cd $RUNTIME_DIRECTORY
-        cp -rv ${firmware} recovery.bin
-        exec atftpd -v 2 -m 2 --daemon --no-fork --bind-address 192.168.1.88 .
-      '';
-      serviceConfig.RuntimeDirectory = "cudy-x6-firmware-dir";
-    };
+  #  in
+  #  {
+  #    after = [ "network.target" ];
+  #    wantedBy = [ "multi-user.target" ];
+  #    path = [
+  #      pkgs.atftp
+  #    ];
+  #    script = ''
+  #      cd $RUNTIME_DIRECTORY
+  #      cp -rv ${firmware} recovery.bin
+  #      exec atftpd -v 2 -m 2 --daemon --no-fork --bind-address 192.168.1.88 .
+  #    '';
+  #    serviceConfig.RuntimeDirectory = "cudy-x6-firmware-dir";
+  #  };
 }

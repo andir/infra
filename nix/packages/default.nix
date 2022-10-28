@@ -107,15 +107,16 @@ self: super: {
     }
   );
 
-  photoprism = self.callPackage ./photoprism {
+  my-libtensorflow-bin = unstable.callPackage ./libtensorflow-bin.nix { };
+  photoprism = unstable.callPackage ./photoprism {
     src = sources.photoprism;
     ranz2nix = sources.ranz2nix;
-    #    buildGo118Module = self.bui
-    ##      let
-    ##        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {
-    ##          inherit (self.darwin_sdk.frameworks) Security Foundation;
-    ##        };
-    ##      in
+    #    buildGo118Module =
+    #      let
+    #        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {
+    #          inherit (self.darwin_sdk.frameworks) Security Foundation;
+    #        };
+    #      in
     #      self.callPackage (unstable.path + "/pkgs/development/go-modules/generic") { go = self.go_1_18; };
   };
 
@@ -153,8 +154,7 @@ self: super: {
     src = sources.dex;
 
     subPackages = [ "cmd/dex" ];
-
-    vendorSha256 = "1gaqfys19qkck67p3ypwz222m919l71zgq5varnqxkvbj6m4bf66";
+    vendorSha256 = "1wzir9m6psmkzjmbcn1dbhfrdfxsz1dy4b0i9aphki0zsic5ph63";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -283,14 +283,9 @@ self: super: {
       export NODE_PATH="${placeholder "out"}/lib/node_modules/zigbee2mqtt:${placeholder "out"}/lib/node_modules/zigbee2mqtt/node_modules"
       set -ex
       cd ${placeholder "out"}/lib/node_modules/zigbee2mqtt
-      exec ./run.js
-      EOF
-      cat - <<EOF > $out/lib/node_modules/zigbee2mqtt/run.js
-      #!/usr/bin/env node --trace-warnings
-      require('./index.js')
+      exec ${nodejs}/bin/node ./index.js
       EOF
       chmod +x $out/bin/zigbee2mqtt
-      chmod +x $out/lib/node_modules/zigbee2mqtt/run.js
 
       # zigbee2mqtt now checks the configured engine version during runtime
       cp package.json $out/lib/node_modules/zigbee2mqtt/
@@ -426,4 +421,11 @@ self: super: {
   noto-fonts-emoji = if self.system == builtins.currentSystem then super.noto-fonts-emoji else self.nativePkgs.noto-fonts-emoji;
 
   dotagsi = self.callPackage sources.dotagsi { };
+
+  lwnfeed = self.buildGoModule {
+    name = "lwnfeed";
+    src = sources.lwnfeed;
+    vendorSha256 = "091c8lgldihia0vlhigjx7vc9sx640jlz7sg3wx31fpcyml0zy6v";
+    ldflags = [ "-s" "-w" "-X main.BuildTime=2022-10-13T21:11:00Z" ];
+  };
 }

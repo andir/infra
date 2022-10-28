@@ -12,6 +12,7 @@
     ./calibre-web.nix
     ./cgit.nix
     ./cache.nix
+    ./rss.nix
   ];
 
   deployment = {

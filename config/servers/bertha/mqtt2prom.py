@@ -81,6 +81,8 @@ def on_message(client, userdata, msg):
                 value = float(value)
             except TypeError:
                 continue
+            except ValueError:
+                continue
 
             fh.write(f"{key} {value}\n")
 

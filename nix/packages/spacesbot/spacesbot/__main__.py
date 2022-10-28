@@ -10,7 +10,7 @@ def get_argument_parser():
         "--homeserver",
         type=str,
         default=os.environ.get("SPACESBOT_HOMESERVER"),
-        required=os.environ.get("SPACESBOT_HOMESEREVER") is None,
+        required=os.environ.get("SPACESBOT_HOMESERVER") is None,
         help="The base URL of the homeserver. e.g. https://matrix.foobar.tld. (Defaults to the environment variable SPACESBOT_HOMESERVER)",
     )
     parser.add_argument(
@@ -33,6 +33,11 @@ def get_argument_parser():
         help="The matrix room id of the space to join",
     )
 
+    commands = parser.add_subparsers(dest="command")
+    commands.add_parser('join')
+    tree_parser = commands.add_parser('tree')
+    tree_parser.add_argument('output', type=str, default=None, help='Output file for tree markdown')
+    
     return parser
 
 
@@ -40,7 +45,21 @@ def main():
     args = get_argument_parser().parse_args()
     bot = SpacesBot(args.homeserver, args.user, args.access_token, args.room_id)
 
-    future = bot.run()
+    if args.command == "join":
+        future = bot.run()
+    elif args.command == "tree":
+        async def write_output(future) -> None:
+            result = await future
+            if args.output is None:
+                print(result)
+            else:
+                with open(args.output, "w") as fh:
+                    fh.write(result)
+            
+        future = write_output(bot.tree())
+    else:
+        raise RuntimeError(f"Unknown command {args.command}")
+        
     asyncio.get_event_loop().run_until_complete(future)
 
 

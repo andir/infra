@@ -1,13 +1,13 @@
 { pkgs ? import ../.././. { } }:
 let
-  python = pkgs.python38;
+  python = pkgs.fastPython3;
 in
-(pkgs.python38Packages.buildPythonApplication {
+(python.pkgs.buildPythonApplication {
   pname = "spacesbot";
   version = "whatever";
   src = pkgs.nix-gitignore.gitignoreSource [ ] ./.;
   format = "pyproject";
-  propagatedBuildInputs = with python.pkgs; [ matrix-nio ];
+  propagatedBuildInputs = with python.pkgs; [ matrix-nio jinja2 ];
   nativeBuildInputs = [ python.pkgs.poetry-core ];
 
   pythonImportsCheck = [ "spacesbot" ];
