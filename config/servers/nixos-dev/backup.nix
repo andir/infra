@@ -32,7 +32,7 @@
       };
       prune.keep = {
         within = "1d";
-        daily = 7;
+        daily = 2;
         weekly = 1;
         monthly = -1;
       };
