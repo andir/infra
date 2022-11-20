@@ -8,32 +8,44 @@
       "2a01:4f8:1c1c:4b9f::@53"
     ];
     authZones =
-      lib.listToAttrs (
-        map
-          (
-            name: lib.nameValuePair "${name}" {
-              zoneFile = ./zones + "/${name}";
-              slaves = {
-                "ns2.h4ck.space-v4" = {
-                  address = "72.60.37.85";
+      lib.listToAttrs
+        (
+          map
+            (
+              name: lib.nameValuePair "${name}" {
+                zoneFile = ./zones + "/${name}";
+                slaves = {
+                  "ns2.h4ck.space-v4" = {
+                    address = "72.60.37.85";
+                  };
+                  "ns2.h4ck.space-v6" = {
+                    address = "2a03:4000:33:792::";
+                  };
                 };
-                "ns2.h4ck.space-v6" = {
-                  address = "2a03:4000:33:792::";
-                };
-              };
-            }
-          ) [
-          "darmstadt.digital"
-          "darmstadt.io"
-          "kack.it"
-          "megfau.lt"
-          "nopejs.io"
-          "notmuch.email"
-          "wifi-darmstadt.de"
-          "wlanladadi.net"
-          "nixos.cloud"
-        ]
-      );
+              }
+            ) [
+            "darmstadt.digital"
+            "darmstadt.io"
+            "kack.it"
+            "nopejs.io"
+            "notmuch.email"
+            "wifi-darmstadt.de"
+            "wlanladadi.net"
+            "nixos.cloud"
+          ]
+        ) // {
+        "megfau.lt" = {
+          zoneFile = ./zones + "/megfau.lt";
+          slaves = {
+            "ns2.h4ck.space-v4" = {
+              address = "72.60.37.85";
+            };
+            "ns2.h4ck.space-v6" = {
+              address = "2a03:4000:33:792::";
+            };
+          };
+        };
+      };
     slaveZones = lib.listToAttrs (
       map
         (

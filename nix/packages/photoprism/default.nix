@@ -23,13 +23,13 @@ buildGo119Module {
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
   '';
-  vendorSha256 = "1cwypg3mp9bilc2m0zxj5rsk066y713c8x1kkz5830y6303rymf7";
+  vendorSha256 = "sha256-3SSkQR/tC64TONtKhR8l9aN/Q8CZBpvZ5ZCoBryUrb0=";
 
-  # https://github.com/mattn/go-sqlite3/issues/803
+  # https://github.com/mattn/go-sqlite3/issues/802
   CGO_CFLAGS = "-Wno-return-local-addr";
 
   postInstall = ''
-    $out/bin/photoprism --help 
+    $out/bin/photoprism --help
   '';
 
 

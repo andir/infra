@@ -25,6 +25,10 @@ let
         type = types.attrsOf (types.submodule slaveOptions);
         default = { };
       };
+      dnssecSigning = mkOption {
+        type = types.bool;
+        default = true;
+      };
     };
     config = {
       inherit name;
@@ -190,6 +194,7 @@ in
                       zone:
                         - domain: ${name}
                           file: ${zone.name}.zone
+                          dnssec-signing: ${asBool zone.dnssecSigning}
                           acl: [${lib.concatMapStringsSep "," (slave: "\"${slave.name}-${zone.name}\"") (lib.attrValues zone.slaves)}]
                           ${lib.optionalString (zone.slaves != { }) ''
                       notify: [${lib.concatStringsSep ", " (

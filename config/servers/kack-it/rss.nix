@@ -23,7 +23,11 @@
         proxyPass = "http://localhost:8282";
         extraConfig =
           let
-            htpasswd = pkgs.writeText "htpasswd" "cioupaoisv:$6$TS.uEVGRdaMzuhMc$6ZNENO4AEZ8nT7hxcabbGoCmj5IIWkKz4yOacX.8oHMmBsVzg3jg.bSrSkmNawWBdF8PY74Q/MTBxVLazycOo/";
+            htpasswd = pkgs.writeText "htpasswd" ''
+              cioupaoisv:$6$TS.uEVGRdaMzuhMc$6ZNENO4AEZ8nT7hxcabbGoCmj5IIWkKz4yOacX.8oHMmBsVzg3jg.bSrSkmNawWBdF8PY74Q/MTBxVLazycOo/
+              ochahWeegh8soox:$6$yl3kuU6bMCFrN3Ni$druWekTF12jUPUFf2nDK6MDi595obt/0i8kLHSUzU9huZBCo6VArSK1srvctkIraYHk6UjdyAELeyzBuucZb70
+              Drowsily0545:$6$rc86K4BOyb6FgTqJ$u.3V1bjoKOhKKFWQl40u4PGjSZ4Qfs2G/o3v7LV4Rve8W.Q/jhbD2G471EAWLaZFiddJzv7w6Lw2Fm0BuI4QS1
+            '';
           in
           ''
             auth_basic           "closed site";
