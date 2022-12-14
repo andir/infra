@@ -54,6 +54,7 @@ in
     ./nginx.nix
     ./mqtt2prom.nix
     ./streetmerchant.nix
+    #./lab.nix
   ];
 
 
@@ -158,7 +159,16 @@ in
         Id = 43;
       };
     };
-
+    "00-lab0" = {
+      # cudy x6
+      netdevConfig = {
+        Name = "lab0";
+        Kind = "vlan";
+      };
+      vlanConfig = {
+        Id = 50;
+      };
+    };
   };
 
   systemd.network.networks = {
@@ -166,7 +176,7 @@ in
       matchConfig = {
         Name = "internal";
       };
-      vlan = [ "oldlan" "lan" "mgmt" "sc-agx" "iot" ];
+      vlan = [ "oldlan" "lan" "mgmt" "sc-agx" "iot" "lab0" ];
       networkConfig = {
         DHCP = "no";
         IPv6AcceptRA = false;
@@ -233,6 +243,7 @@ in
       {
         interface = "oldlan";
         subnetId = "b";
+        dnsOverTls = true;
         v4Addresses = [
           { address = "10.250.11.254"; prefixLength = 24; }
         ];
@@ -242,6 +253,7 @@ in
       }
       {
         interface = "mgmt";
+        avahiProxy = false;
         v4Addresses = [
           { address = "10.250.30.254"; prefixLength = 24; }
         ];
@@ -251,12 +263,12 @@ in
       }
       {
         interface = "sc-agx";
+        dnsOverTls = true;
+        avahiProxy = false;
         subnetId = "42";
         v4Addresses = [
           { address = "10.250.42.1"; prefixLength = 24; }
 
-          # Cudy X6 TFTP recovery
-          # { address = "192.168.1.88"; prefixLength = 24; }
         ];
         v6Addresses = [
           { address = "fd21:a07e:735e:ff42::"; prefixLength = 64; }
@@ -264,12 +276,29 @@ in
       }
       {
         interface = "iot";
+        avahiProxy = false;
+        dnsOverTls = true;
         subnetId = "43";
         v4Addresses = [
           { address = "10.250.43.1"; prefixLength = 24; }
         ];
         v6Addresses = [
           { address = "fd21:a07e:735e:ff43::"; prefixLength = 64; }
+        ];
+      }
+      {
+        interface = "lab0";
+        dnsOverTls = true;
+        avahiProxy = false;
+        subnetId = "50";
+        v4Addresses = [
+          { address = "10.250.50.1"; prefixLength = 24; }
+          # Cudy X6 TFTP recovery
+          { address = "192.168.1.88"; prefixLength = 24; }
+        ];
+        v6Addresses = [
+          { address = "fe80::1"; prefixLength = 64; }
+          { address = "fd21:a07e:735e:ff50::"; prefixLength = 64; }
         ];
       }
     ];
@@ -304,6 +333,7 @@ in
           iifname mgmt accept;
           iifname sc-agx jump agx_input
           iifname iot jump iot_input
+          iifname lab0 jump lab0_input
 
           ${lib.concatStringsSep "\n" (lib.mapAttrsToList (n: peer: "iifname ${peer.interfaceName} jump wg_peer_input;") config.h4ck.wireguardBackbone.peers)}
 
@@ -312,6 +342,14 @@ in
 
 
           counter log prefix "blocked incoming: " drop
+        }
+
+        chain lab0_input {
+          ip protocol icmp accept
+          ip6 nexthdr icmpv6 accept
+          # TFTP
+          tcp dport 69 accept;
+          udp dport 69 accept;
         }
 
         chain wg_peer_input {
@@ -404,10 +442,19 @@ in
           oifname sc-agx iifname oldlan accept
           oifname sc-agx ip6 nexthdr tcp tcp dport 22 accept
 
+          oifname lab0 iifname lan accept
+          oifname lab0 iifname oldlan accept
+          oifname lab0 ip6 nexthdr tcp tcp dport 22 accept
 
           oifname "wg-*" jump forward_to_wg
 
           log prefix "not forwarding: " reject
+        }
+
+        chain snat_to_sc_agx {
+          # primarily needed because the vacuum robot doesn't like addresses outside of its subnet
+          masquerade
+          accept
         }
 
         chain forward_from_iot {
@@ -464,7 +511,14 @@ in
         chain postrouting {
            type nat hook postrouting priority srcnat;
            oifname uplink masquerade
+
+           # from non-dn42 address space
            iifname oldlan oifname wg-dn42_cccda snat 172.20.24.1
+
+           # for the vacuum robot that require the src address to be in the same network
+           iifname oldlan oifname sc-agx masquerade
+           iifname lan oifname sc-agx masquerade
+
         }
       }
     '';
@@ -501,7 +555,7 @@ in
     };
   users.users.root.initialPassword = "password";
 
-  environment.systemPackages = [ pkgs.ldns pkgs.inetutils pkgs.ethtool ];
+  environment.systemPackages = [ pkgs.ldns pkgs.inetutils pkgs.ethtool pkgs.screen pkgs.uucp ];
 
 
   h4ck.wireguardBackbone = {
@@ -650,26 +704,4 @@ in
       };
     };
   };
-
-  #systemd.services.cudy-x6-tftp-recovery =
-  #  let
-  #    firmware = pkgs.fetchurl {
-  #      url = "https://s.rammhold.de/openwrt-ramips-mt7621-cudy-x6-flash.bin";
-  #      sha256 = "0wip8cd1gal1880c9a3b17mghp22iwfrfbpgp1yjsfkngaqr0qfg";
-  #    };
-
-  #  in
-  #  {
-  #    after = [ "network.target" ];
-  #    wantedBy = [ "multi-user.target" ];
-  #    path = [
-  #      pkgs.atftp
-  #    ];
-  #    script = ''
-  #      cd $RUNTIME_DIRECTORY
-  #      cp -rv ${firmware} recovery.bin
-  #      exec atftpd -v 2 -m 2 --daemon --no-fork --bind-address 192.168.1.88 .
-  #    '';
-  #    serviceConfig.RuntimeDirectory = "cudy-x6-firmware-dir";
-  #  };
 }

@@ -102,12 +102,12 @@ in
     };
   };
 
-  services.k3s = {
-    enable = false;
-    docker = true;
-    role = "server";
-    package = pkgs.unstable.k3s;
-  };
+  #  services.k3s = {
+  #    enable = false;
+  #    docker = true;
+  #    role = "server";
+  #    package = pkgs.unstable.k3s;
+  #  };
 
   systemd.network.networks."99-main".enable = false;
 

@@ -70,8 +70,8 @@ self: super: {
       nativeBuildInputs = nativeBuildInputs ++ [ self.autoreconfHook ];
       src = self.fetchgit {
         url = "https://git.sr.ht/~andir/bird";
-        rev = "8a6cbd08ad9ad5804cddde0df21bf007edcdb479";
-        sha256 = "1k8py3agd8kzpvq7lv6b402ahj95h91961vll0353b3gckg1l91m";
+        rev = "7064ef80dda74fcc7bc270c4c5a1613ad974a7c5";
+        sha256 = "sha256-SJ1hMAo8DEDGAu2hLht/8UUim4CBl/BdxvgdImmabLA=";
         #rev = "12e1520e493e81b64d98ec63c4497d8b3f6dc492";
         #sha256 = "13i3mmyhlh81sm3b2hf0f1w5r0rm9cvfvmnsd4l2i7l7dfdlxias";
       };
@@ -110,14 +110,6 @@ self: super: {
   my-libtensorflow-bin = unstable.callPackage ./libtensorflow-bin.nix { };
   photoprism = unstable.callPackage ./photoprism {
     src = sources.photoprism;
-    ranz2nix = sources.ranz2nix;
-    #    buildGo118Module =
-    #      let
-    #        go_1_18 = self.callPackage (unstable.path + "/pkgs/development/compilers/go/1.18.nix") {
-    #          inherit (self.darwin_sdk.frameworks) Security Foundation;
-    #        };
-    #      in
-    #      self.callPackage (unstable.path + "/pkgs/development/go-modules/generic") { go = self.go_1_18; };
   };
 
   fping_exporter = self.callPackage ./fping-exporter.nix { };
@@ -149,12 +141,12 @@ self: super: {
   };
 
 
-  dex = unstable.buildGo118Module {
+  dex = self.buildGo118Module {
     name = "dex";
     src = sources.dex;
 
     subPackages = [ "cmd/dex" ];
-    vendorSha256 = "sha256-w8BbWNQfxAmvShEs4lv4uruWHVwtWLaq/LPqa2rK8fM=";
+    vendorSha256 = "sha256-IdPXyYFzaqphSSfDhL+i9jvb8wQVHwwwGsa7Y+amMbo=";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -257,7 +249,7 @@ self: super: {
 
   watering = self.esp32Pkgs.pkgsCross.esp32.callPackage ./watering { };
 
-  my-zigbee2mqtt = self.npmlock2nix.build rec {
+  my-zigbee2mqtt = self.npmlock2nix.v1.build rec {
     src = sources.zigbee2mqtt;
     nodejs = self.nodejs-14_x;
     node_modules_attrs = {
@@ -330,7 +322,7 @@ self: super: {
 
   compact-matrix-states = self.callPackage ./compact-matrix-states.nix { };
 
-  mumble-web = self.npmlock2nix.build {
+  mumble-web = self.npmlock2nix.v1.build {
     src = sources.mumble-web;
     buildCommands = [ "npm run build" ];
     installPhase = "cp dist $out";
@@ -367,7 +359,7 @@ self: super: {
     '';
   };
 
-  cinny = self.npmlock2nix.build {
+  cinny = self.npmlock2nix.v1.build {
     src = sources.cinny;
 
     installPhase = [ "cp -r dist $out" ];
@@ -427,5 +419,25 @@ self: super: {
     src = sources.lwnfeed;
     vendorSha256 = "091c8lgldihia0vlhigjx7vc9sx640jlz7sg3wx31fpcyml0zy6v";
     ldflags = [ "-s" "-w" "-X main.BuildTime=2022-10-13T21:11:00Z" ];
+  };
+
+  shairport-sync = super.shairport-sync.overrideAttrs (_: {
+    src = super.fetchFromGitHub {
+      owner = "mikebrady";
+      repo = "shairport-sync";
+      rev = "4.1";
+      sha256 = "sha256-iEiKOOFZE8rxyJpCJI1mx4M03iHRlujNvQypuhG4cu8=";
+    };
+  });
+
+  gotosocial = unstable.buildGoModule {
+    pname = "gotosocial";
+    version = sources.gotosocial.version;
+    src = sources.gotosocial;
+    #goPackagePath = "github.com/superseriousbusiness/gotosocial";
+    vendorSha256 = null;
+    buildFlags = [ "-trimpath" "-buildmode=pie" ];
+    ldFlags = [ "-static" "-x" "-w" "-extldflags" "-static" "-X main.Version=${sources.gotosocial.version}" ];
+    CGO_ENABLE = "0";
   };
 }

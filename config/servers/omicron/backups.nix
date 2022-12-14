@@ -1,3 +1,4 @@
+{ pkgs, ... }:
 {
   users.groups.zrepl-clients = { };
   users.users.zeta-backups = {
@@ -31,6 +32,47 @@
             ];
           };
           root_fs = "tank/backups/zrepl";
+        }
+        {
+          name = "omicron-to-zeta";
+          type = "push";
+          send = { };
+          connect = {
+            type = "ssh+stdinserver";
+            host = "zeta.rammhold.de";
+            user = "omicron-backups";
+            port = 22;
+            identity_file = "/root/.ssh/id_ed25519";
+          };
+          filesystems = {
+            "tank/backups<" = true;
+            "tank/backups/zrepl<" = false;
+            "tank/vaultwaren" = true;
+            "tank/gitea" = true;
+            "tank/drone" = true;
+          };
+          snapshotting = {
+            type = "periodic";
+            prefix = "zrepl_";
+            interval = "15m";
+          };
+          pruning = {
+            keep_sender = [
+              { type = "not_replicated"; }
+              {
+                type = "grid";
+                grid = "1x1h(keep=all) | 24x1h | 180x1d";
+                regex = "zrepl_";
+              }
+            ];
+            keep_receiver = [
+              {
+                type = "grid";
+                grid = "1x1h(keep=all) | 24x1h | 30x1d | 24x30d";
+                regex = "zrepl_";
+              }
+            ];
+          };
         }
       ];
     };

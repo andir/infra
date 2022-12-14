@@ -1,5 +1,5 @@
 { src
-, ranz2nix
+, npmlock2nix
 , coreutils
 , stdenv
 , fetchurl
@@ -7,7 +7,7 @@
 , runCommand
 , buildGo119Module
 , my-libtensorflow-bin
-, nodejs-14_x
+, nodejs-18_x
 , callPackage
 }:
 buildGo119Module {
@@ -23,7 +23,7 @@ buildGo119Module {
   prePatch = ''
     substituteInPlace internal/commands/passwd.go --replace '/bin/stty' "${coreutils}/bin/stty"
   '';
-  vendorSha256 = "sha256-3SSkQR/tC64TONtKhR8l9aN/Q8CZBpvZ5ZCoBryUrb0=";
+  vendorSha256 = "sha256-Cx7nW3gTZ9CG0NHMXdwBm4IEU7y81kjwzjl4pxWT0AA=";
 
   # https://github.com/mattn/go-sqlite3/issues/802
   CGO_CFLAGS = "-Wno-return-local-addr";
@@ -34,50 +34,13 @@ buildGo119Module {
 
 
   passthru = rec {
-
-    frontend =
-      let
-        noderanz = callPackage ranz2nix {
-          nodejs = nodejs-14_x;
-          sourcePath = src + "/frontend";
-          packageOverride = name: spec:
-            if name == "minimist" && spec ? resolved && spec.resolved == "" && spec.version == "1.2.0" then {
-              resolved = "file://" + (
-                toString (
-                  fetchurl {
-                    url = "https://registry.npmjs.org/minimist/-/minimist-1.2.0.tgz";
-                    sha256 = "0w7jll4vlqphxgk9qjbdjh3ni18lkrlfaqgsm7p14xl3f7ghn3gc";
-                  }
-                )
-              );
-            } else { };
-        };
-        node_modules = noderanz.patchedBuild;
-      in
-      stdenv.mkDerivation {
-        name = "photoprism-frontend";
-        nativeBuildInputs = [ nodejs-14_x ];
-
-        inherit src;
-
-        sourceRoot = "source/frontend";
-
-        postUnpack = ''
-          chmod -R +rw .
-        '';
-
-        NODE_ENV = "production";
-
-        buildPhase = ''
-          export HOME=$(mktemp -d)
-          ln -sf ${node_modules}/node_modules node_modules
-          ln -sf ${node_modules.lockFile} package-lock.json
-          npm run build
-        '';
-        installPhase = ''
-          cp -rv ../assets/static/build $out
-        '';
-      };
+    frontend = npmlock2nix.v2.build {
+      nodejs = nodejs-18_x;
+      src = src + "/frontend";
+      installPhase = ''
+        cp -rv ../assets/static/build $out
+      '';
+    };
 
     assets =
       let

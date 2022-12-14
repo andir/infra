@@ -45,6 +45,13 @@ let
       v4Addresses = mkOption {
         type = types.listOf addressesOptions;
       };
+      avahiProxy = mkOption {
+        type = types.bool;
+        default = true;
+        description = ''
+          Proxy avahi from and to this interface.
+        '';
+      };
 
       dnsOverTls = mkOption {
         type = types.bool;
@@ -276,7 +283,7 @@ in
       publish.enable = true; # FIXME: required?
       ipv4 = true;
       ipv6 = true;
-      interfaces = map (iface: iface.interface) cfg.downstreamInterfaces;
+      interfaces = map (iface: iface.interface) (builtins.filter (iface: iface.avahiProxy) cfg.downstreamInterfaces);
     };
   };
 }

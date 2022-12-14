@@ -147,6 +147,7 @@
         mtu = 1400;
       };
 
+
       origen = {
         localPort = 42258;
         localAddresses = [
@@ -161,6 +162,21 @@
         remotePublicKey = "zLMDAz+OAEAyY6cQnP6SWudbNLaYuFnR2Vm1h3+hI3s=";
         mtu = 1400;
       };
+      delta = {
+        localPort = 42259;
+        localAddresses = [
+          "172.20.25.12/32"
+          "fd21:a07e:735e:0f04::1/64"
+        ];
+        remoteAddresses = [
+          "172.20.25.54/32"
+          "fd21:a07e:735e:0f04::2/64"
+        ];
+        babel = false;
+        remotePublicKey = "qHAN1RKOVvQGp5wBuxmhUgqTLP0qdE1R+kuSFigSayE=";
+        mtu = 1400;
+      };
+
     };
   };
 

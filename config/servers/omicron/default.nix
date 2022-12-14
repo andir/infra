@@ -8,6 +8,7 @@
     ./drone.nix
     ./vaultwarden.nix
     ./backups.nix
+    #./gotosocial.nix
   ];
 
   deployment = {
@@ -55,6 +56,12 @@
     enableACME = true;
     forceSSL = true;
     default = true;
+    locations."/".root = pkgs.runCommand "empty" { } "mkdir $out";
+  };
+
+  services.nginx.virtualHosts."gts.kack.it" = {
+    enableACME = true;
+    forceSSL = true;
     locations."/".root = pkgs.runCommand "empty" { } "mkdir $out";
   };
 }

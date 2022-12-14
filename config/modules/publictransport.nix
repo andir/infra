@@ -13,16 +13,18 @@ in
       type = types.port;
       default = 1339;
     };
-    virtualHost = mkOption {
-      type = types.str;
-      default = "darmstadt.io";
+    virtualHosts = mkOption {
+      type = types.listOf types.str;
+      default = [ "darmstadt.io" ];
     };
   };
 
   config = mkIf cfg.enable {
-    services.nginx.virtualHosts.${cfg.virtualHost} = {
-      locations."/".proxyPass = "http://localhost:${toString cfg.port}";
-    };
+    services.nginx.virtualHosts = lib.listToAttrs (map
+      (virtualHost: lib.nameValuePair virtualHost {
+        locations."/".proxyPass = "http://localhost:${toString cfg.port}";
+      })
+      cfg.virtualHosts);
 
     systemd.services.publictransport = {
       wantedBy = [ "multi-user.target" ];

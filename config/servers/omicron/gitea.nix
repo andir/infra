@@ -1,7 +1,6 @@
 {
   services.gitea = {
     enable = true;
-    ssh.enable = true;
     domain = "gitea.rammhold.de";
     rootUrl = "https://gitea.rammhold.de";
     settings.other.SHOW_FOOTER_VERSION = false;

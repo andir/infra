@@ -148,9 +148,14 @@
 
   h4ck.publictransport = {
     enable = true;
-    virtualHost = "darmstadt.io";
+    virtualHosts = [ "www.darmstart.de" "darmstadt.io" ];
   };
   services.nginx.virtualHosts."darmstadt.io" = {
+    enableACME = true;
+    forceSSL = true;
+  };
+
+  services.nginx.virtualHosts."www.darmstart.de" = {
     enableACME = true;
     forceSSL = true;
   };

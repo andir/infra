@@ -111,7 +111,7 @@
     };
     provision = {
       enable = true;
-      datasources = [
+      datasources.settings.datasources = [
         {
           access = "proxy";
           name = "prometheus";

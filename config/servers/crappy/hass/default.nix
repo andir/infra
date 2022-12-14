@@ -1,7 +1,7 @@
 { lib, pkgs, ... }: {
 
   imports = [
-    ./dining_table_movement_light.nix
+    ./motion-aware-lights.nix
   ];
 
   services.home-assistant = {
@@ -196,6 +196,68 @@
                     snapcast_devices;
               }
             ];
+        }
+        {
+          title = "Vacuum";
+          cards = [
+            {
+              type = "entities";
+              entities = [
+                {
+                  entity = "sensor.roborock_s7_maxv_current_clean_area";
+                  name = "Current clean area";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_current_clean_duration";
+                  name = "Current clean duration";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_filter_left";
+                  name = "Filter left";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_last_clean_area";
+                  name = "Last clean area";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_last_clean_duration";
+                  name = "Last clean duration";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_last_clean_end";
+                  name = "Last clean end";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_last_clean_start";
+                  name = "Last clean start";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_main_brush_left";
+                  name = "Main brush left";
+                }
+                {
+                  entity = "binary_sensor.roborock_s7_maxv_mop_attached";
+                  name = "Mop attached";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_sensor_dirty_left";
+                  name = "Sensor dirty left";
+                }
+                {
+                  entity = "sensor.roborock_s7_maxv_side_brush_left";
+                  name = "Side brush left";
+                }
+                {
+                  entity = "binary_sensor.roborock_s7_maxv_water_box_attached";
+                  name = "Water box attached";
+                }
+                {
+                  entity = "binary_sensor.roborock_s7_maxv_water_shortage";
+                  name = "Water shortage";
+                }
+              ];
+            }
+          ];
         }
         {
           title = "Tomatoes";

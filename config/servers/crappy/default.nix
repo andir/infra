@@ -27,18 +27,35 @@
   };
   h4ck.monitoring.targetHost = config.deployment.targetHost;
 
-  sound.enable = true;
+  # sound.enable = true;
 
   # do not create the home dir for the pulse user as otherwise
   # the permissions will be 700 and nobody else on the system
   # is able to access the daemon files *after* the activation
   # script has been run.
-  users.users.pulse.createHome = lib.mkForce false;
+  #users.users.pulse.createHome = lib.mkIf config.hardware.pulseaudio.enable lib.mkForce false;
   systemd.tmpfiles.rules = [
-    "d '/run/pulse' 0755 pulse pulse"
+    #    "d '/run/pulse' 0755 pulse pulse"
   ];
-  hardware.pulseaudio = {
+  services.pipewire = {
     enable = true;
+    pulse.enable = true;
+    alsa.enable = true;
+    systemWide = true;
+    config.pipewire-pulse = {
+      "pulse.properties"."server.address" = [
+        "unix:native"
+        {
+          address = "tcp:4713";
+          max-clients = 32;
+          listen-backlog = 32;
+          "client.access" = "allowed";
+        }
+      ];
+    };
+  };
+  hardware.pulseaudio = {
+    enable = false;
     systemWide = true;
     package = pkgs.pulseaudioFull;
     extraModules = [ ];
@@ -66,12 +83,19 @@
     '';
   };
 
+  services.shairport-sync = {
+    enable = true;
+    openFirewall = true;
+  };
+  users.users.andi.extraGroups = [ "pipewire" ];
+  users.users.shairport.extraGroups = [ "pipewire" "pulse" ];
+
   services.mopidy = {
     enable = true;
     extensionPackages = with pkgs; [
       mopidy-mpd
       mopidy-iris
-      mopidy-local
+      #mopidy-local
       mopidy-somafm
       mopidy-tunein
     ];
