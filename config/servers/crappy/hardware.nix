@@ -73,7 +73,7 @@
   systemd.network = {
     networks = {
       "0-default" = {
-        matchConfig.Name = "eth0";
+        matchConfig.Name = "end0";
         networkConfig = {
           DHCP = "yes";
           IPv6AcceptRA = true;

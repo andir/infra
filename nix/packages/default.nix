@@ -255,9 +255,6 @@ self: super: {
     node_modules_attrs = {
       packageLockJson = src + "/package-lock.json";
       nativeBuildInputs = [ self.python3 self.nukeReferences ];
-      #preBuild = ''
-      #  mv package-lock.json npm-shrinkwrap.json
-      #'';
       postBuild = ''
         find . -type f -iname "package.json" -exec nuke-refs {} \;
       '';

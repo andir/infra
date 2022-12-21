@@ -25,7 +25,7 @@ let
 in
 rec {
   rmv-card = callPackage
-    ({ runCommand }: runCommand "lovelance-rmv-card"
+    ({ runCommand }: runCommand "lovelace-rmv-card"
       {
         src = sources.lovelance-rmv-card;
 
@@ -35,6 +35,19 @@ rec {
       } ''
       mkdir $out
       cp $src/rmv-card.js $out/rmv-card.js
+    '')
+    { };
+
+  multiple-entity-row = callPackage
+    ({ runCommand }: runCommand "lovelace-multiple-entity-row"
+      {
+        src = sources.lovelace-multiple-entity-row;
+        passthru.files = [
+          "${multiple-entity-row}/multiple-entity-row.js"
+        ];
+      } ''
+      mkdir $out
+      cp $src/multiple-entity-row.js $out
     '')
     { };
 
@@ -72,6 +85,37 @@ rec {
       '';
     })
     { };
+
+  battery-state-card = callPackage
+    ({ npmlock2nix, nodejs-18_x }: npmlock2nix.v2.build {
+      src = sources.lovelace-battery-state-card;
+      nodejs = nodejs-18_x;
+      passthru.files = [
+        "${battery-state-card}/dist.js"
+      ];
+      buildCommands = [
+        "npm run release"
+      ];
+      installPhase = ''
+        mkdir $out
+        cp dist/battery-state-card.js $out/dist.js
+      '';
+    })
+    { };
+
+  auto-entities = callPackage
+    ({ runCommand }: runCommand "lovelace-auto-entities"
+      {
+        src = sources.lovelace-auto-entities;
+        passthru.files = [
+          "${auto-entities}/dist.js"
+        ];
+      } ''
+      mkdir $out
+      cp $src/auto-entities.js $out/dist.js
+    '')
+    { };
+
 
   vacuum-card = callPackage
     ({ npmlock2nix, nodejs-18_x }:
@@ -146,5 +190,8 @@ rec {
     mini-media-player
     mini-graph-card
     vacuum-card
+    multiple-entity-row
+    battery-state-card
+    auto-entities
   ];
 }

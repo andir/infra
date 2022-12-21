@@ -54,7 +54,7 @@ in
     ./nginx.nix
     ./mqtt2prom.nix
     ./streetmerchant.nix
-    #./lab.nix
+    ./lab.nix
   ];
 
 

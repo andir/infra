@@ -1,7 +1,83 @@
-{ lib, pkgs, ... }: {
+{ lib, pkgs, ... }:
+let
+  mkSensor = id: features:
+    (lib.genAttrs features (feat: "sensor.${id}_${feat}")) // { inherit id; };
+  mkAqaraTempSensor = id: mkSensor id [ "temperature" "battery" "humidity" ];
+
+  sensors = {
+    motion_sensor_livingroom = mkSensor "0x001788010b09f8b9" [ "temperature" "battery" "occupancy" ];
+    temperature_sensor_livingroom = mkAqaraTempSensor "0x00158d00057f9d18";
+    motion_sensor_hallway = mkSensor "0x001788010b095fd9" [ "temperature" "battery" "occupancy" ];
+    temperature_sensor_bathroom = mkAqaraTempSensor "0x00158d000588ceb6";
+    temperature_sensor_bedroom = mkAqaraTempSensor "0x00158d000588cc10";
+    temperature_sensor_kitchen = mkAqaraTempSensor "0x00158d00058a6475";
+    temperature_sensor_balcony = mkAqaraTempSensor "0x00158d00056a19b8";
+  };
+
+  lights = lib.genAttrs [
+    "living_room_floor_lamp"
+    "living_room_ceiling_lamp"
+    "living_room_dining_lamp"
+    "living_room_work_desk_lamp"
+  ]
+    (l: "light.${l}");
+
+
+  climateDevices = {
+    livingRoom."0x943469fffe70bfc4" = {
+      nominal_temperature = 20;
+      dormant_temperature = 18;
+    };
+    bedRoom."0x70ac08fffe547ee7" = {
+      nominal_temperature = 18;
+      dormant_temperature = 18;
+    };
+    bathroom."0x70ac08fffe4dd8c9" = {
+      nominal_temperature = 19;
+      dormant_temperature = 18;
+    };
+    kitchen."0x70ac08fffe550abb" = {
+      nominal_temperature = 15;
+      dormant_temperature = 15;
+    };
+  };
+
+  allClimateDevices = builtins.foldl' (acc: item: acc // item) { } (
+    (builtins.attrValues climateDevices)
+  );
+in
+{
 
   imports = [
     ./motion-aware-lights.nix
+    (import ./dafoss-external-temperature.nix {
+      rooms = {
+        livingRoom = {
+          climateDevices = climateDevices.livingRoom;
+          temperatureSensors = [
+            sensors.temperature_sensor_livingroom.temperature
+          ];
+        };
+        bedRoom = {
+          climateDevices = climateDevices.bedRoom;
+          temperatureSensors = [
+            sensors.temperature_sensor_bedroom.temperature
+          ];
+        };
+        bathroom = {
+          climateDevices = climateDevices.bathroom;
+          temperatureSensors = [
+            sensors.temperature_sensor_bathroom.temperature
+          ];
+        };
+        kitchen = {
+          climateDevices = climateDevices.kitchen;
+          temperatureSensors = [
+            sensors.temperature_sensor_kitchen.temperature
+          ];
+        };
+      };
+    })
   ];
 
   services.home-assistant = {
@@ -36,6 +112,211 @@
       views = [
         {
           title = "Home";
+          cards =
+            let
+              verticalStack = data: { type = "vertical-stack"; } // data;
+              horizontalStack = data: { type = "horizontal-stack"; } // data;
+              miniGraph = data: { type = "custom:mini-graph-card"; } // data;
+              miniTemperatureGraph = entities: miniGraph ({
+                name = "Temperature";
+                icon = "mdi:thermometer";
+                hours_to_show = "8";
+                points_per_hour = "3";
+                inherit entities;
+              });
+              miniHumidityGraph = entities: miniGraph ({
+                name = "Humidity";
+                icon = "mdi:cloud-percent-outline";
+                hours_to_show = "8";
+                points_per_hour = "3";
+                inherit entities;
+              });
+              miniBatteryGraph = entities: miniGraph ({
+                name = "Battery";
+                icon = "mid:battery-high";
+                hours_to_show = "24";
+                points_per_hour = "1";
+                inherit entities;
+              });
+
+              o = cond: content: if cond then [ content ] else [ ];
+
+              mkLight = title: entity: { inherit title entity; type = "light"; };
+
+              mkMultipleEntityRow = { entity, entities ? [ ], ... }@args: {
+                type = "custom:multiple-entity-row";
+                inherit entity entities;
+              } // args;
+
+              mkRoom =
+                { name
+                , temperature ? [ ]
+                , humidity ? [ ]
+                , battery ? [ ]
+                , cards ? [ ]
+                , heating ? { }
+                }:
+                let
+                  temperatureEntities = temperature
+                    ++ (map (id: "sensor.${id}_temperature") heating);
+                in
+                verticalStack {
+                  cards = [
+                    (horizontalStack {
+                      title = name;
+                      cards = [
+                        (miniTemperatureGraph temperature)
+                        (miniHumidityGraph humidity)
+                      ];
+                    })
+                  ]
+                  ++ (map
+                    (id:
+                      mkMultipleEntityRow {
+                        title = "Thermostat";
+                        entity = "climate.${id}";
+                        show_state = false;
+                        entities = [
+                          { entity = "sensor.${id}_temperature"; name = "Target"; /* icon = "mdi:home-thermometer"; */ }
+                          { entity = "sensor.${id}_battery"; name = "battery"; /* icon = "mdi:battery"; */ }
+                          { entity = "sensor.${id}_pi_heating_demand"; name = "Load %"; /* icon = "mdi:radiator"; */ }
+                        ];
+                      })
+                    (builtins.attrNames heating))
+                  ++ cards;
+                };
+
+
+            in
+            [
+              (mkRoom {
+                name = "Livingroom";
+                temperature = [
+                  sensors.temperature_sensor_livingroom.temperature
+                  sensors.motion_sensor_livingroom.temperature
+                ];
+                humidity = [
+                  sensors.temperature_sensor_livingroom.humidity
+                ];
+                battery = [
+                  sensors.temperature_sensor_livingroom.battery
+                  sensors.motion_sensor_livingroom.battery
+                ];
+
+                heating = climateDevices.livingRoom;
+
+                cards = [
+                  {
+                    type = "custom:multiple-entity-row";
+                    entity = "light.living_room_lights";
+                    icon = "mdi:lightbulb-outline";
+                    toggle = true;
+                    entities = [
+                      { tap_action.action = "toggle"; name = "Stehlampe"; entity = lights.living_room_floor_lamp; icon = "mdi:floor-lamp"; }
+                      { tap_action.action = "toggle"; name = "Esstisch"; entity = lights.living_room_dining_lamp; icon = "mdi:ceiling-light-outline"; }
+                      { tap_action.action = "toggle"; name = "Deckenlampe"; entity = lights.living_room_ceiling_lamp; icon = "mdi:chandelier"; }
+                      { tap_action.action = "toggle"; name = "Schreibtisch"; entity = lights.living_room_work_desk_lamp; icon = "mdi:lamps"; }
+                    ];
+                  }
+                  {
+                    type = "custom:mini-media-player";
+                    name = "Spotify";
+                    entity = "media_player.spotify_andir0815";
+                  }
+                  {
+                    type = "custom:mini-media-player";
+                    name = "Amplifier";
+                    entity = "media_player.denon";
+                  }
+                  {
+                    #type = "custom:mini-media-player";
+                    type = "media-control";
+                    name = "Kodi";
+                    entity = "media_player.crappy";
+                    #hide = {
+                    #  power = true;
+                    #  source = true;
+                    #};
+                  }
+                ];
+              })
+              (mkRoom {
+                name = "Bedroom";
+                temperature = [ sensors.temperature_sensor_bedroom.temperature ];
+                humidity = [ sensors.temperature_sensor_bedroom.humidity ];
+                battery = [ sensors.temperature_sensor_bedroom.battery ];
+                heating = climateDevices.bedRoom;
+              })
+              (mkRoom {
+                name = "Kitchen";
+                temperature = [ sensors.temperature_sensor_kitchen.temperature ];
+                humidity = [ sensors.temperature_sensor_kitchen.humidity ];
+                battery = [ sensors.temperature_sensor_kitchen.battery ];
+                heating = climateDevices.kitchen;
+              })
+              (mkRoom {
+                name = "Bathroom";
+                temperature = [ sensors.temperature_sensor_bathroom.temperature ];
+                humidity = [ sensors.temperature_sensor_bathroom.humidity ];
+                battery = [ sensors.temperature_sensor_bathroom.battery ];
+                heating = climateDevices.bathroom;
+              })
+              (mkRoom {
+                name = "Hallway";
+                temperature = [ sensors.motion_sensor_hallway.temperature ];
+                humidity = [ ];
+                battery = [ sensors.motion_sensor_hallway.battery ];
+              })
+              (verticalStack {
+                title = "Balcony";
+                cards = [
+                  (mkMultipleEntityRow {
+                    entity = sensors.temperature_sensor_balcony.temperature;
+                  })
+                ];
+              })
+              (verticalStack {
+                title = "Vacuum";
+                cards = [
+                  {
+                    type = "custom:vacuum-card";
+                    entity = "vacuum.roborock_s7_maxv";
+                    actions = { };
+                    stats = {
+                      default = [
+                        { attribute = "filter_left"; unit = "hours"; subtitle = "Filter"; }
+                        { attribute = "side_brush_left"; unit = "hours"; subtitle = "Side brush"; }
+                        { attribute = "main_brush_left"; unit = "hours"; subtitle = "Main brush"; }
+                        { attribute = "sensor_dirty_left"; unit = "hours"; subtitle = "Sensors"; }
+                      ];
+                      cleaning = [
+                        { attribute = "cleaning_time"; unit = "minutes"; subtitle = "Cleaning time"; }
+                      ];
+                    };
+                    shortcuts = [
+                      {
+                        name = "Clean living room";
+                        service = "script.vacuum_livingroom";
+                        icon = "mdi:sofa";
+                      }
+                      {
+                        name = "Clean bedroom";
+                        service = "script.vacuum_bedroom";
+                        icon = "mdi:bed-empty";
+                      }
+                      {
+                        name = "Clean kitchen";
+                        service = "script.vacuum_kitchen";
+                        icon = "mdi:silverware-fork-knife";
+                      }
+                    ];
+                  }
+                ];
+              })
+            ];
+        }
+        {
+          title = "Old";
           cards = [
             {
               title = "Living Room Floor Lamp";
@@ -318,10 +599,41 @@
               (mkPump "switch.pump_4" "Pump 4")
             ];
         }
+        {
+          title = "Batteries";
+          cards = [
+            {
+              type = "custom:auto-entities";
+              card = {
+                type = "custom:battery-state-card";
+                title = "All Batteries";
+              };
+              filter.include = [
+                { entity_id = "sensor.*.battery"; }
+              ];
+            }
+          ];
+        }
+
       ];
     };
     config = {
       default_config = { };
+
+      template = map
+        (climateDevice:
+          {
+            sensor = [
+              {
+                name = "${climateDevice} temperature";
+                state = "{{ state_attr('climate.${climateDevice}', 'temperature') }}";
+                state_class = "measurement";
+                unit_of_measurement = "°C";
+              }
+            ];
+          }
+        )
+        (builtins.attrNames allClimateDevices);
 
       zone = [
         {
@@ -509,7 +821,7 @@
               platform = "zone";
               event = "leave";
               zone = "zone.home";
-              entity_id = "device_tracker.pixel_4";
+              entity_id = "device_tracker.iphone";
             }
           ];
           condition = [ ];
@@ -520,13 +832,34 @@
             }
           ];
         };
+        "Lower the heating when I leave the house" = {
+          trigger = [
+            {
+              platform = "zone";
+              event = "leave";
+              zone = "zone.home";
+              entity_id = "device_tracker.iphone";
+            }
+          ];
+          condition = [ ];
+          action = map
+            (id: {
+              service = "climate.set_temperature";
+              target.entity_id = "climate.${id}";
+              data = {
+                temperature = allClimateDevices.${id}.dormant_temperature;
+                hvac_mode = "heat";
+              };
+            })
+            (builtins.attrNames allClimateDevices);
+        };
         "Turn off the music when I leave the house" = {
           trigger = [
             {
               platform = "zone";
               event = "leave";
               zone = "zone.home";
-              entity_id = "device_tracker.pixel_4";
+              entity_id = "device_tracker.iphone";
             }
           ];
           condition = [ ];
@@ -692,7 +1025,19 @@
         deny all;
       '';
     };
+    virtualHosts."z2m.rammhold.de" = {
+      locations."/" = {
+        proxyPass = "http://[::1]:8083";
+        proxyWebsockets = true;
+      };
+      extraConfig = ''
+        allow 127.0.0.0/8;
+        allow ::1/128;
+        allow 172.20.24.0/24;
+        allow fd21:a07e:735e::/48;
+        deny all;
+      '';
+    };
   };
   networking.firewall.allowedTCPPorts = [ 80 ];
-
 }

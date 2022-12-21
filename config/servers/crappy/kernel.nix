@@ -7,24 +7,23 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "LibreELEC";
         repo = "LibreELEC.tv";
-        rev = "2552fd1c7cccf7f864988cfa1f894cd5b651aca5";
-        sha256 = "sha256-fmXk6AJmqMfYJe+W47L45X2ghgP6GPRgZzqF5YWVvrA=";
+        rev = "5fc1868d8610dadb91c380a88997583d554d97d8";
+        sha256 = "sha256-RnU61sDXivFDxI19afPNFnLLtgjYX+K6EQl9/qmPCZ8=";
       };
       prefix = "projects/Rockchip/patches/linux/default";
-
-
     in
     map
       (path: {
         name = path;
         patch = "${src}/${prefix}/${path}";
       }) [
-      "linux-0001-rockchip-from-6.1.patch"
       "linux-0002-rockchip-from-list.patch"
+      "linux-0011-v4l2-from-list.patch"
       "linux-0020-drm-from-list.patch"
       "linux-1000-drm-rockchip.patch"
+      "linux-1001-v4l2-rockchip.patch"
       "linux-1002-for-libreelec.patch"
-      #"linux-2000-v4l2-wip-rkvdec-hevc.patch"
+      "linux-2000-v4l2-wip-rkvdec-hevc.patch"
       "linux-2001-v4l2-wip-iep-driver.patch"
     ];
 

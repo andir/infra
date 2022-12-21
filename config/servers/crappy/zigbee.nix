@@ -35,12 +35,19 @@
       };
 
       devices = {
-        "0x00158d000588cc10".friendly_name = "0x00158d000588cc10";
-        "0x00158d00057f9d18".friendly_name = "0x00158d00057f9d18"; # living room
-        "0x00158d00056a19b8".friendly_name = "0x00158d00056a19b8";
+        "0x00158d000588cc10".friendly_name = "Bedroom Temperature Sensor";
+        "0x00158d00057f9d18".friendly_name = "Living Room Temperature Sensor"; # living room
+        "0x00158d00056a19b8".friendly_name = "Balcony Temperature Sensor";
         "0x04cf8cdf3c8240ce".friendly_name = "0x04cf8cdf3c8240ce";
-        "0x00158d00058a6475".friendly_name = "0x00158d00058a6475";
-        "0x00158d000588ceb6".friendly_name = "0x00158d000588ceb6"; # kitchen?
+        "0x00158d00058a6475".friendly_name = "Kitchen Temperature Sensor";
+        "0x00158d000588ceb6".friendly_name = "Bathroom Temperature Sensor"; # bathroom
+        "0x00158d00071106dd".friendly_name = "Basement Temperature Sensor";
+
+        "0x943469fffe70bfc4".friendly_name = "Living Room Heating Valve";
+        "0x70ac08fffe547ee7".friendly_name = "Bedroom Heating Valve";
+        "0x70ac08fffe4dd8c9".friendly_name = "Bathroom Heating Valve";
+        "0x70ac08fffe550abb".friendly_name = "Kitchen Heating Valve";
+
         "0xcc86ecfffe8742bc".friendly_name = "Dyson Charging Switch";
 
         "0x001788010b9c608f".friendly_name = "Living Room Ceiling 1";
