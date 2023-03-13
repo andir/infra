@@ -59,15 +59,11 @@
     ];
     configText = builtins.toJSON {
       route = {
-        receiver = "xmpp-notify";
+        receiver = "matrix-notify";
         routes = [
           {
             receiver = "ana-xmpp-notify";
             match.external = "ana";
-          }
-          {
-            receiver = "maralorn-xmpp-notify";
-            match.external = "maralorn";
           }
         ];
       };
@@ -79,15 +75,15 @@
           ];
         }
         {
-          name = "ana-xmpp-notify";
+          name = "matrix-notify";
           webhook_configs = [
-            { url = "http://127.0.0.1:9199/alert/ana@xmpp.megfau.lt"; }
+            { url = "http://localhost:4050/services/hooks/YWxlcnRtYW5hZ2VyX3NlcnZpY2U"; }
           ];
         }
         {
-          name = "maralorn-xmpp-notify";
+          name = "ana-xmpp-notify";
           webhook_configs = [
-            { url = "http://127.0.0.1:9199/alert/maralorn@darmstadt.ccc.de"; }
+            { url = "http://127.0.0.1:9199/alert/ana@xmpp.megfau.lt"; }
           ];
         }
       ];

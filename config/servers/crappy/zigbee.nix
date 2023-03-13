@@ -35,6 +35,7 @@
       };
 
       devices = {
+        "0x7cb03eaa0a00c424".friendly_name = "Bedside Table Lamp";
         "0x00158d000588cc10".friendly_name = "Bedroom Temperature Sensor";
         "0x00158d00057f9d18".friendly_name = "Living Room Temperature Sensor"; # living room
         "0x00158d00056a19b8".friendly_name = "Balcony Temperature Sensor";
@@ -42,6 +43,7 @@
         "0x00158d00058a6475".friendly_name = "Kitchen Temperature Sensor";
         "0x00158d000588ceb6".friendly_name = "Bathroom Temperature Sensor"; # bathroom
         "0x00158d00071106dd".friendly_name = "Basement Temperature Sensor";
+        "0xb4e3f9fffebbfb1b".friendly_name = "Coffee Table Socket";
 
         "0x943469fffe70bfc4".friendly_name = "Living Room Heating Valve";
         "0x70ac08fffe547ee7".friendly_name = "Bedroom Heating Valve";
@@ -71,6 +73,7 @@
         "0x7cb03eaa0a00a84b".friendly_name = "Work Desk Light";
 
         "0x50325ffffe739d21".friendly_name = "Work Desk Switch";
+        "0xb43522fffeb5bf4c" = { legacy = false; friendly_name = "Bedside Lamp Switch"; };
       };
 
       frontend = {

@@ -122,11 +122,10 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    #rockpi4.mpv
-    mpv
+    rockpi4.mpv
     youtube-dl
     #rockpi4.mpp
-    #rockpi4.ffmpeg
+    rockpi4.ffmpeg
     ffmpeg
     syncplay
     streamlink

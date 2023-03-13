@@ -13,7 +13,7 @@
     enable = true;
     config = {
       domain = "https://bw.rammhold.de";
-      signupsAllowed = true;
+      signupsAllowed = false;
       rocketPort = 8222;
       rocketAddress = "127.0.80.1";
       rocketLog = "critical";

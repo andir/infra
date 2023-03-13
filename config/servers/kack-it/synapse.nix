@@ -158,12 +158,13 @@
       redaction_retention_period = 1;
       rc_messages_per_second = 10;
       rc_message_burst_count = 15;
-      key_refresh_interval = "1h"; # for initial setup so we can invalidate the key earlier
+      key_refresh_interval = "8h"; # for initial setup so we can invalidate the key earlier
       max_upload_size = "10M";
-      url_preview_enabled = false;
-      dynamic_thumbnails = true; # might be a nicer user experience?
+      url_preview_enabled = true;
+      dynamic_thumbnails = false; # might be a nicer user experience?
       allow_guest_access = false;
       enable_registration = false; # for admin purposes
+      enable_registration_without_verification = false;
       log_config = pkgs.writeText "config.yaml" ''
         version: 1
 

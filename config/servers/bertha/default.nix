@@ -63,7 +63,7 @@ in
     fsType = "ext4";
   };
 
-  h4ck.monitoring.targetHost = "fd21:a07e:735e:ffff::1";
+  h4ck.monitoring.targetHost = "[fd21:a07e:735e:ffff::1]"; # need to add [ & ] for some URL scheme that changed over the years. Prometheus used to take these just fine :(
   h4ck.wireguardBackbone = {
     addresses = [
       "fe80::1/64"
@@ -477,10 +477,12 @@ in
         chain forward_to_lan {
           tcp dport { 22 } accept
           tcp dport { 6882 } accept;
+          udp dport { 49001 } accept;
 
-          ip6 nexthdr tcp tcp dport { 22, 80, 443, 655, 4001, 8000, 9100, 22000, 16686 } accept
+          ip6 nexthdr tcp tcp dport { 22, 80, 443, 655, 4001, 8000, 9100, 22000, 16686, 49001 } accept
           # allow mosh
           udp dport 60000-61000 accept
+          ip saddr 172.20.25.51/32 accept
 
           # forward to monitoring ports, final access control happens on each device
           ${lib.concatMapStringsSep "\n" (port: "tcp dport ${toString port} accept") monitoringPorts}
@@ -505,6 +507,7 @@ in
            type nat hook prerouting priority dstnat;
            # tcp dport { 4001 } dnat to $somewhere
            iifname uplink tcp dport { 6882 } dnat to 10.250.11.249
+           iifname uplink udp dport { 49001 } dnat to 172.20.24.174
 
            # dnat udp dport map @somemap;
         }

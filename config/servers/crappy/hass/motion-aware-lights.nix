@@ -32,10 +32,6 @@ let
               service = "timer.start";
               target.entity_id = "timer.${timer_name}";
             }
-            {
-              service = "notify.notify";
-              data.message = "Turned light `${light}` on.";
-            }
           ];
         };
         automation = lib.mapAttrsToList (alias: value: { id = alias; inherit alias; } // value) {
@@ -117,6 +113,33 @@ let
             ];
 
             action = [{ service = "script.${script_name}"; }];
+          };
+          "${name}_timer_stop_when_manual_change" = {
+            trigger = [
+              {
+                platform = "state";
+                entity_id = light;
+                to = "";
+              }
+              {
+                platform = "numeric_state";
+                entity_id = light;
+                to = "";
+              }
+            ];
+            condition = [
+              {
+                condition = "state";
+                entity_id = "timer.${timer_name}";
+                state = "active";
+              }
+            ];
+            action = [
+              {
+                service = "timer.stop";
+                target.entity_id = "timer.${timer_name}";
+              }
+            ];
           };
         };
 

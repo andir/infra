@@ -226,7 +226,6 @@ in
       #     level: DEBUG
       #     handlers: [journal]
       # '';
-
     };
 
     extraConfigFiles = [

@@ -12,6 +12,7 @@ let
     temperature_sensor_bedroom = mkAqaraTempSensor "0x00158d000588cc10";
     temperature_sensor_kitchen = mkAqaraTempSensor "0x00158d00058a6475";
     temperature_sensor_balcony = mkAqaraTempSensor "0x00158d00056a19b8";
+    temperature_sensor_basement = mkAqaraTempSensor "0x00158d00071106dd";
   };
 
   lights = lib.genAttrs [
@@ -19,6 +20,7 @@ let
     "living_room_ceiling_lamp"
     "living_room_dining_lamp"
     "living_room_work_desk_lamp"
+    "bedside_table_lamp"
   ]
     (l: "light.${l}");
 
@@ -26,30 +28,65 @@ let
   climateDevices = {
     livingRoom."0x943469fffe70bfc4" = {
       nominal_temperature = 20;
-      dormant_temperature = 18;
+      dormant_temperature = 17;
+      night_temperature = 18;
     };
     bedRoom."0x70ac08fffe547ee7" = {
       nominal_temperature = 18;
-      dormant_temperature = 18;
+      dormant_temperature = 17;
+      night_temperature = 18;
     };
     bathroom."0x70ac08fffe4dd8c9" = {
       nominal_temperature = 19;
-      dormant_temperature = 18;
+      dormant_temperature = 17;
+      night_temperature = 18;
     };
     kitchen."0x70ac08fffe550abb" = {
       nominal_temperature = 15;
       dormant_temperature = 15;
+      night_temperature = 15;
     };
   };
 
   allClimateDevices = builtins.foldl' (acc: item: acc // item) { } (
     (builtins.attrValues climateDevices)
   );
+
+  switches = lib.mapAttrs
+    (_: device:
+      let
+        mkAction = action: {
+          platform = "mqtt";
+          topic = "zigbee2mqtt/${device}/action";
+          # type = "click";
+          payload = action;
+        };
+      in
+      {
+        on = mkAction "on";
+        off = mkAction "off";
+        brightness_move_up = mkAction "brightness_move_up";
+        brightness_move_down = mkAction "brightness_move_down";
+        brightness_stop = mkAction "brightness_stop";
+      })
+    {
+      bedside_light_switch = "Bedside Lamp Switch";
+    };
 in
 {
 
   imports = [
     ./motion-aware-lights.nix
+    ./radio.nix
+    ./power-consumption.nix
+    (import ./ikea-light-switches.nix {
+      combinations = {
+        "bedside_light" = {
+          switch = switches.bedside_light_switch;
+          light = lights.bedside_table_lamp;
+        };
+      };
+    })
     (import ./dafoss-external-temperature.nix {
       rooms = {
         livingRoom = {
@@ -94,21 +131,18 @@ in
         "denonavr"
         "kodi"
         "xiaomi_miio"
+        "samsungtv"
+        "steam_online"
+        "shelly"
+        "homekit"
+        "sonos"
       ];
     }).overrideAttrs (_: {
       doInstallCheck = false;
     });
     lovelaceConfig = {
       title = "Home";
-      switch = [
-        {
-          platform = "flux";
-          lights = [
-            "light.living_room_lights"
-            "light.hallway_lamp"
-          ];
-        }
-      ];
+
       views = [
         {
           title = "Home";
@@ -185,8 +219,6 @@ in
                     (builtins.attrNames heating))
                   ++ cards;
                 };
-
-
             in
             [
               (mkRoom {
@@ -238,6 +270,44 @@ in
                     #  source = true;
                     #};
                   }
+                  (horizontalStack {
+                    cards = [
+                      ({
+                        type = "button";
+                        entity = "switch.0xb4e3f9fffebbfb1b";
+                        icon = "mdi:coffee";
+                        show_state = true;
+                      })
+                      ({
+                        type = "button";
+                        entity = "switch.dyson_charging_switch";
+                        icon = "mdi:vacuum";
+                        show_state = true;
+                      })
+                    ];
+                  })
+                  (horizontalStack {
+                    cards =
+                      let
+                        mkButton = title: script: icon: {
+                          type = "picture";
+                          name = title;
+                          image = "/_custom-icons/${icon}";
+
+                          tap_action = {
+                            action = "call-service";
+                            service = "script.turn_on";
+                            data.entity_id = "script.${script}";
+                          };
+                        };
+                      in
+                      [
+                        (mkButton "Play DLF" "play_dlf" "dlf.svg")
+                        (mkButton "Play HR3" "play_hr3" "hr3.png")
+                        (mkButton "Play SWR3" "play_swr3" "swr3.png")
+                      ];
+                  })
+
                 ];
               })
               (mkRoom {
@@ -246,6 +316,22 @@ in
                 humidity = [ sensors.temperature_sensor_bedroom.humidity ];
                 battery = [ sensors.temperature_sensor_bedroom.battery ];
                 heating = climateDevices.bedRoom;
+                cards = [
+                  {
+                    type = "custom:multiple-entity-row";
+                    entity = lights.bedside_table_lamp;
+                    icon = "mdi:lightbulb-outline";
+                    toggle = true;
+                    entities = [
+                      {
+                        tap_action.action = "toggle";
+                        name = "Nachttisch";
+                        entity = lights.bedside_table_lamp;
+                        icon = "mdi:lamp";
+                      }
+                    ];
+                  }
+                ];
               })
               (mkRoom {
                 name = "Kitchen";
@@ -268,48 +354,73 @@ in
                 battery = [ sensors.motion_sensor_hallway.battery ];
               })
               (verticalStack {
-                title = "Balcony";
+                title = "Other sensors";
                 cards = [
                   (mkMultipleEntityRow {
                     entity = sensors.temperature_sensor_balcony.temperature;
+                    entities = [
+                      sensors.temperature_sensor_balcony.humidity
+                    ];
                   })
+                  (mkMultipleEntityRow {
+                    entity = sensors.temperature_sensor_basement.temperature;
+                    entities = [
+                      sensors.temperature_sensor_basement.humidity
+                    ];
+                  })
+
                 ];
               })
+              #(verticalStack {
+              #  title = "Vacuum";
+              #  cards = [
+              #    {
+              #      type = "custom:vacuum-card";
+              #      entity = "vacuum.roborock_s7_maxv";
+              #      actions = { };
+              #      stats = {
+              #        default = [
+              #          { attribute = "filter_left"; unit = "hours"; subtitle = "Filter"; }
+              #          { attribute = "side_brush_left"; unit = "hours"; subtitle = "Side brush"; }
+              #          { attribute = "main_brush_left"; unit = "hours"; subtitle = "Main brush"; }
+              #          { attribute = "sensor_dirty_left"; unit = "hours"; subtitle = "Sensors"; }
+              #        ];
+              #        cleaning = [
+              #          { attribute = "cleaning_time"; unit = "minutes"; subtitle = "Cleaning time"; }
+              #        ];
+              #      };
+              #      shortcuts = [
+              #        {
+              #          name = "Clean living room";
+              #          service = "script.vacuum_livingroom";
+              #          icon = "mdi:sofa";
+              #        }
+              #        {
+              #          name = "Clean bedroom";
+              #          service = "script.vacuum_bedroom";
+              #          icon = "mdi:bed-empty";
+              #        }
+              #        {
+              #          name = "Clean kitchen";
+              #          service = "script.vacuum_kitchen";
+              #          icon = "mdi:silverware-fork-knife";
+              #        }
+              #      ];
+              #    }
+              #  ];
+              #})
               (verticalStack {
-                title = "Vacuum";
+                title = "Energy";
                 cards = [
-                  {
-                    type = "custom:vacuum-card";
-                    entity = "vacuum.roborock_s7_maxv";
-                    actions = { };
-                    stats = {
-                      default = [
-                        { attribute = "filter_left"; unit = "hours"; subtitle = "Filter"; }
-                        { attribute = "side_brush_left"; unit = "hours"; subtitle = "Side brush"; }
-                        { attribute = "main_brush_left"; unit = "hours"; subtitle = "Main brush"; }
-                        { attribute = "sensor_dirty_left"; unit = "hours"; subtitle = "Sensors"; }
-                      ];
-                      cleaning = [
-                        { attribute = "cleaning_time"; unit = "minutes"; subtitle = "Cleaning time"; }
-                      ];
-                    };
-                    shortcuts = [
-                      {
-                        name = "Clean living room";
-                        service = "script.vacuum_livingroom";
-                        icon = "mdi:sofa";
-                      }
-                      {
-                        name = "Clean bedroom";
-                        service = "script.vacuum_bedroom";
-                        icon = "mdi:bed-empty";
-                      }
-                      {
-                        name = "Clean kitchen";
-                        service = "script.vacuum_kitchen";
-                        icon = "mdi:silverware-fork-knife";
-                      }
+                  (miniGraph {
+                    name = "Power consumption";
+                    icon = "mdi:home-lightning-bolt";
+                    entities = [
+                      "sensor.power_consumption"
                     ];
+                  })
+                  {
+                    type = "energy-usage-graph";
                   }
                 ];
               })
@@ -478,68 +589,68 @@ in
               }
             ];
         }
-        {
-          title = "Vacuum";
-          cards = [
-            {
-              type = "entities";
-              entities = [
-                {
-                  entity = "sensor.roborock_s7_maxv_current_clean_area";
-                  name = "Current clean area";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_current_clean_duration";
-                  name = "Current clean duration";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_filter_left";
-                  name = "Filter left";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_last_clean_area";
-                  name = "Last clean area";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_last_clean_duration";
-                  name = "Last clean duration";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_last_clean_end";
-                  name = "Last clean end";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_last_clean_start";
-                  name = "Last clean start";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_main_brush_left";
-                  name = "Main brush left";
-                }
-                {
-                  entity = "binary_sensor.roborock_s7_maxv_mop_attached";
-                  name = "Mop attached";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_sensor_dirty_left";
-                  name = "Sensor dirty left";
-                }
-                {
-                  entity = "sensor.roborock_s7_maxv_side_brush_left";
-                  name = "Side brush left";
-                }
-                {
-                  entity = "binary_sensor.roborock_s7_maxv_water_box_attached";
-                  name = "Water box attached";
-                }
-                {
-                  entity = "binary_sensor.roborock_s7_maxv_water_shortage";
-                  name = "Water shortage";
-                }
-              ];
-            }
-          ];
-        }
+        #{
+        #  title = "Vacuum";
+        #  cards = [
+        #    {
+        #      type = "entities";
+        #      entities = [
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_current_clean_area";
+        #          name = "Current clean area";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_current_clean_duration";
+        #          name = "Current clean duration";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_filter_left";
+        #          name = "Filter left";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_last_clean_area";
+        #          name = "Last clean area";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_last_clean_duration";
+        #          name = "Last clean duration";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_last_clean_end";
+        #          name = "Last clean end";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_last_clean_start";
+        #          name = "Last clean start";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_main_brush_left";
+        #          name = "Main brush left";
+        #        }
+        #        {
+        #          entity = "binary_sensor.roborock_s7_maxv_mop_attached";
+        #          name = "Mop attached";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_sensor_dirty_left";
+        #          name = "Sensor dirty left";
+        #        }
+        #        {
+        #          entity = "sensor.roborock_s7_maxv_side_brush_left";
+        #          name = "Side brush left";
+        #        }
+        #        {
+        #          entity = "binary_sensor.roborock_s7_maxv_water_box_attached";
+        #          name = "Water box attached";
+        #        }
+        #        {
+        #          entity = "binary_sensor.roborock_s7_maxv_water_shortage";
+        #          name = "Water shortage";
+        #        }
+        #      ];
+        #    }
+        #  ];
+        #}
         {
           title = "Tomatoes";
           cards =
@@ -619,8 +730,17 @@ in
     };
     config = {
       default_config = { };
-
-      template = map
+      recorder = { purge_keep_days = 365 * 10; };
+      switch = [
+        {
+          platform = "flux";
+          lights = [
+            "light.living_room_lights"
+            "light.hallway_lamp"
+          ];
+        }
+      ];
+      template = (map
         (climateDevice:
           {
             sensor = [
@@ -633,7 +753,36 @@ in
             ];
           }
         )
-        (builtins.attrNames allClimateDevices);
+        (builtins.attrNames allClimateDevices)) ++ [
+        {
+          sensor = [
+            {
+              name = "Power consumption";
+              unit_of_measurement = "W";
+              state = ''
+                {% set a = states('sensor.shellyem3_349454747f1a_channel_a_power') | float %}
+                {% set b = states('sensor.shellyem3_349454747f1a_channel_b_power') | float %}
+                {% set c = states('sensor.shellyem3_349454747f1a_channel_c_power') | float %}
+                {{ (-a) + b + c }}
+              '';
+              device_class = "power";
+              state_class = "measurement";
+            }
+            {
+              name = "Energy consumption";
+              unit_of_measurement = "kWh";
+              state = ''
+                {% set a = states('sensor.shellyem3_349454747f1a_channel_a_energy_returned') | float %}
+                {% set b = states('sensor.shellyem3_349454747f1a_channel_b_energy') | float %}
+                {% set c = states('sensor.shellyem3_349454747f1a_channel_c_energy') | float %}
+                {{ a + b + c }}
+              '';
+              device_class = "energy";
+              state_class = "total_increasing";
+            }
+          ];
+        }
+      ];
 
       zone = [
         {
@@ -669,6 +818,7 @@ in
             "light.hallway_lamp".state = "off";
             "light.bedroom_lights".state = "off";
             "media_player.denon".state = "off";
+            "media_player.tv".state = "off";
           };
         }
         {
@@ -676,6 +826,10 @@ in
           entities = {
             "light.living_room_lights".state = "off";
             "light.hallway_lamp".state = "off";
+            "media_player.tv" = {
+              state = "on";
+              source = "HDMI";
+            };
             "media_player.denon" = {
               state = "playing";
               source = "GAME2";
@@ -744,6 +898,11 @@ in
         }
         {
           platform = "group";
+          name = "Bedside Table Lamp";
+          entities = [ "light.0x7cb03eaa0a00c424" ];
+        }
+        {
+          platform = "group";
           name = "Living Room Lights";
           entities = [
             "light.living_room_floor_lamp"
@@ -799,7 +958,7 @@ in
         broker = "10.250.43.1";
         discovery = true;
       };
-      automation = lib.mapAttrsToList (alias: value: { id = alias; inherit alias; } // value) {
+      automation = (lib.mapAttrsToList (alias: value: { id = alias; inherit alias; } // value) ({
         "Turn off the music" = {
           trigger = [
             {
@@ -853,6 +1012,56 @@ in
             })
             (builtins.attrNames allClimateDevices);
         };
+        "Lower the heating during the night" = {
+          trigger = [
+            {
+              platform = "time";
+              at = "22:30:00";
+            }
+          ];
+          condition = [
+            {
+              condition = "zone";
+              entity_id = "device_tracker.iphone";
+              zone = "zone.home";
+            }
+          ];
+          action = map
+            (id: {
+              service = "climate.set_temperature";
+              target.entity_id = "climate.${id}";
+              data = {
+                temperature = allClimateDevices.${id}.night_temperature;
+                hvac_mode = "heat";
+              };
+            })
+            (builtins.attrNames allClimateDevices);
+        };
+        "Set heating to nominal when I am home in the morning" = {
+          trigger = [
+            {
+              platform = "time";
+              at = "9:30:00";
+            }
+          ];
+          condition = [
+            {
+              condition = "zone";
+              entity_id = "device_tracker.iphone";
+              zone = "zone.home";
+            }
+          ];
+          action = map
+            (id: {
+              service = "climate.set_temperature";
+              target.entity_id = "climate.${id}";
+              data = {
+                temperature = allClimateDevices.${id}.nominal_temperature;
+                hvac_mode = "heat";
+              };
+            })
+            (builtins.attrNames allClimateDevices);
+        };
         "Turn off the music when I leave the house" = {
           trigger = [
             {
@@ -886,7 +1095,7 @@ in
                 platform = "zone";
                 event = "enter";
                 zone = "zone.home";
-                entity_id = "device_tracker.pixel_4";
+                entity_id = "device_tracker.iphone";
               }
             ];
             condition = [
@@ -895,7 +1104,7 @@ in
                 conditions = [
                   {
                     condition = "zone";
-                    entity_id = "device_tracker.pixel_4";
+                    entity_id = "device_tracker.iphone";
                     zone = "zone.home";
                   }
                   {
@@ -919,39 +1128,22 @@ in
               }
             ];
           };
-        "Work Desk Switch Living room lights ON" = {
-          trigger = [
-            {
-              platform = "state";
-              entity_id = "switch.0x50325ffffe739d21";
-              to = "on";
-              from = "off";
-            }
-          ];
-          action = [
-            {
-              service = "light.turn_on";
-              target.entity_id = "light.living_room_lights";
-            }
-          ];
-        };
-        "Work Desk Switch Living room lights OFF" = {
-          trigger = [
-            {
-              platform = "state";
-              entity_id = "switch.0x50325ffffe739d21";
-              to = "off";
-              from = "on";
-            }
-          ];
-          action = [
-            {
-              service = "light.turn_off";
-              target.entity_id = "light.living_room_lights";
-            }
-          ];
-        };
-      };
+      } // (lib.traceVal (lib.foldAttrs (a: b: a // b) { } (lib.mapAttrsToList
+        (name: switches:
+          lib.mapAttrs'
+            (action: match: lib.nameValuePair "DEBUG ${name} ${action}" {
+              trigger = [ match ];
+              action = [
+                {
+                  service = "notify.notify";
+                  data.message = "DEBUG ${name} ${action}";
+                }
+              ];
+            })
+            ({ } # // switches
+            )
+        )
+        switches)))));
 
       # spotify = {
       #   client_id = "!secret spotify_client_id";
@@ -1004,7 +1196,31 @@ in
             }
           ];
         }
+        {
+          platform = "integration";
+          source = "sensor.power_consumption";
+          name = "energy_spent";
+          unit_prefix = "k";
+          round = 2;
+        }
       ];
+      utility_meter = {
+        monthly_energy = {
+          name = "Monthly Energy";
+          cycle = "monthly";
+          source = "sensor.energy_spent";
+        };
+        yearly_energy = {
+          name = "Yearly Energy";
+          cycle = "yearly";
+          source = "sensor.energy_spent";
+        };
+        daily_energy = {
+          name = "Daily Energy";
+          cycle = "daily";
+          source = "sensor.energy_spent";
+        };
+      };
     };
   };
 
@@ -1013,6 +1229,17 @@ in
     virtualHosts."home.rammhold.de" = {
       default = true;
       locations."/nix-resources/".alias = (toString pkgs.lovelaceModules.allResources.wwwRoot) + "/";
+      locations."/_custom-icons/".alias = (pkgs.runCommand "custom-icons"
+        {
+          dlf_icon = ./dlf.svg;
+          hr3_icon = ./hr3.png;
+          swr3_icon = ./swr3.png;
+        } ''
+        mkdir $out
+        cp $dlf_icon $out/dlf.svg
+        cp $hr3_icon $out/hr3.png
+        cp $swr3_icon $out/swr3.png
+      '') + "/";
       locations."/" = {
         proxyPass = "http://[::1]:8123";
         proxyWebsockets = true;
@@ -1021,6 +1248,8 @@ in
         allow 127.0.0.0/8;
         allow ::1/128;
         allow 172.20.24.0/24;
+        allow 172.20.25.42/32; # mbpm1
+        allow 172.20.25.51/32; # iphone
         allow fd21:a07e:735e::/48;
         deny all;
       '';
@@ -1034,6 +1263,8 @@ in
         allow 127.0.0.0/8;
         allow ::1/128;
         allow 172.20.24.0/24;
+        allow 172.20.25.42/32; # mbpm1
+        allow 172.20.25.51/32; # iphone
         allow fd21:a07e:735e::/48;
         deny all;
       '';

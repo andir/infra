@@ -3,33 +3,8 @@
   environment.systemPackages = with pkgs; [
     ate
     firefox
-    (
-      ((pkgs.kodi.withPackages (p: with p; [
-        youtube
-        netflix
-        pvr-iptvsimple
-        a4ksubtitles
-        (p.buildKodiAddon {
-          pname = "plugin.video.media-ccc-de";
-          version = "git+" + pkgs.sources."plugin.video.media-ccc-de".revision;
-          namespace = "plugin.video.media-ccc-de";
-          src = sources."plugin.video.media-ccc-de";
-          propagatedBuildInputs = with p; [
-            requests
-            routing
-          ];
-        })
-      ])).override {
-        kodi = (pkgs.kodi.override { waylandSupport = true; }).overrideAttrs ({ patches ? [ ], ... }: {
-          patches = patches ++ [
-            #(pkgs.fetchpatch {
-            #  url = "https://github.com/xbmc/xbmc/pull/20632/commits/3f02f813997d19d15917fb4eb3387c60a3696837.patch";
-            #  sha256 = "0f8f3245f3jg5ghvfyjhbvjvv3xz8gnbmhzwwvvdd55m3yz19m94";
-            #})
-          ];
-        });
-      })
-    )
+    rockpi4.kodi
+    rockpi4.mpv
   ];
 
   networking.firewall.extraStopCommands = ''

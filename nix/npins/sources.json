@@ -8,9 +8,9 @@
         "repo": "ate"
       },
       "branch": "master",
-      "revision": "8377b0fcbeff761a8978d62a59884def78f3d6d3",
-      "url": "https://github.com/andir/ate/archive/8377b0fcbeff761a8978d62a59884def78f3d6d3.tar.gz",
-      "hash": "09qx66bmigp87g42cyhy34rah95aai1kxydrvifzm5426hxhb6xp"
+      "revision": "359ecf9c433f488dbfe8a4c6a21855215c95561c",
+      "url": "https://github.com/andir/ate/archive/359ecf9c433f488dbfe8a4c6a21855215c95561c.tar.gz",
+      "hash": "0ki8xrnrxfxll4m16jdm0li86vvjwbymbn73g0ksxcp12687q9xm"
     },
     "bertha-nixpkgs": {
       "type": "Git",
@@ -20,9 +20,21 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable-small",
-      "revision": "ff07b107adeda2164b29f8feb4a86ed012854dfb",
-      "url": "https://github.com/nixos/nixpkgs/archive/ff07b107adeda2164b29f8feb4a86ed012854dfb.tar.gz",
-      "hash": "05wbwbvnf4ak92c6scrb5rkwh413i93zf6cjnf11apxyn55aw855"
+      "revision": "dcc47fef8bd1e91baeab8fb34a35337ab8f3a3fd",
+      "url": "https://github.com/nixos/nixpkgs/archive/dcc47fef8bd1e91baeab8fb34a35337ab8f3a3fd.tar.gz",
+      "hash": "1cbxbnbrfscqlk0y2f1pr2hlmdp52jfpn534xllrax4vb10by37p"
+    },
+    "bird": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "andir",
+        "repo": "bird"
+      },
+      "branch": "babel-v4-via-v6-with-tunnel-rtt",
+      "revision": "f9ccc2402eddaa332f965b2fb2acb9326b229c74",
+      "url": "https://github.com/andir/bird/archive/f9ccc2402eddaa332f965b2fb2acb9326b229c74.tar.gz",
+      "hash": "1qdf1nn4wqj33rpmaabj342z4a42ai78g7l4rswrr7jgq6zxqxn6"
     },
     "c3schedule": {
       "type": "Git",
@@ -45,10 +57,10 @@
       },
       "pre_releases": false,
       "version_upper_bound": null,
-      "version": "v2.2.2",
-      "revision": "91a6916f4ca1b876028280856cba8ce12115a81e",
-      "url": "https://api.github.com/repos/ajbura/cinny/tarball/v2.2.2",
-      "hash": "05hlllc05nqn6j3bb59488gficqffss1l6bn88456iv4kiwcg6sm"
+      "version": "v2.2.4",
+      "revision": "a6fb44e1abe9ad48136dee8e7d053e639f37bedc",
+      "url": "https://api.github.com/repos/ajbura/cinny/tarball/v2.2.4",
+      "hash": "0m7y1hzsdmlhp39hdv2fazhm07kskgb5qf2khhyxrs8nlas4fbha"
     },
     "crappy-nixpkgs": {
       "type": "Git",
@@ -58,9 +70,9 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable-small",
-      "revision": "ff07b107adeda2164b29f8feb4a86ed012854dfb",
-      "url": "https://github.com/nixos/nixpkgs/archive/ff07b107adeda2164b29f8feb4a86ed012854dfb.tar.gz",
-      "hash": "05wbwbvnf4ak92c6scrb5rkwh413i93zf6cjnf11apxyn55aw855"
+      "revision": "b0e4a1d6f0c5baac6b2c246ca3122d8c803be999",
+      "url": "https://github.com/nixos/nixpkgs/archive/b0e4a1d6f0c5baac6b2c246ca3122d8c803be999.tar.gz",
+      "hash": "1mf6j6sv2rss6w1gw1zqrcn4c1rzcbqwcjxmn4xhnbsnbbdjz21r"
     },
     "dex": {
       "type": "Git",
@@ -70,9 +82,9 @@
         "repo": "dex"
       },
       "branch": "master",
-      "revision": "6d9ca8de490d35c7e11de01e334c3abc788f5724",
-      "url": "https://github.com/dexidp/dex/archive/6d9ca8de490d35c7e11de01e334c3abc788f5724.tar.gz",
-      "hash": "0ij70fcs5gq0c8cgpkdjn2jdzxwl3w963prgdb72p2kjxn08jf3x"
+      "revision": "c6d42252277a8eeaf2ec4d9b22d283057a71f9ec",
+      "url": "https://github.com/dexidp/dex/archive/c6d42252277a8eeaf2ec4d9b22d283057a71f9ec.tar.gz",
+      "hash": "0x2j0bsx6vxwaf5s97h8y55sc6wdq5acsz7cx2zf9vlxdzsb2ky6"
     },
     "dn42-registry": {
       "type": "Git",
@@ -81,9 +93,9 @@
         "url": "https://gitlab.com/andi-/dn42-registry.git"
       },
       "branch": "master",
-      "revision": "756b01c3abb18d7269b9a1e06404ba0aebc3ee5e",
+      "revision": "82ef6cb1797339da0edbb9aeb76aeea9aad4ec26",
       "url": null,
-      "hash": "1d431rmx2dzsmg2vjb2ccz7jbgngqb7iyzsnzkf2fyk7zybqxiqi"
+      "hash": "11r5fbaas3fzckawcwaaccp64lmib2s8qzvgcqdh105hyvzal2d4"
     },
     "dn42-regparse": {
       "type": "Git",
@@ -117,10 +129,10 @@
       },
       "pre_releases": false,
       "version_upper_bound": null,
-      "version": "v1.11.16",
-      "revision": "442bd935b941bfad48021f2861fa1f776a0e605c",
-      "url": "https://api.github.com/repos/vector-im/element-web/tarball/v1.11.16",
-      "hash": "0v8xllc14vannglrhfidck2n7gz0bi8rjgw9w5ff72xqv4c1r9ag"
+      "version": "v1.11.24",
+      "revision": "a79c5c6431330db1955a1df3eda0556d2bb5466f",
+      "url": "https://api.github.com/repos/vector-im/element-web/tarball/v1.11.24",
+      "hash": "0fg4i7h9nrz37k4di7kqwk9wvl3145ldk8hj8d5hy62kz5yp5773"
     },
     "gotosocial": {
       "type": "GitRelease",
@@ -131,10 +143,10 @@
       },
       "pre_releases": false,
       "version_upper_bound": null,
-      "version": "v0.6.0",
-      "revision": "f9e5ec99bd29018088232417e634fc1731d1cb08",
-      "url": "https://api.github.com/repos/superseriousbusiness/gotosocial/tarball/v0.6.0",
-      "hash": "1m7rqf7mxb2spg32jlwsfjm738wr27aljqfym7snm6prr7xh3gal"
+      "version": "v0.7.1",
+      "revision": "adb596600b4705fa22061db5bfe076407c5e0ec6",
+      "url": "https://api.github.com/repos/superseriousbusiness/gotosocial/tarball/v0.7.1",
+      "hash": "1pc3c8aij8kznhph2x5sqiwfavy1hs93vmg00f4vycym2lgjfc3s"
     },
     "knot_exporter": {
       "type": "Git",
@@ -184,9 +196,9 @@
         "repo": "mini-graph-card"
       },
       "branch": "master",
-      "revision": "8e70381e3d887e5803bc8fc4bc115ecc4dc587e0",
-      "url": "https://github.com/kalkih/mini-graph-card/archive/8e70381e3d887e5803bc8fc4bc115ecc4dc587e0.tar.gz",
-      "hash": "0ykv53cp1p7cn567zi4qd17bzzs7qmk4ywg6fz3rr98bqv7c0cx7"
+      "revision": "88d91ebb19779d5f79d6cdf1f90b8677a15b69ef",
+      "url": "https://github.com/kalkih/mini-graph-card/archive/88d91ebb19779d5f79d6cdf1f90b8677a15b69ef.tar.gz",
+      "hash": "0wjgmfkj1w3bahvmsf9x51kq3w1s8aqb2l9disxc3asnnvp66240"
     },
     "lovelace-mini-media-player": {
       "type": "GitRelease",
@@ -247,9 +259,9 @@
         "url": "https://gitlab.matrix.org/matrix-org/olm.git"
       },
       "branch": "master",
-      "revision": "5efd38c990b1238236f4e573fba8835dc400982a",
+      "revision": "0eb4550a8f1f393a57c26b93f574097347c152f7",
       "url": null,
-      "hash": "0pj7gs32ixhlls792wah7xf49j5pra0avp7dpvy9cndkdkg6biq5"
+      "hash": "0nv0qrh4gkdd55r9bhmbx92amf7phpx082spnzqxxynfkn7mpx5d"
     },
     "matrix-static": {
       "type": "Git",
@@ -355,9 +367,9 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-22.11",
-      "revision": "0938d73bb143f4ae037143572f11f4338c7b2d1c",
-      "url": "https://github.com/nixos/nixpkgs/archive/0938d73bb143f4ae037143572f11f4338c7b2d1c.tar.gz",
-      "hash": "005gnzr48jv4xpwldp3jpsli6fag7yyvmgnyxgarh36ys6p57mla"
+      "revision": "a7cc81913bb3cd1ef05ed0ece048b773e1839e51",
+      "url": "https://github.com/nixos/nixpkgs/archive/a7cc81913bb3cd1ef05ed0ece048b773e1839e51.tar.gz",
+      "hash": "0mzqw20rj0i0wi8zbdszcm81zadmyk1mspi70bf7qkfdv201fl28"
     },
     "nixpkgs-esp32": {
       "type": "Git",
@@ -379,9 +391,9 @@
         "repo": "nixpkgs"
       },
       "branch": "nixos-unstable-small",
-      "revision": "ff07b107adeda2164b29f8feb4a86ed012854dfb",
-      "url": "https://github.com/nixos/nixpkgs/archive/ff07b107adeda2164b29f8feb4a86ed012854dfb.tar.gz",
-      "hash": "05wbwbvnf4ak92c6scrb5rkwh413i93zf6cjnf11apxyn55aw855"
+      "revision": "dcc47fef8bd1e91baeab8fb34a35337ab8f3a3fd",
+      "url": "https://github.com/nixos/nixpkgs/archive/dcc47fef8bd1e91baeab8fb34a35337ab8f3a3fd.tar.gz",
+      "hash": "1cbxbnbrfscqlk0y2f1pr2hlmdp52jfpn534xllrax4vb10by37p"
     },
     "npins": {
       "type": "Git",
@@ -403,9 +415,9 @@
         "repo": "npmlock2nix"
       },
       "branch": "master",
-      "revision": "cc11d791fdc3afb2ae7c2f11e10abf7c33b40763",
-      "url": "https://github.com/tweag/npmlock2nix/archive/cc11d791fdc3afb2ae7c2f11e10abf7c33b40763.tar.gz",
-      "hash": "1iyd7pc9x7jnbb04kjp6f0qly5di29rgh8g85w6fcplzkvlsd046"
+      "revision": "9197bbf397d76059a76310523d45df10d2e4ca81",
+      "url": "https://github.com/tweag/npmlock2nix/archive/9197bbf397d76059a76310523d45df10d2e4ca81.tar.gz",
+      "hash": "1ddfby72fsnpn4yw43g4zxvg6jzlk5hi5cfnnccg9jgw53ckr4xh"
     },
     "photoprism": {
       "type": "Git",
@@ -415,9 +427,9 @@
         "repo": "photoprism"
       },
       "branch": "develop",
-      "revision": "0890b4384bd810bbcf618064d3e63b87a351ba87",
-      "url": "https://github.com/photoprism/photoprism/archive/0890b4384bd810bbcf618064d3e63b87a351ba87.tar.gz",
-      "hash": "03jqy8bwywzp1sdp9vr305xy87xc2x2vyrlbyr9vcs0vqfigdc2a"
+      "revision": "189fae6dafd1f58f274d137d0679718df392b9ac",
+      "url": "https://github.com/photoprism/photoprism/archive/189fae6dafd1f58f274d137d0679718df392b9ac.tar.gz",
+      "hash": "0k31f4qxcl1g1i6j9vl40srgp3vf1dn1pimzq572bacxk02dwyba"
     },
     "plugin.video.media-ccc-de": {
       "type": "Git",
@@ -427,9 +439,21 @@
         "repo": "plugin.video.media-ccc-de"
       },
       "branch": "main",
-      "revision": "e09f79569d535d6de2e6a9b3c528464eb295a8a9",
-      "url": "https://github.com/voc/plugin.video.media-ccc-de/archive/e09f79569d535d6de2e6a9b3c528464eb295a8a9.tar.gz",
-      "hash": "1vjys4ipin328kg9br2hp7by05fxs693pjafg8l3f20zvmdzq8q7"
+      "revision": "f23d4cd8b413ea856458d68c0f2010f565d11656",
+      "url": "https://github.com/voc/plugin.video.media-ccc-de/archive/f23d4cd8b413ea856458d68c0f2010f565d11656.tar.gz",
+      "hash": "1v14bffb08cklq5djnnnx4i2immh9nc4j60y130swbcm0lyg1yln"
+    },
+    "plugin.video.mediathekview": {
+      "type": "Git",
+      "repository": {
+        "type": "GitHub",
+        "owner": "mediathekview",
+        "repo": "plugin.video.mediathekview"
+      },
+      "branch": "master",
+      "revision": "7da2e21e9c3b3731acfa2d8d8ecc4d88a3155259",
+      "url": "https://github.com/mediathekview/plugin.video.mediathekview/archive/7da2e21e9c3b3731acfa2d8d8ecc4d88a3155259.tar.gz",
+      "hash": "0m6px78awd7wcm22ilyxspz37wp8n5m99dlyb5asj52sspnd8f51"
     },
     "pre-commit-hooks.nix": {
       "type": "Git",
@@ -439,9 +463,9 @@
         "repo": "pre-commit-hooks.nix"
       },
       "branch": "master",
-      "revision": "200790e9c77064c53eaf95805b013d96615ecc27",
-      "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/200790e9c77064c53eaf95805b013d96615ecc27.tar.gz",
-      "hash": "0qf37gkw0xgk3nxrsd3b2b38hx401y8zc9aiw58990hy064xgb0y"
+      "revision": "382bee738397ca005206eefa36922cc10df8a21c",
+      "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/382bee738397ca005206eefa36922cc10df8a21c.tar.gz",
+      "hash": "0yvraqm786kxdysp7lrcf0ibjg533zypz49maa83hqc1m69zw1sx"
     },
     "publictransport": {
       "type": "Git",
@@ -450,9 +474,9 @@
         "url": "https://git.darmstadt.ccc.de/cda/publictransport.git"
       },
       "branch": "master",
-      "revision": "9d6d727a8a9bd1909b5e63ed2becb6b4cc84ebb0",
+      "revision": "5dc6a76953b99df2eb9f44914412599062b6bf1e",
       "url": null,
-      "hash": "0wx81f6cw6zpqpzbhix593hryxx9jjrcrmdmdakfh3fqjxsgm1zm"
+      "hash": "17k4mxn4hixrxgn2i457ww6k6pxyfs8rg4j2gyj5ky5agk16wkj2"
     },
     "streetmerchant": {
       "type": "Git",
@@ -462,9 +486,9 @@
         "repo": "streetmerchant"
       },
       "branch": "main",
-      "revision": "5eb7c126300a3d86cdafc0b73f3765fffcfdcf2d",
-      "url": "https://github.com/jef/streetmerchant/archive/5eb7c126300a3d86cdafc0b73f3765fffcfdcf2d.tar.gz",
-      "hash": "111mg8gqyk512w4d39xf1xjcra0xgyk8hhklx0pypyahigb8j7xj"
+      "revision": "d8915cf3579c29d0b48fa2ec247f460b0b462e13",
+      "url": "https://github.com/jef/streetmerchant/archive/d8915cf3579c29d0b48fa2ec247f460b0b462e13.tar.gz",
+      "hash": "01j2j08ip1kqqri8qymhbzfnmymfy34paqa4rchn31vg8syzn9cp"
     },
     "vacuum-card": {
       "type": "GitRelease",
@@ -488,9 +512,9 @@
         "repo": "zigbee2mqtt"
       },
       "branch": "dev",
-      "revision": "8fc83caac73e7f73763fa87225308a9a26e2a154",
-      "url": "https://github.com/Koenkk/zigbee2mqtt/archive/8fc83caac73e7f73763fa87225308a9a26e2a154.tar.gz",
-      "hash": "0gp3l3iz1fqf6bxrsxzdwx7lk9lxs40zbh4n8qa9bj33dqk7fgdi"
+      "revision": "f865c976e38122363caf7399682062195f71e305",
+      "url": "https://github.com/Koenkk/zigbee2mqtt/archive/f865c976e38122363caf7399682062195f71e305.tar.gz",
+      "hash": "1vgqq0igzgl2g8jch7znfidwfm3d40pz614y6pyk3az1axcmqbkw"
     }
   },
   "version": 3

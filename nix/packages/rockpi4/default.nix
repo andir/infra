@@ -1,6 +1,67 @@
-{ lib, ubootRockPi4, armTrustedFirmwareRK3399, callPackage, ffmpeg, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch, jdk11_headless }:
+{ lib, ubootRockPi4, armTrustedFirmwareRK3399, callPackage, ffmpeg_5, mpv-unwrapped, wrapMpv, fetchFromGitHub, libv4l, udev, fetchpatch, jdk11_headless, linux_latest, kernelPatches, linuxPackagesFor, kodi-wayland, sources }:
 let
+  libreElecSrc = fetchFromGitHub {
+    owner = "LibreELEC";
+    repo = "LibreELEC.tv";
+    rev = "0405d900a5a7054ed3231c40a3c2181f4b9d2e07";
+    sha256 = "sha256-7y+xS8tTwoSyGI/jynB/K4Z/afO3qAmcyH/I7DGNzrs=";
+  };
+
+  libreEleckernelPatches =
+    let
+      prefix = "projects/Rockchip/patches/linux/default";
+    in
+    map
+      (path: {
+        name = path;
+        patch = "${libreElecSrc}/${prefix}/${path}";
+      }) [
+      "linux-0002-rockchip-from-list.patch"
+      "linux-0011-v4l2-from-list.patch"
+      "linux-0020-drm-from-list.patch"
+      "linux-1000-drm-rockchip.patch"
+      "linux-1001-v4l2-rockchip.patch"
+      "linux-1002-for-libreelec.patch"
+      "linux-2000-v4l2-wip-rkvdec-hevc.patch"
+      "linux-2001-v4l2-wip-iep-driver.patch"
+    ];
+
+
   self = {
+    kodi = kodi-wayland.withPackages (p: with p; [
+      youtube
+      netflix
+      pvr-iptvsimple
+      a4ksubtitles
+      (p.buildKodiAddon {
+        pname = "plugin.video.media-ccc-de";
+        version = "git+" + sources."plugin.video.media-ccc-de".revision;
+        namespace = "plugin.video.media-ccc-de";
+        src = sources."plugin.video.media-ccc-de";
+        propagatedBuildInputs = with p; [
+          requests
+          routing
+        ];
+      })
+      (p.buildKodiAddon {
+        pname = "plugin.video.mediathekview";
+        version = "git" + sources."plugin.video.mediathekview".revision;
+        namespace = "plugin.video.mediathekview";
+        src = sources."plugin.video.mediathekview";
+        propagatedBuildInputs = with p; [
+          myconnpy
+        ];
+      })
+    ]);
+
+    kernel = linux_latest.override {
+      kernelPatches = with kernelPatches; [
+        bridge_stp_helper
+        request_key_helper
+      ] ++ libreEleckernelPatches;
+    };
+    kernelPackages = linuxPackagesFor self.kernel;
+
     uboot =
       let
         drv = ubootRockPi4;
@@ -9,60 +70,29 @@ let
       assert (lib.versionAtLeast drv.version "2020.10"); drv;
     mpp = callPackage ./mpp.nix { };
 
-    kodi = callPackage ./kodi {
-      jre_headless = jdk11_headless;
-      waylandSupport = true;
-    };
-
-    ffmpeg = ffmpeg.overrideAttrs ({ buildInputs, patches ? [ ], ... }: {
-      patches = patches ++ [
-        ./ffmpeg-4.3-v4l.patch
-        #(fetchpatch {
-        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/4888409c3ad97630a270543b56822aa318871fa8/packages/multimedia/ffmpeg/patches/v4l2-request/ffmpeg-001-v4l2-request.patch";
-        #  sha256 = "1rqam7jl6k0swn87rvpk9k08bwvvxlp5ydkang71bj6m4gg9yffa";
-        #})
-
-        #(fetchpatch {
-        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/8a018bd987e70aed2c95792702f9bbb894dc5df2/packages/multimedia/ffmpeg/patches/v4l2-drmprime/ffmpeg-001-v4l2-drmprime.patch";
-        #  sha256 = "0z0h8nqpmk17vg98krw9bs8226fhb5phx7iavq0sc9sfys9wg5lg";
-        #})
-
-        #(fetchpatch {
-        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/4888409c3ad97630a270543b56822aa318871fa8/packages/multimedia/ffmpeg/patches/libreelec/ffmpeg-001-libreelec.patch";
-        #  sha256 = "0vmd24lidvwwp4akphvvnkmawdsmrqqc72vzdqvi8parzzsf7rx9";
-        #})
-        #(fetchpatch {
-        #  url = "https://raw.githubusercontent.com/LibreELEC/LibreELEC.tv/4888409c3ad97630a270543b56822aa318871fa8/packages/multimedia/ffmpeg/patches/rpi/ffmpeg-001-rpi.patch";
-        #  sha256 = "0bgrw6wkd0ywfzzh54vb6ac53nb71vdgqsphbqkdpljswzl5avl9";
-        #})
-
-      ];
-      buildInputs = buildInputs ++ [
-        libv4l
-        udev
-      ];
-      NIX_LDFLAGS = "-L${udev}/lib -ludev";
-      preConfigure = ''
-        configureFlags="$configureFlags --enable-v4l2-request --enable-libudev --enable-libdrm --enable-v4l2_m2m --enable-hwaccels"
-      '';
-      src = fetchFromGitHub {
-        owner = "xbmc";
-        repo = "FFmpeg";
-        rev = "4.3.2-Matrix-19.1";
-        sha256 = "0pxxf5bbap4g4v64ayimd78qz6p7d2qks3lfsqni71y50fis24wz";
-      };
+    ffmpeg = ffmpeg_5.overrideAttrs ({ buildInputs, patches ? [ ], preConfigure ? "", ... }: {
+      #  buildInputs = buildInputs ++ [
+      #    libv4l
+      #    udev
+      #  ];
+      #  NIX_LDFLAGS = "-L${udev}/lib -ludev";
+      #  # --enable-v4l2-request
+      #  # --enable-libudev
+      #  preConfigure = ''
+      #    ${preConfigure}
+      #    configureFlags="$configureFlags --enable-libdrm --enable-v4l2_m2m --enable-hwaccels"
+      #  '';
+      #  src = fetchFromGitHub {
+      #    owner = "FFmpeg";
+      #    repo = "FFmpeg";
+      #    rev = "ed519a36908e2009389c7321ed73da36c586930e";
+      #    sha256 = "sha256-vqe4MtkZB+vTCciU3z8LOHgEamoRY2GMQBrBF1F80wY=";
+      #  };
     });
 
     mpv-unwrapped = (mpv-unwrapped.override {
-      inherit (self) ffmpeg;
+      #  ffmpeg_5 = self.ffmpeg;
     }).overrideAttrs (_: {
-      src = fetchFromGitHub {
-        owner = "mpv-player";
-        repo = "mpv";
-        rev = "9b5672ebedf22e1c0d3ba81791c64087e369ee02";
-        sha256 = "0x4rh187jyw2a4l5zbnhs470wrsjx4mcsxd40axpw4rrl6wf1nj3";
-      };
-
       preConfigure = ''
         wafConfigureFlags=$(echo "$wafConfigureFlags" | sed -e 's/--disable-libsmbclient//g' -e 's/--disable-sndio//g')
       '';

@@ -68,13 +68,7 @@ self: super: {
 
       #configureFlags = configureFlags ++ [ "--enable-debug" ];
       nativeBuildInputs = nativeBuildInputs ++ [ self.autoreconfHook ];
-      src = self.fetchgit {
-        url = "https://git.sr.ht/~andir/bird";
-        rev = "7064ef80dda74fcc7bc270c4c5a1613ad974a7c5";
-        sha256 = "sha256-SJ1hMAo8DEDGAu2hLht/8UUim4CBl/BdxvgdImmabLA=";
-        #rev = "12e1520e493e81b64d98ec63c4497d8b3f6dc492";
-        #sha256 = "13i3mmyhlh81sm3b2hf0f1w5r0rm9cvfvmnsd4l2i7l7dfdlxias";
-      };
+      src = sources.bird;
       # we have to remove a patch that nixpkgs fetches but that already is in our tree
       patches = builtins.filter (patch: builtins.typeOf patch == "path") (patches ++ [
       ]);
@@ -146,7 +140,7 @@ self: super: {
     src = sources.dex;
 
     subPackages = [ "cmd/dex" ];
-    vendorSha256 = "sha256-IdPXyYFzaqphSSfDhL+i9jvb8wQVHwwwGsa7Y+amMbo=";
+    vendorSha256 = "sha256-wkuh/XpHvTnKsVA1Z/YOQFFi+D+vSJ06RO7uASgoXZY=";
   };
 
   matrix-static = unstable.buildGoModule {
@@ -307,7 +301,12 @@ self: super: {
     self = self.fastPython3;
     pythonAttr = "fastPython3";
     packageOverrides = (pyself: pysuper: {
-      ijson = pysuper.ijson.overrideAttrs (_: { buildInputs = [ self.yajl ]; doCheck = true; });
+      # https://lore.kernel.org/all/20221226132753.44175-1-kuniyu@amazon.com/
+      ephemeral-port-reserve = pysuper.ephemeral-port-reserve.overrideAttrs (_: {
+        doCheck = false;
+        checkInputs = [ ];
+        pytestCheckPhase = "true";
+      });
     });
   };
 
@@ -356,7 +355,7 @@ self: super: {
     '';
   };
 
-  cinny = self.npmlock2nix.v1.build {
+  cinny = self.npmlock2nix.v2.build {
     src = sources.cinny;
 
     installPhase = [ "cp -r dist $out" ];
@@ -365,9 +364,9 @@ self: super: {
       nativeBuildInputs = [ self.pkgconfig self.python3 ];
     };
 
-    preBuild = ''
-      sed -e "/'process.env': JSON.stringify(process.env),/d" -i webpack.common.js
-    '';
+    # preBuild = ''
+    #   sed -e "/'process.env': JSON.stringify(process.env),/d" -i webpack.common.js
+    # '';
 
     passthru.withConfig = config: self.runCommand "cinny-with-config"
       {

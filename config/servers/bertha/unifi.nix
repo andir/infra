@@ -1,7 +1,7 @@
 { pkgs, config, lib, ... }:
 {
   services.unifi = {
-    enable = true;
+    enable = false;
     #mongodbPackage = pkgs.mongodb-4_2;
     unifiPackage = pkgs.unifi.overrideAttrs (
       _: rec {
@@ -15,8 +15,8 @@
   };
 
 
-  users.users.unifi.group = "unifi";
-  users.groups.unifi = { };
+  # users.users.unifi.group = "unifi";
+  # users.groups.unifi = { };
 
   services.nginx = {
     # disabled since unifi seems to request logins for unknown reason..
